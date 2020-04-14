@@ -1,0 +1,28 @@
+html, body {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+.box {
+  max-width: 70vw;
+  padding: 30px;
+  margin: 0 auto;
+  position: relative;
+  top: 50%;
+  font-size: 30px;
+  line-height: 1.5;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+  -webkit-perspective: 400px;
+          perspective: 400px;
+  color: 0;
+}
+
+.source {
+  color: skyblue;
+  margin: 0 auto;
+}
+/*# sourceMappingURL=style.css.map */

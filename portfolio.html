@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Amelia Goodson - Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css2?family=Amita:wght@700&family=Berkshire+Swash&family=Comic+Neue&family=Cookie&family=Great+Vibes&family=Pacifico&family=Parisienne&family=Satisfy&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.css">
+        <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!--Navigation bar-->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <!-- <a class="navbar-brand" href="index.html">Amelia Goodson</a> -->
+        <h1 class="nav-header">
+            <span class="text-wrapper">
+              <span class="line line1"></span>
+              <a class ="nav-header-link" href="index.html"><span class="letters">Amelia Goodson</span></a>
+              <span class="line line2"></span>
+            </span>
+          </h1>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.0.2/anime.min.js"></script>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <button class="nav-button"><li class="nav-item active">
+                    <a class="nav-link" href="index.html">About <span class="sr-only">(current)</span></a>
+                </li></button>
+                <button class="nav-button"><li class="nav-item">
+                    <a class="nav-link" href="portfolio.html">Portfolio</a>
+                </li></button>
+                <button class="nav-button"><li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li></button>
+            </ul>
+        </div>
+    </nav>
+        <!--Image grid-->
+        <div id="img-container" class = "animated fadeIn">
+            <div class="container-header">Portfolio
+            </div>
+                <div class="row">
+                    <div class="col-lg-3">
+                        <h2 class="project-title">What's in your fridge?</h2>
+                        <button class="accordion-btn">
+                        <img src="Assets/Images/port-recipe-search-crop.png" class="img-fluid" id="fridge-img"></button>
+                        <div class="portfolio-expanded">
+                            <p>What's in your Fridge is a recipe search app with a difference: the user searches by ingredient.
+                            This web app is designed so that people can search recipes by the ingredients they already have, to prevent them from having to go grocery shopping, to minimise waste and to encourage creative cooking.</p>
+                            <a class="github-link" href="https://github.com/ameliagoodson/Recipe-search">Github</a>
+                            <a class="github-site" href="https://ameliagoodson.github.io/Recipe-search/">Website</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <h2 class="project-title">What's the weather like?</h2>
+                        <button class="accordion-btn">
+                        <img src="Assets/Images/port-weatherapp-crop.png" class="img-fluid" id="weather-img"></button>
+                        <div class="portfolio-expanded">
+                            <p>Interactive weather app featuring current and forecasted weather conditions including temperature, humidity, wind speed and UV index.
+                            The user's search history is saved via local storage to the sidebar so they can access their saved searches.</p>
+                            <a class="github-link" href="https://github.com/ameliagoodson/Dynamic-weather-app">Github</a>
+                            <a class="github-site" href="https://ameliagoodson.github.io/Daily-work-scheduler/">Website</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <h2 class="project-title">Daily planner</h2>
+                        <button class="accordion-btn">
+                        <img src="Assets/Images/port-work-scheduler-crop.png" class="img-fluid" id="planner-img"></button>
+                        <div class="portfolio-expanded">
+                            <p>This daily planner features timeblocks for standard business hours, which are shaded     different colours based on the time of day using the moment.js framework.
+                            Users can enter the details of their schedule in the planner and press the 'save' button, which saves the information to local storage and remains constant upon page refresh.</p>
+                            <a class="github-link" href="https://github.com/ameliagoodson/Daily-work-scheduler">Github</a>
+                            <a class="github-site" href="https://ameliagoodson.github.io/Daily-work-scheduler/">Website</a>
+                        </div>
+                    </div>
+                        <div class="col-lg-3">
+                            <h2 class="project-title">Google News search</h2>
+                            <button class="accordion-btn">
+                            <img src="Assets/Images/port-news.PNG" class="img-fluid" id="news-img"></button>
+                            <div class="portfolio-expanded">
+                                <p>Google News search app that allows users to search by keyword for local news or all related articles. Users can select number of articles to be displayed and filter by language or country.</p>
+                                <a class="github-link" href="https://github.com/ameliagoodson/Google-News-search">Github</a>
+                                <a class="github-site" href="https://ameliagoodson.github.io/Google-News-search">Website</a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    <footer>Amelia Goodson 2020</footer>
+    <script src="script.js"></script>
+    </body>
