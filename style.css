@@ -22,7 +22,7 @@ body {
 }
 
 .nav-header {
-    font-size: 3.5em;
+    font-size: 30px;
     font-family:'Amita', cursive;
   }
 
@@ -64,7 +64,7 @@ a.navbar-brand:hover {
     color: white !important;
 }
 a.nav-link {
-    font-size: 28px;
+    font-size: 20px;
     padding-left: 20px !important;
     padding-right: 20px !important;
 }
@@ -91,22 +91,23 @@ html {
 #about-container-header {
     background-color: #734B5E;
     height: 40px;
+    margin-bottom: 10px;
     font-size: 25px;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     color: #BCBDC0;
-    border-bottom: 2px solid #BCBDC0;
-    margin-bottom: 30px;
+    border-bottom: 2px solid #BCBDC0; 
 }
 #about-container {
     background-color: #734B5E;
     padding: 15px 25px 25px 25px;
-    margin: 40px;
+    margin: 20px; 
     float: left;
     border-radius: 30px;
     color: #BCBDC0;
-    font-size: 20px;
+    font-size: 18px;
+    max-width: 650px;
 }
-.CVlink {
+.CVlink, .github-link, .github-site {
     color: white;
     font-size: 20px;
     margin: 5px;
@@ -115,7 +116,7 @@ html {
     text-align: center;
 }
 
-.CVlink:hover {
+.CVlink:hover, .github-link:hover, .github-site:hover {
     color: white;
     background-color: #553555;
     border-radius: 30px;
@@ -126,12 +127,12 @@ html {
 
 #img-container {
     background-color: #734B5E;
-    padding: 45px 25px 25px 25px;
+    padding: 20px 20px 20px 20px;
     border-radius: 30px;
-    font-size: 30px;
+    font-size: 25px;
     color: #BCBDC0;
     width: fit-content;
-    max-width: 1500px;
+    max-width: 1200px;
     margin: auto; 
     margin-top: 5vh;
     margin-bottom: 20vh; 
@@ -139,49 +140,91 @@ html {
 
  .project-title {
     color: #BCBDC0;
-    font-size: 25px;  
+    font-size: 20px;  
+    margin-top: 0px;
  }
 
  .portfolio-expanded {
-     font-size: 18px;
+     font-size: 16px;
      max-height: 0px;
      overflow: hidden;
      transition: max-height 0.2s ease-in-out;
  }
-    .github-link {
-    float: left;
-    margin-left: 20px;
-    text-decoration: none;
+
+ .github-link {
+    color: white;
+    font-size: 20px;
+    margin: 5px;
+    padding: 5px;
+    bottom: 0px;
+    display: flex;
+    width: 30%;
 }
-    .github-site {
-    float: right;
-    margin-right: 0px;
+
+.github-site {
+    color: white;
+    font-size: 20px;
+    margin: 5px;
+    padding: 5px;
+    bottom: 0px;
+    display: flex;
+    width: 30%;
+}
+.github-link:hover, .github-site:hover {
+    color: white;
+    background-color: #553555;
+    border-radius: 30px;
     text-decoration: none;
 }
 
 /*Contact Form*/
 #contactDetails {
-    background-color: white;
-    width: 400px;
+    background-color: #8A8D91;
+    border: solid 3px #553555;
+    width: 300px;
     float: left;
     margin-left: 20px;
     margin-top: 20px;
     font-size: 18px;
+    border-radius: 30px;
+    line-height: 5px;
+}
+
+@media only screen and (max-width: 1122px) {
+    #contactDetails {
+        position: absolute;
+        bottom: 50px;
+        font-size: 16px;
+        line-height: 0px;
+        justify-content: center;
+        align-items: center;
+        display: grid;
+        /* margin: auto; */
+    }
 }
 
 #contactDetailsHead {
-    font-size: 28px;
+    font-size: 22px;
+}
+
+.contactLink {
+    color: white;
+}
+
+.contactLink:hover {
+    text-decoration: none;
+    color: rgb(250, 200, 200)
 }
 
 .container-contact-form {
-    width: 40vw;
+    width: 500px;
     margin: auto;
-    padding: 40px;
-    height: 40vh;
+    padding: 20px;
+    height: 300px
 }
 .contact-form-header {
-    background-image: url(/Assets/Images/sydneyharbour-blurred-cropped.jpg);
-    height: 150px;
+    background-image: url(Assets/sydneyharbour-blurred-cropped.jpg);
+    height: 100px;
     border-radius: 30px 30px 0px 0px;
     font-family: 'Montserrat', sans-serif;
     letter-spacing: 3px;
@@ -189,9 +232,9 @@ html {
 }
 header {
     color: rgb(250, 200, 200);
-    font-size: 50px;
+    font-size: 30px;
     text-align: center;
-    padding-top: 50px;  
+    padding-top: 20px;  
 }
 form {
     background-color: #734B5E;
@@ -202,15 +245,13 @@ form {
 input {
     width: 500px;
     margin: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 10px;
     padding: 5px;
 }
 textarea {
-    height: 200px;
+    height: 100px;
     margin: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin: 10px;
     width: 500px;
     padding: 5px;
 }
@@ -227,11 +268,10 @@ footer {
     background-color:#553555;
     border-top: rgb(250, 200, 200) 3px solid;
     height: 40px;
-    color: white;
-    bottom: 0;
+    color: white;   
     width: 100%;
     position: absolute;
-    bottom: 0px;
+    bottom: 0px !important;
     font-size: 20px;
     padding: 5px;
 }
