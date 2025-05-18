@@ -1,0 +1,30 @@
+/* Code -------------------------------------- */
+
+code,
+kbd,
+pre,
+samp {
+	font-family: monospace;
+	font-size: 1em;
+	padding: .4rem .6rem;
+}
+
+code,
+kbd,
+samp {
+	border-radius: .2rem;
+}
+
+pre {
+	border: .1rem solid var(--ag-border-color);
+	line-height: 1.5;
+	margin: 4rem 0;
+	overflow: auto;
+	padding: 2.4rem;
+	text-align: left;
+}
+
+pre code {
+	background: transparent;
+	padding: 0;
+}

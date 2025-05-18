@@ -1,0 +1,187 @@
+/* Inputs ------------------------------------ */
+
+fieldset {
+  border: 0.2rem solid var(--ag-border-color);
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+  padding: var(--ag-gap);
+
+  @media (min-width: $tablet) {
+    padding: 4.8rem;
+  }
+}
+
+form {
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+  border-radius: var(--ag-border-radius) !important;
+}
+
+legend {
+  font-size: 0.85em;
+  font-weight: 700;
+  padding: 0 1rem;
+
+  @media (min-width: $tablet) {
+    padding: 0 1.5rem;
+  }
+}
+
+label {
+  display: block;
+  font-size: 1.3rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--ag-background-color);
+
+  @media (min-width: $tablet) {
+    font-size: 1.4rem;
+  }
+}
+
+label.inline,
+input[type="checkbox"] + label {
+  display: inline;
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+input,
+textarea,
+button {
+  font-family: inherit;
+  line-height: 1;
+}
+
+input,
+textarea {
+  background-color: var(--ag-white-color);
+  border-color: var(--ag-border-color);
+  color: var(--ag-background-color) !important;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="week"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: var(--ag-border-radius);
+  border-style: solid;
+  border-width: 0.1rem;
+  box-shadow: none;
+  display: block;
+  font-size: 1.6rem;
+  line-height: normal;
+  margin: 0;
+  max-width: 100%;
+  padding: 1.5rem 1.8rem;
+  width: 100%;
+}
+
+textarea {
+  height: 12rem;
+  line-height: 1.5;
+  width: 100%;
+}
+
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+::-webkit-input-placeholder {
+  color: var(--ag-background-color);
+  line-height: normal;
+}
+::-moz-placeholder {
+  color: var(--ag-background-color);
+  line-height: normal;
+}
+:-ms-input-placeholder {
+  color: var(--ag-background-color);
+  line-height: normal;
+}
+:-moz-placeholder {
+  color: var(--ag-background-color);
+  opacity: 1;
+  line-height: normal;
+}
+::placeholder {
+  color: var(--ag-background-color);
+  line-height: normal;
+  opacity: 1;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+/* Input Reset ------------------------------- */
+
+button.reset,
+input.reset,
+textarea.reset {
+  background: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  padding: 0;
+  text-transform: none;
+}
+
+/* Search Form ------------------------------- */
+
+.search-form {
+  max-width: 32rem;
+  position: relative;
+}
+
+.search-form .search-field {
+  align-items: center;
+  background-color: var(--ag-background-color);
+  border: 0.1rem solid var(--ag-border-color);
+  border-radius: 999rem;
+  color: var(--ag-primary-color);
+  display: flex;
+  font-size: 1.8rem;
+  padding: 1.35rem 6.6rem 1.35rem 2.4rem;
+  position: relative;
+  transition: border-color 0.15s linear;
+  width: 100%;
+}
+
+.search-form .search-field:focus {
+  border-color: var(--ag-background-color);
+}
+
+.search-form .search-submit {
+  align-items: center;
+  color: var(--ag-background-color);
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 6.6rem;
+}

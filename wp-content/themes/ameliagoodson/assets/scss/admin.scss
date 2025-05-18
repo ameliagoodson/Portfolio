@@ -1,0 +1,14 @@
+/* ------------------------------------------------------------------------------ /*
+/*  ADMIN STYLES
+/* ------------------------------------------------------------------------------ */
+
+@import '01-settings/config';
+@import '01-settings/functions';
+@import '01-settings/mixins';
+@import '01-settings/variables';
+
+
+// Normalize 1rem = 10px from frontend styles in the editor.
+html.interface-interface-skeleton__html-container {
+	font-size: percent($rem, 16px);
+}

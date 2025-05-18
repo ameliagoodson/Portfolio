@@ -1,0 +1,179 @@
+button,
+.btn,
+.faux-button,
+.wp-block-button__link,
+:root .wp-block-file__button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+:root .woocommerce #respond input#submit,
+:root .woocommerce a.button,
+:root .woocommerce button.button,
+:root .woocommerce input.button,
+#site-content .forminator-button.forminator-button-submit {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: var(--ag-button-background-color);
+  border: var(--ag-button-border-width) solid var(--ag-button-border-color);
+  border-radius: var(--ag-button-border-radius);
+  color: var(--ag-button-text-color);
+  cursor: pointer;
+  display: inline-flex;
+  font-size: var(--ag-button-font-size);
+  font-weight: var(--ag-button-font-weight);
+  justify-content: center;
+  text-transform: var(--ag-button-text-transform);
+  letter-spacing: var(--ag-button-letter-spacing);
+  line-height: var(--ag-button-line-height);
+  margin: 0 0 1.4rem 0;
+  padding: var(--ag-button-padding-y) var(--ag-button-padding-x);
+  text-align: center;
+  text-decoration: none;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 0.1rem;
+  transition: var(--ag-trans-speed) var(--ag-trans-ease);
+  transition-property: background, border, color;
+  width: fit-content;
+
+  &:hover,
+  &:focus {
+    color: var(--ag-button-text-color-active);
+    background: var(--ag-button-background-color-active);
+    border-color: var(--ag-button-border-color-active);
+  }
+}
+
+.hero-btn {
+  font-size: calc(1.2 * var(--ag-button-font-size));
+  padding: calc(1.5 * var(--ag-button-padding-y)) calc(2 * var(--ag-button-padding-x));
+}
+
+.btn-sm {
+  font-size: 15px;
+  padding: 10px 18px;
+}
+
+.btn-back-to-top {
+  display: none;
+  position: fixed !important;
+  position: absolute;
+  bottom: 10%;
+  right: 2%;
+  padding: 0 !important;
+
+  &.show {
+    display: block;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: var(--ag-button-background-color-active);
+  }
+
+  .svg-icon {
+    width: 4rem;
+    height: 4rem;
+
+    svg {
+      height: 100%;
+      width: 100%;
+      padding: 0.1rem;
+    }
+  }
+}
+
+.wp-block-button__link:visited {
+  color: var(--ag-button-text-color);
+}
+
+.wp-block-button__link:active,
+.wp-block-button__link:focus,
+.wp-block-button__link:hover {
+  color: var(--ag-button-text-color-active);
+}
+
+/* STYLE: OUTLINE */
+
+.wp-block-button.is-style-outline .wp-block-button__link,
+.wp-block-button__link.is-style-outline {
+  border: var(--ag-button-outline-border-width) solid currentColor;
+  padding: var(--ag-button-padding-y) var(--ag-button-padding-x);
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link:not(.has-text-color),
+.wp-block-button__link.is-style-outline:not(.has-text-color) {
+  color: var(--ag-button-outline-color);
+
+  &:active,
+  &:hover,
+  &:focus {
+    color: var(--ag-button-outline-text-color-active);
+    background: var(--ag-button-outline-background-color-active);
+    border-color: var(--ag-button-outline-color-active);
+  }
+}
+
+// Mobile button
+.hamburger-btn {
+  background-color: inherit;
+  color: inherit;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 1.2rem;
+  height: 5rem;
+  width: 5rem;
+  border-radius: 50%;
+  z-index: 2;
+  margin: 0;
+
+  &:focus,
+  &:hover {
+    background-color: inherit;
+  }
+}
+.icon-menu {
+  display: block;
+}
+.icon-close {
+  display: none;
+}
+
+.active .icon-menu {
+  display: none;
+}
+.active .icon-close {
+  display: block;
+}
+
+/* Toggles ----------------------------------- */
+
+.toggle {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  color: inherit;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  text-align: inherit;
+  user-select: none;
+}
+
+button.toggle {
+  background: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.toggle svg * {
+  stroke: currentColor;
+}

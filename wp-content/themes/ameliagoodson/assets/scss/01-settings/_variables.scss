@@ -1,0 +1,154 @@
+// ------------------------------------------------------------------------------ //
+//  VARIABLES: Uses SCSS variables to set CSS variables
+// ------------------------------------------------------------------------------ //
+
+:root {
+  /* Alignments */
+  @each $size, $px in $alignments {
+    --ag-inner-width-#{$size}: #{rem($px)};
+  }
+
+  /* Colors */
+  @each $color, $hex in $colors {
+    --ag-#{$color}-color: #{$hex};
+    --ag-#{$color}-light: #{lighten($hex, 20%)};
+    --ag-#{$color}-dark: #{darken($hex, 10%)};
+    --ag-#{$color}-xtra-dark: #{darken($hex, 20%)};
+  }
+  /* Spacing */
+  @include fluid(--ag-gutter, $gutter-min, $gutter-max); // 48px to 192px
+  @include fluid(--ag-gap, $gutter-min * 0.5, $gutter-max * 0.5); // 24px to 96px
+  @include fluid(--ag-spacer, $spacing-unit * 1.5, $spacing-unit * 3); // 24px to 48px
+
+  @include fluid(--ag-spacer-xxs, $spacing-unit * 0.75, $spacing-unit); // 12px to 16px
+  @include fluid(--ag-spacer-xs, $spacing-unit, $spacing-unit * 1.5); // 16px to 24px
+  @include fluid(--ag-spacer-sm, $spacing-unit * 1.5, $spacing-unit * 2); // 24px to 32px
+  @include fluid(--ag-spacer-md, $spacing-unit * 1.5, $spacing-unit * 4); // 24px to 64px
+  @include fluid(--ag-spacer-lg, $spacing-unit * 1.5, $spacing-unit * 6); // 24px to 96px
+  @include fluid(--ag-spacer-xl, $spacing-unit * 2, $spacing-unit * 6); // 32px to 96px
+  @include fluid(--ag-spacer-xxl, $spacing-unit * 3, $spacing-unit * 8); // 48px to 128px
+
+  /* Typography */
+  @include fluid(--ag-body-font-size, $body-font-size-min, $body-font-size-max);
+  @include fluid(
+    --ag-body-line-height,
+    $body-line-height-min * $body-font-size-min,
+    $body-line-height-max * $body-font-size-max
+  );
+  --ag-body-font: #{inspect($body-font)};
+  --ag-body-font-weight: #{$body-font-weight};
+  --ag-body-font-weight-bold: #{$body-font-weight-bold};
+  --ag-body-letter-spacing: #{$body-letter-spacing};
+  --ag-body-text-transform: #{$body-text-transform};
+
+  // Headings
+  --ag-heading-font: #{inspect($heading-font)};
+  --ag-heading-font-weight: #{$heading-font-weight};
+  --ag-heading-font-weight-bold: #{$heading-font-weight-bold};
+  --ag-heading-letter-spacing: #{$heading-letter-spacing};
+  --ag-heading-text-transform: #{$heading-text-transform};
+
+  // H1
+  @include fluid(--ag-h1-font-size, $h1-font-size-min, $h1-font-size-max);
+  @include fluid(
+    --ag-h1-line-height,
+    $h1-line-height-min * $h1-font-size-min,
+    $h1-line-height-max * $h1-font-size-max
+  );
+
+  // H2
+  @include fluid(--ag-h2-font-size, $h2-font-size-min, $h2-font-size-max);
+  @include fluid(
+    --ag-h2-line-height,
+    $h2-line-height-min * $h2-font-size-min,
+    $h2-line-height-max * $h2-font-size-max
+  );
+
+  // H3
+  @include fluid(--ag-h3-font-size, $h3-font-size-min, $h3-font-size-max);
+  @include fluid(
+    --ag-h3-line-height,
+    $h3-line-height-min * $h3-font-size-min,
+    $h3-line-height-max * $h3-font-size-max
+  );
+
+  // H4
+  @include fluid(--ag-h4-font-size, $h4-font-size-min, $h4-font-size-max);
+  @include fluid(
+    --ag-h4-line-height,
+    $h4-line-height-min * $h4-font-size-min,
+    $h4-line-height-max * $h4-font-size-max
+  );
+
+  // H5
+  @include fluid(--ag-h5-font-size, $h5-font-size-min, $h5-font-size-max);
+  @include fluid(
+    --ag-h5-line-height,
+    $h5-line-height-min * $h5-font-size-min,
+    $h5-line-height-max * $h5-font-size-max
+  );
+
+  // H6
+  @include fluid(--ag-h6-font-size, $h6-font-size-min, $h6-font-size-max);
+  @include fluid(
+    --ag-h6-line-height,
+    $h6-line-height-min * $h6-font-size-min,
+    $h6-line-height-max * $h6-font-size-max
+  );
+
+  //  Style
+  --ag-border-radius: #{rem($border-radius)};
+
+  /* Buttons */
+  --ag-button-text-color: #{$button-text-color};
+  --ag-button-background-color: #{$button-background-color};
+  --ag-button-border-color: #{$button-border-color};
+  --ag-button-border-width: #{rem($button-border-width)};
+  --ag-button-border-radius: #{$button-border-radius};
+  --ag-button-font-size: #{rem($button-font-size)};
+  --ag-button-line-height: #{$button-line-height};
+  --ag-button-font-weight: #{$button-font-weight};
+  --ag-button-padding-y: #{rem($button-padding-y)};
+  --ag-button-padding-x: #{rem($button-padding-x)};
+  --ag-button-text-transform: #{$button-text-transform};
+  --ag-button-letter-spacing: #{rem($button-letter-spacing)};
+
+  --ag-button-text-color-active: #{$button-text-color-active};
+  --ag-button-background-color-active: #{$button-background-color-active};
+  --ag-button-border-color-active: #{$button-border-color-active};
+
+  --ag-button-outline-border-width: #{rem($button-outline-border-width)};
+  --ag-button-outline-color: #{$button-outline-color};
+  --ag-button-outline-color-active: #{$button-outline-color-active};
+  --ag-button-outline-text-color-active: #{$button-outline-text-color-active};
+  --ag-button-outline-background-color-active: #{$button-outline-background-color-active};
+
+  /* Site Header */
+  --ag-site-header-background-color: #{$header-background-color};
+  --ag-site-header-text-color: #{$header-text-color};
+  --ag-site-header-height: #{$header-min-height};
+  --ag-site-header-fixed-background-color: #{$header-fixed-background-color};
+  --ag-site-header-fixed-text-color: #{$header-fixed-text-color};
+
+  /* Site Footer */
+  --ag-site-footer-background-color: #{$footer-background-color};
+  --ag-site-footer-text-color: #{$footer-text-color};
+
+  /* Animations */
+  --ag-anim-speed: #{$anim-speed};
+
+  --ag-trans-speed: #{$trans-speed};
+  --ag-trans-speed-slow: #{$trans-speed-slow};
+  --ag-trans-ease: #{$trans-ease};
+
+  /* Admin Bar */
+  --ag-admin-bar-height: 0;
+}
+
+.admin-bar {
+  --ag-admin-bar-height: 4.6rem;
+
+  @media (min-width: $wptablet) {
+    --ag-admin-bar-height: 3.2rem;
+  }
+}

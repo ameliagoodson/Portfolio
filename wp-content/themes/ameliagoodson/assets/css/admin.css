@@ -1,0 +1,155 @@
+/* ------------------------------------------------------------------------------ /*
+/*  ADMIN STYLES
+/* ------------------------------------------------------------------------------ */
+:root {
+  /* Alignments */
+  --ag-inner-width-thin: 65.2rem;
+  --ag-inner-width-small: 76rem;
+  --ag-inner-width-medium: 104rem;
+  --ag-inner-width-large: 130rem;
+  --ag-inner-width-max: 205.2rem;
+  /* Colors */
+  --ag-background-color: #18002d;
+  --ag-background-light: #4e0093;
+  --ag-background-dark: black;
+  --ag-background-xtra-dark: black;
+  --ag-primary-color: #ffffff;
+  --ag-primary-light: white;
+  --ag-primary-dark: #e6e6e6;
+  --ag-primary-xtra-dark: #cccccc;
+  --ag-secondary-color: #ff00c7;
+  --ag-secondary-light: #ff66dd;
+  --ag-secondary-dark: #cc009f;
+  --ag-secondary-xtra-dark: #990077;
+  --ag-border-color: #650d94;
+  --ag-border-light: #a31ceb;
+  --ag-border-dark: #450965;
+  --ag-border-xtra-dark: #250536;
+  --ag-accent-color: #ff7f62;
+  --ag-accent-light: #ffd2c8;
+  --ag-accent-dark: #ff552f;
+  --ag-accent-xtra-dark: #fb2e00;
+  --ag-white-color: #ffffff;
+  --ag-white-light: white;
+  --ag-white-dark: #e6e6e6;
+  --ag-white-xtra-dark: #cccccc;
+  --ag-black-color: #000000;
+  --ag-black-light: #333333;
+  --ag-black-dark: black;
+  --ag-black-xtra-dark: black;
+  --ag-green-color: #91ff00;
+  --ag-green-light: #bdff66;
+  --ag-green-dark: #74cc00;
+  --ag-green-xtra-dark: #579900;
+  --ag-chartreuse-color: #c7ff00;
+  --ag-chartreuse-light: #ddff66;
+  --ag-chartreuse-dark: #9fcc00;
+  --ag-chartreuse-xtra-dark: #779900;
+  --ag-cyan-color: #00eeff;
+  --ag-cyan-light: #66f5ff;
+  --ag-cyan-dark: #00becc;
+  --ag-cyan-xtra-dark: #008f99;
+  --ag-orange-color: #fb2e00;
+  --ag-orange-light: #ff7f62;
+  --ag-orange-dark: #c82500;
+  --ag-orange-xtra-dark: #951b00;
+  --ag-pink-color: #ff00c7;
+  --ag-pink-light: #ff66dd;
+  --ag-pink-dark: #cc009f;
+  --ag-pink-xtra-dark: #990077;
+  --ag-dark-purple-color: #650d94;
+  --ag-dark-purple-light: #a31ceb;
+  --ag-dark-purple-dark: #450965;
+  --ag-dark-purple-xtra-dark: #250536;
+  --ag-light-grey-color: #e2e2e2;
+  --ag-light-grey-light: white;
+  --ag-light-grey-dark: #c9c9c9;
+  --ag-light-grey-xtra-dark: #afafaf;
+  /* Spacing */
+  --ag-gutter: clamp(4.8rem, calc(11.8vw + 0.392rem), 19.2rem);
+  --ag-gap: clamp(2.4rem, calc(5.9vw + 0.196rem), 9.6rem);
+  --ag-spacer: clamp(2.4rem, calc(2vw + 1.665rem), 4.8rem);
+  --ag-spacer-xxs: clamp(1.2rem, calc(0.3vw + 1.078rem), 1.6rem);
+  --ag-spacer-xs: clamp(1.6rem, calc(0.7vw + 1.355rem), 2.4rem);
+  --ag-spacer-sm: clamp(2.4rem, calc(0.7vw + 2.155rem), 3.2rem);
+  --ag-spacer-md: clamp(2.4rem, calc(3.3vw + 1.176rem), 6.4rem);
+  --ag-spacer-lg: clamp(2.4rem, calc(5.9vw + 0.196rem), 9.6rem);
+  --ag-spacer-xl: clamp(3.2rem, calc(5.2vw + 1.241rem), 9.6rem);
+  --ag-spacer-xxl: clamp(4.8rem, calc(6.5vw + 2.351rem), 12.8rem);
+  /* Typography */
+  --ag-body-font-size: clamp(1.5rem, calc(0.2vw + 1.408rem), 1.8rem);
+  --ag-body-line-height: clamp(2.1rem, calc(0.9vw + 1.751rem), 3.24rem);
+  --ag-body-font: "Montserrat", Helvetica, sans-serif;
+  --ag-body-font-weight: 400;
+  --ag-body-font-weight-bold: 700;
+  --ag-body-letter-spacing: 0;
+  --ag-body-text-transform: none;
+  --ag-heading-font: "Montserrat", Helvetica, sans-serif;
+  --ag-heading-font-weight: 700;
+  --ag-heading-font-weight-bold: 700;
+  --ag-heading-letter-spacing: -0.02em;
+  --ag-heading-text-transform: none;
+  --ag-h1-font-size: clamp(3.2rem, calc(1.3vw + 2.71rem), 4.8rem);
+  --ag-h1-line-height: clamp(3.84rem, calc(1.4vw + 3.326rem), 5.52rem);
+  --ag-h2-font-size: clamp(2.8rem, calc(1vw + 2.433rem), 4rem);
+  --ag-h2-line-height: clamp(3.5rem, calc(1.1vw + 3.102rem), 4.8rem);
+  --ag-h3-font-size: clamp(2.4rem, calc(0.7vw + 2.155rem), 3.2rem);
+  --ag-h3-line-height: clamp(3.12rem, calc(0.7vw + 2.851rem), 4rem);
+  --ag-h4-font-size: clamp(2.2rem, calc(0.5vw + 2.016rem), 2.8rem);
+  --ag-h4-line-height: clamp(2.86rem, calc(0.5vw + 2.664rem), 3.5rem);
+  --ag-h5-font-size: clamp(2rem, calc(0.3vw + 1.878rem), 2.4rem);
+  --ag-h5-line-height: clamp(2.6rem, calc(0.4vw + 2.441rem), 3.12rem);
+  --ag-h6-font-size: clamp(1.8rem, calc(0.2vw + 1.739rem), 2rem);
+  --ag-h6-line-height: clamp(2.43rem, calc(0.1vw + 2.378rem), 2.6rem);
+  --ag-border-radius: 1rem;
+  /* Buttons */
+  --ag-button-text-color: var(--ag-dark-purple-xtra-dark);
+  --ag-button-background-color: var(--ag-accent-color);
+  --ag-button-border-color: none;
+  --ag-button-border-width: 0.2rem;
+  --ag-button-border-radius: 2px;
+  --ag-button-font-size: 1.6rem;
+  --ag-button-line-height: 1.2;
+  --ag-button-font-weight: 700;
+  --ag-button-padding-y: 1rem;
+  --ag-button-padding-x: 1.6rem;
+  --ag-button-text-transform: uppercase;
+  --ag-button-letter-spacing: 0.1em;
+  --ag-button-text-color-active: var(--ag-white-color);
+  --ag-button-background-color-active: var(--ag-black-color);
+  --ag-button-border-color-active: none;
+  --ag-button-outline-border-width: 0.2rem;
+  --ag-button-outline-color: var(--ag-accent-color);
+  --ag-button-outline-color-active: var(--ag-accent-color);
+  --ag-button-outline-text-color-active: var(--ag-white-color);
+  --ag-button-outline-background-color-active: var(--ag-accent-color);
+  /* Site Header */
+  --ag-site-header-background-color: var(--ag-background-color);
+  --ag-site-header-text-color: var(--ag-primary-color);
+  --ag-site-header-height: clamp(6.4rem, 14.2vw - 2.667rem, 16rem);
+  --ag-site-header-fixed-background-color: var(--ag-black-color);
+  --ag-site-header-fixed-text-color: var(--ag-white-color);
+  /* Site Footer */
+  --ag-site-footer-background-color: var(--ag-black-color);
+  --ag-site-footer-text-color: var(--ag-white-color);
+  /* Animations */
+  --ag-anim-speed: 0.75s;
+  --ag-trans-speed: 0.15s;
+  --ag-trans-speed-slow: 0.25s;
+  --ag-trans-ease: ease;
+  /* Admin Bar */
+  --ag-admin-bar-height: 0;
+}
+
+.admin-bar {
+  --ag-admin-bar-height: 4.6rem;
+}
+@media (min-width: 782px) {
+  .admin-bar {
+    --ag-admin-bar-height: 3.2rem;
+  }
+}
+
+html.interface-interface-skeleton__html-container {
+  font-size: 62.5%;
+}

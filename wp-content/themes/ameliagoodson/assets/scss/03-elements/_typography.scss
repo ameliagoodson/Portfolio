@@ -1,0 +1,143 @@
+/* ------------------------------------------------------------------------------ /*
+/*  ELEMENTS
+/* ------------------------------------------------------------------------------ */
+
+h1,
+.h1,
+h2,
+.h2,
+h3,
+.h3,
+h4,
+.h4,
+h5,
+.h5,
+h6,
+.h6 {
+  font-family: var(--ag-heading-font);
+  font-feature-settings: "lnum";
+  font-variant-numeric: lining-nums;
+  font-weight: var(--ag-heading-font-weight);
+  letter-spacing: var(--ag-heading-letter-spacing);
+  text-transform: var(--ag-heading-text-transform);
+  line-height: 1.25;
+  margin: 4.8rem 0 3.2rem;
+
+  @media (min-width: $tablet) {
+    margin-top: 6.4rem;
+  }
+
+  strong {
+    font-weight: var(--ag-heading-font-weight-bold);
+  }
+}
+
+h1,
+.h1 {
+  font-size: var(--ag-h1-font-size);
+  line-height: var(--ag-h1-line-height);
+}
+h2,
+.h2 {
+  font-size: var(--ag-h2-font-size);
+  line-height: var(--ag-h2-line-height);
+}
+
+h3,
+.h3 {
+  font-size: var(--ag-h3-font-size);
+  line-height: var(--ag-h3-line-height);
+}
+
+h4,
+.h4 {
+  font-size: var(--ag-h4-font-size);
+  line-height: var(--ag-h4-line-height);
+}
+
+h5,
+.h5 {
+  font-size: var(--ag-h5-font-size);
+  line-height: var(--ag-h5-line-height);
+}
+
+h6,
+.h6 {
+  font-size: var(--ag-h6-font-size);
+  line-height: var(--ag-h6-line-height);
+}
+
+p {
+  line-height: var(--ag-body-line-height);
+  margin: 0 0 1em 0;
+}
+
+strong {
+  font-weight: var(--ag-body-font-weight-bold);
+}
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+sub {
+  bottom: -0.25em;
+}
+
+abbr,
+acronym {
+  cursor: help;
+}
+
+address {
+  line-height: 1.5;
+  margin: 0 0 2rem 0;
+}
+
+a {
+  color: var(--ag-accent-color);
+  text-decoration: underline;
+
+  &:hover,
+  &:focus {
+    text-decoration: none;
+  }
+}
+
+.section-title {
+  margin-top: 0;
+}
+
+/* Drop Cap ---------------------------------- */
+
+.has-drop-cap:not(:focus):first-letter {
+  color: var(--ag-accent-color);
+  font-size: 5.2em;
+  font-weight: 700;
+  margin: 0.09em 1rem 0.5rem 0;
+
+  @media (min-width: $tablet) {
+    font-size: 5.4em;
+    margin: 0.1em 1rem 0.5rem 0;
+  }
+}
+
+.has-drop-cap.has-text-color:not(:focus):first-letter {
+  color: inherit;
+}
+
+//
+.entry-title {
+  margin-top: 1rem;
+}
+
+.intro-text {
+  line-height: var(--ag-h3-line-height);
+}

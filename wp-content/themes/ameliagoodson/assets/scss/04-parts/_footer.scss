@@ -1,0 +1,132 @@
+/* ------------------------------------------------------------------------------ /*
+/*  SITE FOOTER
+/* ------------------------------------------------------------------------------ */
+
+#site-footer {
+  margin-top: 0;
+  padding: 3.2rem 0;
+  background: rgb(24, 0, 45);
+  background: linear-gradient(
+    180deg,
+    var(--ag-background-color) 10%,
+    var(--ag-dark-purple-xtra-dark) 64%,
+    var(--ag-dark-purple-color) 100%
+  );
+  color: var(--ag-site-footer-text-color);
+
+  @media (min-width: $tablet) {
+    margin-top: 0;
+    padding: 4.8rem 0;
+  }
+}
+
+body:not(.home) #site-footer {
+  margin-top: 6.4rem;
+}
+
+/* Footer Columns ----------------------------- */
+
+.footer-columns {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  .footer-branding {
+    margin-right: var(--ag-spacer-sm);
+
+    .footer-logo {
+      max-width: 200px;
+    }
+  }
+
+  .footer-nav {
+    display: flex;
+  }
+}
+
+/* Footer Menu ------------------------------- */
+
+.footer-menu {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-right: var(--ag-spacer-md);
+  text-align: right;
+
+  ul {
+    margin: 0 0 0 2.4rem;
+    list-style-type: none;
+
+    li {
+      margin-top: 0;
+    }
+
+    li:not(:first-child) {
+      margin-top: 0.4rem;
+
+      @media (min-width: $tablet) {
+        margin-top: 0.8rem;
+      }
+    }
+  }
+}
+
+/* Footer Bottom / Credits  ---------------------------- */
+.footer-bottom {
+  padding: var(--ag-spacer-sm);
+  border-top: 1px solid var(--ag-border-color);
+
+  .footer-credits {
+    align-items: baseline;
+    display: flex;
+    flex-shrink: 0;
+    margin: -0.4rem 2.4rem 0 -2.4rem;
+
+    @media (min-width: $tablet) {
+      margin: -0.8rem 2.4rem 0 -2.4rem;
+    }
+    p {
+      margin: 0.4rem 0 0 2.4rem;
+
+      @media (min-width: $tablet) {
+        margin: 0.8rem 0 0 2.4rem;
+      }
+    }
+  }
+}
+.footer-inner {
+  align-items: center;
+  display: flex;
+  font-size: 1.4rem;
+  justify-content: space-between;
+  padding: var(--ag-spacer-sm);
+
+  @media (min-width: $tablet) {
+    font-size: 1.6rem;
+  }
+
+  a {
+    color: inherit;
+    outline: none;
+    text-decoration: none;
+  }
+}
+
+.has-footer-menu .footer-inner {
+  align-items: baseline;
+}
+
+.footer-inner .footer-inner a:hover,
+.footer-inner a:focus {
+  text-decoration: underline;
+}
+
+// Footer social ----------------------------------------- //
+.footer-social {
+  .footer-menu {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}

@@ -1,0 +1,166 @@
+/* ------------------------------------------------------------------------------ /*
+/*  PAGINATION
+/* ------------------------------------------------------------------------------ */
+
+.pagination-wrapper {
+	position: relative;
+}
+
+.pagination-wrapper.pagination-type-button.last-page,
+.pagination-wrapper.pagination-type-scroll.last-page,
+.pagination-wrapper:not(.pagination-type-button) #load-more,
+.js .pagination-wrapper:not(.pagination-type-links) .link-pagination,
+.no-js #load-more,
+.no-js .scroll-loading {
+	display: none;
+}
+
+#pagination {
+	position: relative;
+}
+
+/* Loading Icon ------------------------------ */
+
+.pagination-wrapper .loading-icon {
+	height: 1rem;
+	opacity: 0;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	text-align: left;
+	transform: translateX(calc(-50% - .9rem)) translateY(-50%);
+	transition: opacity .2s linear;
+	width: 1rem;
+}
+
+.pagination-wrapper.loading .loading-icon {
+	opacity: 1;
+}
+
+/* Type: Button ------------------------------ */
+
+.js .pagination-wrapper.pagination-type-button {
+	background-color: transparent;
+	margin-bottom: 1.6rem;
+	padding-bottom: 0;
+
+	@media (min-width: $desktop) {
+		margin-bottom: 3.2rem;
+	}
+}
+
+.js .pagination-wrapper.pagination-type-button:before {
+	background: var(--ag-light-background-color);
+	content: "";
+	display: block;
+	position: absolute;
+	bottom: 50%;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+
+#load-more {
+	padding: 2.1rem 3rem;
+	position: relative;
+	width: 100%;
+
+	@media (min-width: $tablet) {
+		font-size: 1.8rem;
+		padding: 3.1rem 4.5rem;
+	}
+
+	@media (min-width: $desktop-xl) {
+		font-size: 2.1rem;
+		padding: 3.75rem 4.5rem;
+	}
+}
+
+#load-more .load-text {
+	opacity: 1;
+	transition: opacity .2s linear;
+}
+
+#load-more .loading-icon {
+	transition-delay: .2s;
+}
+
+.pagination-wrapper.loading #load-more .load-text { 
+	opacity: 0;
+}
+
+/* Type: Scroll ------------------------------ */
+
+.js .pagination-wrapper.pagination-type-scroll {
+	background-color: var(--ag-light-background-color);
+	padding-bottom: 4.8rem;
+
+	@media (min-width: $tablet) {
+		padding-bottom: 8rem;
+	}
+}
+
+.js .pagination-wrapper .scroll-loading {
+	color: var(--ag-accent-color);
+	height: 1.6rem;
+	margin: 0 auto;
+	position: relative;
+}
+
+/* Type: Links/JS Fallback ------------------- */
+
+.no-js .pagination-wrapper,
+.pagination-wrapper.pagination-type-links {
+	background-color: var(--ag-light-background-color);
+}
+
+.no-js .pagination-wrapper #pagination,
+.pagination-wrapper.pagination-type-links #pagination {
+	padding: 3.2rem 0;
+
+	@media (min-width: $tablet) {
+		padding: 4.8rem 0;
+	}
+}
+
+.link-pagination {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+}
+
+.link-pagination.only-next,
+.link-pagination .next-wrapper a {
+	justify-content: flex-end;
+}
+
+.link-pagination > div {
+	width: 100%;
+}
+
+.link-pagination a {
+	color: inherit;
+	display: flex;
+	text-decoration: none;
+}
+
+.link-pagination svg {
+	transition: transform .5s;
+	height: 3.2rem;
+	width: 6.4rem;
+
+	@media (min-width: $tablet) {
+		height: 4.8rem;
+		width: 9.6rem;
+	}
+}
+
+.link-pagination .previous-wrapper a:hover svg,
+.link-pagination .previous-wrapper a:focus svg {
+	transform: translateX(-8.333%);
+}
+
+.link-pagination .next-wrapper a:hover svg,
+.link-pagination .next-wrapper a:focus svg {
+	transform: translateX(8.333%);
+}

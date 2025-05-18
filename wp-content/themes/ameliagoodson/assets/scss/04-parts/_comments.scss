@@ -1,0 +1,424 @@
+/* -------------------------------------------------------------------------------- */
+/*	COMMENTS
+/* -------------------------------------------------------------------------------- */
+
+/* Comment Headers --------------------------- */
+
+.comments-wrapper {
+	margin-top: 6.4rem;
+
+	@media (min-width: $tablet) {
+		margin-top: 12.8rem;
+	}
+}
+
+.comments-header hr {
+	margin: 0;
+}
+
+.comment-reply-title:first-child {
+	margin-top: 0;
+}
+
+hr + .comment-reply-title {
+	margin-top: 1.8rem;
+
+	@media (min-width: $tablet) {
+		margin-top: 2.4rem;
+	}
+}
+
+.comment-reply-title {
+	align-items: baseline;
+	display: flex;
+	flex-wrap: wrap;
+	margin-bottom: 3.2rem;
+
+	@media (min-width: $tablet) {
+		margin-bottom: 4.8rem;
+	}
+}
+
+.comment-reply-title .title:not(:only-child) {
+	margin-right: 1.6rem;
+}
+
+.comment-reply-title small {
+	color: var(--ag-secondary-color);
+	flex-shrink: 0;
+	font-size: 1.6rem;
+	font-weight: 400;
+	white-space: nowrap;
+}
+
+.comment-reply-title small:first-child {
+	margin-left: 1.6rem;
+}
+
+.comment-reply-title small a {
+	color: inherit;
+}
+
+/* Comment Item ------------------------------ */
+
+/* COMMENT HEADER */
+
+.comments .comment,
+.comments .pingback,
+.comments .trackback,
+.comments .review {
+	padding-top: 3.2rem;
+
+	@media (min-width: $tablet) {
+		padding-top: 4.8rem;
+	}
+}
+
+.comment > .comment:first-of-type {
+	margin-top: 3.2rem;
+	padding-top: 0;
+
+	@media (min-width: $tablet) {
+		margin-top: 4.8rem;
+		padding-top: 0;
+	}
+}
+
+.comments .comments-header + div {
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.comment-body {
+	position: relative;
+
+	@media (min-width: $tablet) {
+		min-height: 6rem;
+		padding-left: 8rem;
+	}
+}
+
+.comment .comment {
+	border-left: .1rem solid var(--ag-border-color);
+	padding-left: 5%;
+}
+
+.comment-meta {
+	line-height: 1.5;
+	margin: 0 0 1em;
+	padding-left: 4.8rem;
+
+	@media (min-width: $tablet) {
+		align-items: baseline;
+		display: flex;
+		flex-wrap: wrap;
+		margin: 0 0 calc(1em - .8rem) -1.6rem;
+		padding: 0;
+	}
+}
+
+.comment-meta > * {
+	font-size: 1.6rem;
+
+	@media (min-width: $tablet) {
+		font-size: 1.8rem;
+		margin: 0 0 .8rem 1.6rem;
+	}
+}
+
+.comment-meta a,
+.comment-body .reply a {
+	color: inherit;
+}
+
+.comment-meta .avatar {
+	border-radius: .2rem;
+	height: 3.6rem;
+	position: absolute;
+	left: 0;
+	top: .25em;
+	width: 3.6rem;
+
+	@media (min-width: $tablet) {
+		display: block;
+		height: 6rem;
+		width: 6rem;
+	}
+}
+
+.comment-author b {
+	font-weight: 400;
+}
+
+.comment-author .says {
+	display: none;
+}
+
+.comment-metadata {
+	color: var(--ag-secondary-color);
+	font-size: 1.4rem;
+	margin-top: .1rem;
+
+	@media (min-width: $tablet) {
+		font-size: 1.6rem;
+		white-space: nowrap;
+	}
+}
+
+.comment-metadata a {
+	text-decoration: none;
+
+	&:hover,
+	&:focus {
+		text-decoration: underline;
+	}
+}
+
+.comment-metadata .edit-link {
+	margin-left: 1.6rem;
+}
+
+/* COMMENT CONTENT */
+
+.comment-content h1 { font-size: 2em; }
+.comment-content h2 { font-size: 1.8em; }
+.comment-content h3 { font-size: 1.6em; }
+.comment-content h4 { font-size: 1.4em; }
+.comment-content h5 { font-size: 1.2em; }
+.comment-content h6 { font-size: 1em; }
+
+.bypostauthor .comment-content .by-post-author {
+	color: var(--ag-secondary-color);
+	font-style: italic;
+	font-size: .777777778em;
+}
+
+/* COMMENT FOOTER */
+
+.comment-body .reply {
+	margin-top: 1em;
+}
+
+.comment-body .reply a {
+	background: var(--ag-light-background-color);
+	border-radius: .2rem;
+	display: inline-flex;
+	font-size: 1.2rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	text-decoration: none;
+	padding: .6rem .9rem;
+}
+
+.comment-body .reply a:hover,
+.comment-body .reply a:focus {
+	background-color: var(--ag-accent-color);
+	color: var(--ag-background-color);
+}
+
+/* Pingbacks & Trackbacks -------------------- */
+
+.pingback .comment-body,
+.trackback .comment-body {
+	min-height: 0;
+	padding-left: 0;
+}
+
+.pingback .comment-body {
+	@media (min-width: $tablet) {
+		padding: 0;
+	}
+}
+
+/* Comments Pagination ----------------------- */
+
+.comments-pagination {
+	margin: 4rem 0 0;
+	text-align: center;
+
+	@media (min-width: $tablet) {
+		margin-top: 6.4rem;
+	}
+}
+
+.comments-pagination hr {
+	margin: 0 0 4rem;
+
+	@media (min-width: $tablet) {
+		margin-bottom: 6.4rem;
+	}
+}
+
+.comments-pagination .comments-pagination-inner {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	margin: 0 0 -.8rem -.8rem;
+}
+
+.comments-pagination.only-next .comments-pagination-inner {
+	justify-content: flex-end;
+}
+
+.comments-pagination .page-numbers {
+	display: none;
+}
+
+.comments-pagination .prev,
+.comments-pagination .next {
+	color: inherit;
+	display: flex;
+	margin: 0 0 .8rem .8rem;
+	text-decoration: none;
+	flex-grow: 1;
+}
+
+.comments-pagination a:hover .text,
+.comments-pagination a:focus .text {
+	text-decoration: underline;
+}
+
+.comments-pagination .next {
+	justify-content: flex-end;
+}
+
+.comments-pagination a > span + span {
+	padding-left: .8rem;
+}
+
+.comments-pagination span.short {
+  @media (min-width: $tablet) {
+    display: none; 
+  }
+}
+
+.comments-pagination span.long {
+	display: none;
+
+	@media (min-width: $tablet) { 
+		display: inline; 
+	}
+}
+
+/* Comment Respond --------------------------- */
+
+.comment-respond {
+	background-color: var(--ag-light-background-color);
+	margin: 0 calc(-1 * var(--ag-gap));
+	padding: var(--ag-gap);
+
+	@media (min-width: $tablet) { 
+		margin: 0 -4.8rem;
+		padding: 4.8rem;
+	}
+}
+
+.comment-respond:not(:first-child) {
+	margin-top: 4rem;
+
+	@media (min-width: $tablet) {
+		margin-top: 6.4rem;
+	}
+}
+
+.comment-respond > hr {
+	margin: 0;
+}
+
+.comment-respond form p {
+	@media (min-width: $tablet) {
+		margin-bottom: 2.4rem;
+	}
+}
+
+.comment-form {
+	margin: 0;
+
+	@media (min-width: $tablet) {
+		margin-top: 4rem;
+	}
+}
+
+.comment-form a {
+	color: inherit;
+}
+
+.comment-form:after {
+	clear: both;
+	content: "";
+	display: block;
+}
+
+.comment-form .logged-in-as a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.comment-form .logged-in-as a:hover,
+.comment-form .logged-in-as a:focus {
+	text-decoration: underline;
+}
+
+.comment-form p {
+	margin-bottom: 1.6rem;
+	width: 100%;
+}
+
+.comment-form p.logged-in-as {
+	margin: -2.4rem 0 3.2rem;
+
+	@media (min-width: $tablet) {
+		margin: -3.6rem 0 4rem;
+	}
+}
+
+.comment-form-cookies-consent {
+	align-items: baseline;
+	display: flex;
+}
+
+.comment-form > p:last-of-type {
+	margin-bottom: 0;
+}
+
+.comment-respond label {
+	display: block;
+}
+
+.comment-respond input[type="text"],
+.comment-respond input[type="email"],
+.comment-respond textarea {
+	margin-bottom: 0;
+}
+
+.comment-respond #submit {
+	display: block;
+	margin-left: auto;
+}
+
+.comment-respond .comment-form-author,
+.comment-respond .comment-form-email {
+  @media (min-width: $tablet) {
+    float: left;
+    width: calc(50% - 1.2rem);
+  }
+}
+
+.comment-respond .comment-form-email {
+	@media (min-width: $tablet) {
+		margin-left: 2.4rem;
+	}
+}
+
+/* Reply Respond ----------------------------- */
+
+:root .comments .comment-respond {
+	margin: 3.2rem 0 0;
+	padding: 3.2rem;
+}
+
+:root .comments .comment-respond .comment-reply-title {
+  @media (min-width: $tablet) {
+    font-size: 3.2rem;
+  }
+}

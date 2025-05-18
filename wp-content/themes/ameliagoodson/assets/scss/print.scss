@@ -1,0 +1,142 @@
+/* ------------------------------------------------------------------------------ /*
+/*  PRINT STYLES
+/* ------------------------------------------------------------------------------ */
+
+@import '01-settings/config';
+@import '01-settings/functions';
+@import '01-settings/mixins';
+@import '01-settings/variables';
+
+*,
+*:before,
+*:after {
+	animation: none;
+	transition: none;
+	animation-delay: 0s !important;
+	animation-duration: 0s !important;
+	transition-delay: 0s !important;
+	transition-duration: 0s !important;
+}
+
+html {
+	background-image: none !important;
+}
+
+body {
+	background-color: #fff !important;
+	border: none !important;
+	font-size: 1.2rem;
+	line-height: 1.6;
+}
+
+body * {
+	font-size: inherit !important;
+	line-height: inherit !important;
+}
+
+#site-content {
+	overflow: hidden;
+}
+
+/* ELEMENT BASE */
+
+p {
+	orphans: 2;
+	widows: 2;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+	margin: 1em 0;
+}
+
+h1, .h1 { font-size: 2.2em !important; }
+h2, .h2 { font-size: 2.0em !important; }
+h3, .h3 { font-size: 1.8em !important; }
+h4, .h4 { font-size: 1.6em !important; }
+h5, .h5 { font-size: 1.4em !important; }
+h6, .h6 { font-size: 1.2em !important; }
+
+figure {
+	page-break-inside: avoid;
+	break-inside: avoid;
+}
+
+/* HIDE ELEMENTS */
+
+#site-header,
+#site-footer,
+.skip-link,
+.cover-modal,
+.header-sticky-adjuster,
+.pagination-wrapper,
+.post-navigation,
+.related-posts {
+	display: none !important;
+}
+
+/* RESET WIDTHS */
+
+.alignwide,
+.alignfull,
+:root .section-inner {
+	margin-left: 0;
+	margin-right :0;
+	max-width: 100%;
+	width: 100%;
+}
+
+/* MODIFY SPACING */
+
+.post-inner,
+.entry-footer {
+	margin-top: 3.2rem;
+}
+
+/* BLOCKS */
+
+.has-background,
+.wp-block-file {
+	padding: 0 !important;
+}
+
+.wp-block-spacer {
+	display: none;
+}
+
+hr:not(.is-style-dots) {
+	background: currentColor !important;
+	height: .2rem !important;
+}
+
+/* ENTRY CONTENT */
+
+.entry-content {
+	font-size: inherit;
+}
+
+.alignwide,
+.alignfull,
+.aligncenter {
+	margin-bottom: 3.2rem !important;
+	margin-top: 3.2rem !important;
+	padding: 0 !important;
+}
+
+.entry-content > .alignwide,
+.entry-content > .alignfull {
+	margin-left: auto !important;
+	margin-right: auto !important;
+	max-width: 100% !important;
+	width: 100% !important;
+}
+
+.entry-content > .alignleft,
+.entry-content > .wp-block-image > .alignleft {
+	margin-left: 0 !important;
+}
+
+.entry-content > .alignright,
+.entry-content > .wp-block-image > .alignright {
+	margin-right: 0 !important;
+}

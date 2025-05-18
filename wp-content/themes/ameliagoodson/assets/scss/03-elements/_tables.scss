@@ -1,0 +1,42 @@
+/* Tables ------------------------------------ */
+
+%table-style {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  font-size: calc(0.75 * var(--ag-body-font-size));
+  margin-top: 2rem;
+
+  th,
+  td {
+    padding: 1.2rem;
+    border: 0.1rem solid var(--ag-border-color);
+    line-height: 1.4;
+    margin: 0;
+    overflow: visible;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    background-color: var(--ag-dark-purple-xtra-dark);
+  }
+
+  thead {
+    border-bottom: 0.2rem solid var(--ag-border-color);
+    background-color: var(--ag-dark-purple-xtra-dark);
+  }
+
+  tfoot {
+    border-top: 0.2rem solid var(--ag-border-color);
+    font-style: italic;
+  }
+
+  caption {
+    background-color: var(--ag-border-color);
+    font-weight: 700;
+    text-align: center;
+  }
+}
+
+table {
+  @extend %table-style;
+}

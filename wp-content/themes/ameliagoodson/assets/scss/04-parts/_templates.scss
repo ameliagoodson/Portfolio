@@ -1,0 +1,34 @@
+
+/* ------------------------------------------------------------------------------ /*
+/*  TEMPLATES
+/* ------------------------------------------------------------------------------ */
+
+.is-blank-canvas #site-content {
+	min-height: 100vh;
+}
+
+
+/* Block Templates ---------------------------- */
+
+.wp-site-blocks {
+	margin: 0 auto;
+	max-width: var(--ag-inner-width-thin);
+	width: calc(100% - var(--ag-gutter));
+}
+
+.wp-block-post-content > * {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: var(--ag-inner-width-thin);
+}
+
+.wp-block-post-content.alignfull > * {
+	// width: calc(100% - var(--ag-gutter) - var(--ag-aside-width));
+}
+
+.wp-block-post-content > .alignfull { max-width: none; }
+.wp-block-post-content > .alignwide { max-width: var(--ag-inner-width-max); }
+
+.wp-block-post-content .wp-block .wp-block {
+	max-width: 100%;
+}

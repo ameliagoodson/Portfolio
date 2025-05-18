@@ -1,0 +1,41 @@
+/* ------------------------------------------------------------------------------ /*
+/*  ERROR 404
+/* ------------------------------------------------------------------------------ */
+
+.error404 #site-header {
+	margin-bottom: 0;
+}
+
+.error404 #site-content {
+	background: url(./assets/img/404.svg) no-repeat center;
+	background-size: contain;
+	text-align: center;
+}
+
+.error404-inner {
+	margin: 0 auto;
+	max-width: 56rem;
+}
+
+.error404-inner .archive-title {
+	@media (min-width: $tablet) {
+		font-size: 4rem;
+	}
+}
+
+.error404-inner p {
+	margin: 1.8rem auto 0 auto;
+
+	@media (min-width: $tablet) {
+		margin-top: 2.4rem;
+	}
+}
+
+.error404-inner .search-form {
+	justify-content: center;
+	margin: 2.4rem auto 0 auto;
+
+	@media (min-width: $tablet) {
+		margin-top: 3.2rem;
+	}
+}

@@ -1,0 +1,25 @@
+// ------------------------------------------------------------------------------ //
+//  FUNCTIONS
+// ------------------------------------------------------------------------------ //
+
+@use "sass:math";
+
+// REM
+// Convert px units to rem.
+@function rem($size) {
+  @if unitless($size) or unit($size) != 'px' {
+    @return $size;
+  }
+  $rem: 16px !default; // Fallback
+  @return math.div($size, $rem) * 1rem;
+}
+
+// DIVIDE
+@function divide($divisor, $dividend) {
+  @return math.div($divisor, $dividend);
+}
+
+// PERCENT
+@function percent($divisor, $dividend) {
+  @return math.percentage(divide($divisor, $dividend));
+}

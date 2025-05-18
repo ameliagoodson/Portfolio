@@ -1,0 +1,449 @@
+/* ------------------------------------------------------------------------------ /*
+/*  UTILITIES
+/* ------------------------------------------------------------------------------ */
+
+/* Colors ---------------------------------- */
+
+@each $slug, $hex in $colors {
+  :root .has-#{$slug}-color {
+    color: var(--ag-#{$slug}-color);
+  }
+  :root .has-#{$slug}-background-color {
+    background-color: var(--ag-#{$slug}-color);
+  }
+  :root .has-#{$slug}-border-color {
+    border-color: var(--ag-#{$slug}-color);
+  }
+}
+
+:root .has-text-color a:not(.wp-block-button__link) {
+  color: inherit;
+}
+
+/* Hiding and Showing ------------------------ */
+
+.js .show-js {
+  display: block !important;
+}
+.js .hide-js {
+  display: none !important;
+}
+
+.no-js .show-no-js {
+  display: block !important;
+}
+.no-js .hide-no-js {
+  display: none !important;
+}
+
+/* Typography -------------------------------- */
+
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Fonts ------------------------------------ */
+
+:root .ff-body {
+  font-family: var(--ag-body-font) !important;
+}
+:root .ff-heading {
+  font-family: var(--ag-heading-font) !important;
+}
+
+/* Font Sizes -------------------------------- */
+
+:root .has-small-font-size {
+  font-size: 0.882352941em;
+}
+
+:root .has-regular-font-size,
+:root .has-normal-font-size {
+  font-size: 1em;
+}
+
+:root .has-large-font-size {
+  font-size: 1.17647em;
+
+  @media (min-width: $tablet) {
+    font-size: 1.333em;
+  }
+}
+
+:root .has-larger-font-size {
+  font-size: 1.29411em;
+
+  @media (min-width: $tablet) {
+    font-size: 1.777em;
+  }
+}
+
+/* Font Weight ------------------------------------ */
+
+:root .fw-100 {
+  font-weight: 100 !important;
+}
+:root .fw-200 {
+  font-weight: 200 !important;
+}
+:root .fw-300 {
+  font-weight: 300 !important;
+}
+:root .fw-400 {
+  font-weight: 400 !important;
+}
+:root .fw-500 {
+  font-weight: 500 !important;
+}
+:root .fw-600 {
+  font-weight: 600 !important;
+}
+:root .fw-700 {
+  font-weight: 700 !important;
+}
+:root .fw-800 {
+  font-weight: 800 !important;
+}
+:root .fw-900 {
+  font-weight: 900 !important;
+}
+
+/* Text Alignment --------------------------- */
+
+:root .has-text-align-left {
+  text-align: left !important;
+}
+:root .has-text-align-center {
+  text-align: center !important;
+}
+:root .has-text-align-right {
+  text-align: right !important;
+}
+:root .has-text-align-justify {
+  text-align: justify !important;
+}
+
+// ==============================================================================
+//  FLEX utilities
+// ==============================================================================
+.flex {
+  display: flex;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.d-none {
+  display: none;
+}
+.d-block {
+  display: block;
+}
+
+.d-desktop {
+  display: none !important;
+  @media (min-width: $tablet) {
+    display: block !important;
+  }
+}
+.flex-desktop {
+  display: none !important;
+  @media (min-width: $tablet) {
+    display: flex !important;
+  }
+}
+.d-mobile {
+  display: block !important;
+  @media (min-width: $tablet) {
+    display: none !important;
+  }
+}
+.flex-mobile {
+  display: flex !important;
+  @media (min-width: $tablet) {
+    display: none !important;
+  }
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
+
+// Align items utilities
+.items-start {
+  align-items: flex-start;
+}
+
+.items-end {
+  align-items: flex-end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.items-baseline {
+  align-items: baseline;
+}
+
+.items-stretch {
+  align-items: stretch;
+}
+
+// Flex direction utilities
+// Row to Column (default row, becomes column at breakpoints)
+.flex-row-to-col-mobile-up {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $mobile) {
+    flex-direction: column;
+  }
+}
+
+.flex-row-to-col-tablet-up {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $tablet) {
+    flex-direction: column;
+  }
+}
+
+.flex-row-to-col-laptop-up {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $laptop) {
+    flex-direction: column;
+  }
+}
+
+.flex-row-to-col-desktop-up {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $desktop) {
+    flex-direction: column;
+  }
+}
+
+.flex-row-to-col-desktop-xl-up {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $desktop-xl) {
+    flex-direction: column;
+  }
+}
+
+// Column to Row (default column, becomes row at breakpoints)
+.flex-col-to-row-mobile-up {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $mobile) {
+    flex-direction: row;
+  }
+}
+
+.flex-col-to-row-tablet-up {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $tablet) {
+    flex-direction: row;
+  }
+}
+
+.flex-col-to-row-laptop-up {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $laptop) {
+    flex-direction: row;
+  }
+}
+
+.flex-col-to-row-desktop-up {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $desktop) {
+    flex-direction: row;
+  }
+}
+
+.flex-col-to-row-desktop-xl-up {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $desktop-xl) {
+    flex-direction: row;
+  }
+}
+
+// Row to Column (default row, reverts to column below breakpoints)
+.flex-row-to-col-mobile-down {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $mobile) {
+    flex-direction: row;
+  }
+}
+
+.flex-row-to-col-tablet-down {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $tablet) {
+    flex-direction: row;
+  }
+}
+
+.flex-row-to-col-laptop-down {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $laptop) {
+    flex-direction: row;
+  }
+}
+
+.flex-row-to-col-desktop-down {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: $desktop) {
+    flex-direction: row;
+  }
+}
+
+// Column to Row (default column, reverts to row below breakpoints)
+.flex-col-to-row-mobile-down {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $mobile) {
+    flex-direction: column;
+  }
+}
+
+.flex-col-to-row-tablet-down {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $tablet) {
+    flex-direction: column;
+  }
+}
+
+.flex-col-to-row-laptop-down {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $laptop) {
+    flex-direction: column;
+  }
+}
+
+.flex-col-to-row-desktop-down {
+  display: flex;
+  flex-direction: row;
+  @media (min-width: $desktop) {
+    flex-direction: column;
+  }
+}
+
+// ==============================================================================
+//  Text alignment
+// ==============================================================================
+
+.align-center {
+  display: flex;
+  justify-items: center;
+  align-items: center;
+  text-align: center;
+}
+.align-left {
+  display: flex;
+  justify-items: center;
+  align-items: flex-start;
+  text-align: left;
+}
+.align-right {
+  display: flex;
+  justify-items: center;
+  align-items: flex-end;
+  text-align: right;
+}
+
+/* Spacing ------------------------ */
+
+$sizes: ("none", "xxs", "xs", "sm", "md", "lg", "xl", "xxl");
+
+@each $size in $sizes {
+  $var: if($size == "none", 0, var(--ag-spacer-#{$size}));
+
+  // Margin
+  .m-#{$size} {
+    margin: #{$var};
+  }
+  .mt-#{$size},
+  .my-#{$size} {
+    margin-top: #{$var} !important;
+  }
+  .mb-#{$size},
+  .my-#{$size} {
+    margin-bottom: #{$var} !important;
+  }
+  .ml-#{$size},
+  .mx-#{$size} {
+    margin-left: #{$var} !important;
+  }
+  .mr-#{$size},
+  .mx-#{$size} {
+    margin-right: #{$var} !important;
+  }
+
+  // Padding
+  .pa-#{$size} {
+    padding: #{$var};
+  }
+  .pt-#{$size},
+  .py-#{$size} {
+    padding-top: #{$var} !important;
+  }
+  .pb-#{$size},
+  .py-#{$size} {
+    padding-bottom: #{$var} !important;
+  }
+  .pl-#{$size},
+  .px-#{$size} {
+    padding-left: #{$var} !important;
+  }
+  .pr-#{$size},
+  .px-#{$size} {
+    padding-right: #{$var} !important;
+  }
+}

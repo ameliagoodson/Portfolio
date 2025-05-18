@@ -1,0 +1,57 @@
+# ------------------------------------------------------------------------------
+# Ignore WordPress core (keep your theme only)
+wp-admin/
+wp-includes/
+wp-activate.php
+wp-blog-header.php
+wp-comments-post.php
+wp-config-sample.php
+wp-config.php
+wp-cron.php
+wp-links-opml.php
+wp-load.php
+wp-login.php
+wp-mail.php
+wp-settings.php
+wp-signup.php
+wp-trackback.php
+xmlrpc.php
+index.php
+license.txt
+readme.html
+local-xdebuginfo.php
+.htaccess
+
+
+# ------------------------------------------------------------------------------
+# Ignore media and runtime
+wp-content/uploads/
+wp-content/cache/
+wp-content/upgrade/
+
+# ------------------------------------------------------------------------------
+# ✅ Track your theme and everything inside it
+!wp-content/themes/
+!wp-content/themes/ameliagoodson/
+!wp-content/themes/ameliagoodson/**
+
+# ✅ ACF JSON
+!wp-content/themes/ameliagoodson/acf-json/
+!wp-content/themes/ameliagoodson/acf-json/**
+
+# ✅ Optionally include plugins (if custom)
+!wp-content/plugins/
+!wp-content/plugins/**
+
+# ------------------------------------------------------------------------------
+# Dev clutter
+*.log
+.DS_Store
+node_modules/
+vendor/
+.env
+.env.*
+.sass-cache/
+.vscode/
+*.zip
+*.map

@@ -1,0 +1,235 @@
+/* -------------------------------------------------------------------------------- */
+/*	NAVIGATION
+/* -------------------------------------------------------------------------------- */
+/* Main Menu --------------------------------- */
+
+.menu {
+  margin: 0;
+
+  a {
+    text-decoration: none;
+  }
+}
+.main-menu {
+  font-size: 1.8rem;
+  display: flex;
+
+  @media (min-width: $tablet) {
+    font-size: 2rem;
+  }
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 1;
+    justify-content: flex-start;
+  }
+}
+.main-menu li:not(:first-child) {
+  margin-left: 2rem;
+}
+
+.main-menu .ancestor-wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.main-menu a {
+  display: block;
+  outline: none;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.main-menu a:hover,
+.main-menu a:focus,
+.main-menu li.current-menu-item > .ancestor-wrapper > a {
+  text-decoration: underline;
+}
+
+.main-menu a:focus {
+  text-decoration-style: dashed;
+}
+
+.main-menu li.current-menu-item > .ancestor-wrapper > a:hover {
+  text-decoration: none;
+}
+
+.sub-menu-toggle-wrapper {
+  display: flex;
+  flex-shrink: 0;
+}
+
+a.sub-menu-toggle {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  padding: 0 1.6rem;
+  position: relative;
+}
+
+a.sub-menu-toggle:before {
+  background: var(--ag-menu-modal-text-color);
+  border-radius: 50%;
+  content: "";
+  display: block;
+  height: 4rem;
+  opacity: 0;
+  position: absolute;
+  left: calc(50% - 2rem);
+  top: calc(50% - 2rem);
+  transition: opacity 0.15s linear;
+  width: 4rem;
+}
+
+a.sub-menu-toggle:focus:before,
+a.sub-menu-toggle:hover:before {
+  opacity: 0.11;
+}
+
+a.sub-menu-toggle svg {
+  transition: transform 0.15s linear;
+  transform: translateY(0.1rem);
+}
+
+a.sub-menu-toggle.active svg {
+  transform: rotate(180deg) translateY(0.2rem);
+}
+
+.main-menu .sub-menu {
+  display: none;
+  font-size: 1.8rem;
+  padding-left: 3.2rem;
+}
+
+// Logo
+.site-title,
+.site-logo {
+  margin: 0 0 0 1rem;
+
+  @media (min-width: $tablet) {
+    margin: 1.2rem 0 0 2.4rem;
+  }
+}
+.site-logo {
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.site-title {
+  font-size: 2.4rem;
+  font-weight: var(--ag-heading-font-weight);
+  line-height: 1;
+}
+
+.site-title a {
+  color: inherit;
+  display: block;
+  outline: none;
+  text-decoration: none;
+}
+
+.site-title a:hover,
+.site-title a:focus {
+  text-decoration: underline;
+}
+
+.site-logo a,
+.site-logo img {
+  display: block;
+}
+
+.site-logo img {
+  height: 100%;
+  max-height: 4rem;
+  width: auto;
+
+  @media (min-width: $tablet) {
+    max-height: 6rem;
+  }
+}
+
+.site-logo img.logo-dark-mode {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .has-dark-mode-palette .site-logo img.logo-regular:not(:only-child) {
+    display: none;
+  }
+  .has-dark-mode-palette .site-logo img.logo-dark-mode {
+    display: block;
+  }
+}
+
+// MOBILE NAVIGATION
+body.menu-open {
+  overflow: hidden;
+}
+.mobile-header {
+  padding: 1rem;
+  width: 100%;
+  align-items: flex-end;
+  flex-direction: column;
+
+  @media (min-width: $tablet) {
+    display: none;
+  }
+
+  .mobile-header-inner {
+    justify-content: space-between;
+  }
+
+  .mobile-menu-container {
+    position: fixed;
+    transform: translateX(100%);
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    background-color: var(--ag-background-color);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 1rem;
+    width: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    z-index: 1;
+
+    /* Initial state: hidden off-screen */
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+
+    &.active {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .mobile-menu {
+      list-style-type: none;
+      margin: 0;
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-transform: uppercase;
+      font-weight: 700;
+      text-align: center;
+      width: 100%;
+
+      li:last-child a {
+        border-bottom: none;
+      }
+
+      a {
+        padding: var(--ag-spacer-xs);
+        width: 80%;
+        display: block;
+        border-bottom: 1px solid grey;
+        margin: 0 auto;
+      }
+    }
+  }
+}

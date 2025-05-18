@@ -1,0 +1,391 @@
+/* ------------------------------------------------------------------------------ /*
+/*  ANIMATIONS
+/* ------------------------------------------------------------------------------ */
+
+@keyframes fade-in-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(5rem);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* NAVIGATION TOGGLE ANIMATIONS */
+
+@keyframes bars-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* State: Initial */
+
+@keyframes bar-one {
+  0% {
+    transform: translateY(0) rotate(45deg);
+  }
+  0%,
+  50% {
+    width: 50%;
+    transform-origin: center right;
+  }
+  50%,
+  50.1% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50.1%,
+  100% {
+    width: 100%;
+    transform-origin: center;
+  }
+  100% {
+    transform: translateY(-0.6rem) rotate(0deg);
+  }
+}
+
+@keyframes bar-three {
+  0% {
+    transform: translateY(0) rotate(-45deg);
+  }
+  0%,
+  50% {
+    width: 50%;
+    transform-origin: center right;
+  }
+  50%,
+  50.1% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50.1%,
+  100% {
+    width: 100%;
+    transform-origin: center;
+  }
+  100% {
+    transform: translateY(0.6rem) rotate(0deg);
+  }
+}
+
+/* State: Hover */
+
+@keyframes bar-one-hover {
+  0% {
+    transform: translateY(-0.6rem) rotate(0deg);
+  }
+  0%,
+  50% {
+    width: 100%;
+    transform-origin: center;
+  }
+  50%,
+  50.1% {
+    transform: translateY(0.05rem) rotate(0deg);
+  }
+  50.1%,
+  100% {
+    width: 50%;
+    transform-origin: center right;
+  }
+  100% {
+    transform: translateY(0.05rem) rotate(45deg);
+  }
+}
+
+@keyframes bar-three-hover {
+  0% {
+    transform: translateY(0.6rem) rotate(0deg);
+  }
+  0%,
+  50% {
+    width: 100%;
+    transform-origin: center;
+  }
+  50%,
+  50.1% {
+    transform: translateY(-0.05rem) rotate(0deg);
+  }
+  50.1%,
+  100% {
+    width: 50%;
+    transform-origin: center right;
+  }
+  100% {
+    transform: translateY(-0.05rem) rotate(-45deg);
+  }
+}
+
+/* State: Active */
+
+@keyframes bar-one-active {
+  0% {
+    transform: translateY(0.05rem) rotate(45deg);
+  }
+  0%,
+  50% {
+    width: 50%;
+    transform-origin: center right;
+  }
+  50%,
+  50.1% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50.1%,
+  100% {
+    width: 100%;
+    transform-origin: center;
+  }
+  100% {
+    transform: translateY(0) rotate(45deg);
+  }
+}
+
+@keyframes bar-two-active {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.1%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes bar-three-active {
+  0% {
+    transform: translateY(0.05rem) rotate(-45deg);
+  }
+  0%,
+  50% {
+    width: 50%;
+    transform-origin: center right;
+  }
+  50%,
+  50.1% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50.1%,
+  100% {
+    width: 100%;
+    transform-origin: center;
+  }
+  100% {
+    transform: translateY(0) rotate(-45deg);
+  }
+}
+
+/* DOT PULSE */
+
+@keyframes dotPulseBefore {
+  0%,
+  60%,
+  100% {
+    box-shadow: 997.5rem 0 0 -0.5rem currentColor;
+  }
+  30% {
+    box-shadow: 997.5rem 0 0 0.2rem currentColor;
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  60%,
+  100% {
+    box-shadow: 999.9rem 0 0 -0.5rem currentColor;
+  }
+  30% {
+    box-shadow: 999.9rem 0 0 0.2rem currentColor;
+  }
+}
+
+@keyframes dotPulseAfter {
+  0%,
+  60%,
+  100% {
+    box-shadow: 1002.3rem 0 0 -0.5rem currentColor;
+  }
+  30% {
+    box-shadow: 1002.3rem 0 0 0.2rem currentColor;
+  }
+}
+
+/* Accessibility Settings -------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *:before,
+  *:after {
+    animation-delay: 0s !important;
+    animation-duration: 0s !important;
+    transition-delay: 0s !important;
+    transition-duration: 0s !important;
+  }
+}
+
+body.no-anim *,
+body.no-anim *:before,
+body.no-anim *:after {
+  animation-delay: 0s !important;
+  animation-duration: 0s !important;
+  transition-delay: 0s !important;
+  transition-duration: 0s !important;
+}
+
+/* Loading Icon ------------------------------ */
+
+/* 
+	Based on dot Pulse loading animation by nzbin
+	Released under the MIT license
+	https://nzbin.github.io/three-dots/
+*/
+
+.dot-pulse,
+.dot-pulse:before,
+.dot-pulse:after {
+  animation: 1.2s infinite ease-in-out;
+  background-color: currentColor;
+  border-radius: 50%;
+  color: currentColor;
+  height: 1rem;
+  width: 1rem;
+}
+
+.dot-pulse {
+  animation-name: dotPulse;
+  animation-delay: 0.2s;
+  box-shadow: 999rem 0 0 -0.5rem currentColor;
+  display: block;
+  position: relative;
+  left: -999rem;
+}
+
+.dot-pulse:before,
+.dot-pulse:after {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+}
+
+.dot-pulse:before {
+  animation-name: dotPulseBefore;
+  box-shadow: 997.5rem 0 0 -0.5rem currentColor;
+}
+
+.dot-pulse:after {
+  animation-name: dotPulseAfter;
+  animation-delay: 0.4s;
+  box-shadow: 1002.3rem 0 0 -0.5rem currentColor;
+}
+
+/* CSS Animations ---------------------------- */
+
+.has-anim .i-a,
+.has-anim .will-be-spotted {
+  animation: var(--ag-anim-speed) forwards;
+}
+
+/* STATE: INITIAL */
+
+.has-anim .a-fade-in-scale,
+.has-anim .spot-fade-in-scale {
+  opacity: 0;
+  transform: scale(0.8);
+}
+.has-anim .a-fade-in,
+.has-anim .spot-fade-in {
+  opacity: 0;
+}
+.has-anim .a-fade-up,
+.has-anim .spot-fade-up {
+  opacity: 0;
+  transform: translateY(5rem);
+}
+
+/* STATE: ANIMATION */
+
+.has-anim .a-fade-in-scale,
+.has-anim .spot-fade-in-scale.spotted {
+  animation-name: fade-in-scale;
+}
+.has-anim .a-fade-in,
+.has-anim .spot-fade-in.spotted {
+  animation-name: fade-in;
+}
+.has-anim .a-fade-up,
+.has-anim .spot-fade-up.spotted {
+  animation-name: fade-up;
+}
+
+/* HELPER CLASSES */
+
+:root .a-del-100 {
+  animation-delay: 0.1s;
+}
+:root .a-del-200 {
+  animation-delay: 0.2s;
+}
+:root .a-del-300 {
+  animation-delay: 0.3s;
+}
+:root .a-del-400 {
+  animation-delay: 0.4s;
+}
+:root .a-del-500 {
+  animation-delay: 0.5s;
+}
+:root .a-del-600 {
+  animation-delay: 0.6s;
+}
+:root .a-del-700 {
+  animation-delay: 0.7s;
+}
+:root .a-del-800 {
+  animation-delay: 0.8s;
+}
+:root .a-del-900 {
+  animation-delay: 0.9s;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.path {
+  stroke: var(--ag-primary-color); /* Ensure stroke color is black */
+  stroke-width: 3; /* Set stroke width */
+  fill: none; /* Ensure no fill */
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+
+.draw-animation {
+  animation: draw 5s forwards;
+}

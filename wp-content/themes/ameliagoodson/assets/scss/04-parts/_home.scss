@@ -1,0 +1,191 @@
+/* Hero ------------------------------ */
+body .background-image {
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.hero {
+  height: calc(80vh - var(--ag-site-header-height));
+  padding-top: 2rem;
+  padding-bottom: 5rem;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (min-width: $tablet) {
+    padding-top: 4rem;
+    padding-bottom: 10rem;
+  }
+
+  .hero-content {
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      row-gap: 2em;
+
+      .hero-title {
+        font-size: clamp(4.4rem, 5vw, 11.2rem);
+        line-height: 1;
+        letter-spacing: 2px;
+        margin: 0;
+        text-wrap: balance;
+      }
+      .hero-subtitle {
+        font-size: clamp(2.4rem, 2vw, 6rem);
+        p {
+          line-height: normal;
+        }
+      }
+    }
+  }
+}
+
+/* Bento grid ------------------------------ */
+.bento-grid {
+  display: grid;
+  gap: var(--ag-spacer-md);
+
+  // Mobile first - single column
+  grid-template-columns: 1fr;
+
+  // Define explicit breakpoints
+  @media (min-width: $laptop) {
+    grid-template-columns: repeat(2, 1fr); // 2 columns at tablet
+  }
+
+  @media (min-width: $desktop) {
+    grid-template-columns: repeat(3, 1fr); // 3 columns at desktop
+  }
+
+  .bento-card {
+    min-height: 20rem;
+    border-radius: var(--ag-border-radius);
+    padding: 3rem;
+    position: relative;
+    aspect-ratio: auto;
+    background: linear-gradient(0deg, rgba(111, 48, 65, 1) 7%, rgba(24, 0, 45, 1) 100%);
+    gap: var(--ag-spacer-sm);
+
+    &.col-span-2,
+    &.col-span-3,
+    &.row-span-2,
+    &.row-span-3 {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+
+    @media (min-width: $desktop) {
+      &.col-span-2 {
+        grid-column: span 2;
+      }
+      &.col-span-3 {
+        grid-column: span 3;
+      }
+      &.row-span-2 {
+        grid-row: span 2;
+      }
+      &.row-span-3 {
+        grid-row: span 3;
+      }
+    }
+
+    .bento-details {
+      .bento-title {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        color: var(--ag-white-color);
+        text-transform: uppercase;
+      }
+      .bento-subtitle {
+        color: var(--ag-white-color);
+        font-size: var(--ag-h5-font-size);
+        border-bottom: 1px solid #a76a6a;
+        padding-bottom: 2.6rem;
+      }
+      .bento-link {
+        text-decoration: none;
+      }
+      .btn-container {
+        text-align: center;
+
+        @media (min-width: $laptop) {
+          text-align: left;
+        }
+      }
+    }
+    .bento-image {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      overflow: visible;
+      color: var(--ag-white-color);
+      flex: 1;
+
+      a {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      img {
+        border-radius: 1rem;
+        max-height: 40rem; /* Mobile default */
+        max-width: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        flex-shrink: 1;
+        flex-grow: 1;
+        object-position: top;
+        animation: fade-in-scale 1s linear 0.5s;
+        transition: transform 0.3s ease-in-out;
+        overflow: visible;
+
+        &:hover {
+          transform: scale(1.1);
+        }
+
+        @media (min-width: $desktop) {
+          max-height: 100%;
+          transform: scale(1.2);
+          transform-origin: top;
+
+          &:hover {
+            transform: scale(1.25);
+          }
+        }
+      }
+    }
+    &.flex-col-to-row-desktop-up {
+      .bento-details {
+        flex: 1;
+      }
+      .bento-image {
+        flex: 1;
+      }
+    }
+  }
+}
+
+// About ----------------------------------------- //
+#about {
+  background: var(--ag-dark-purple-xtra-dark);
+
+  img {
+    border-radius: var(--ag-border-radius);
+    border: 1px solid var(--ag-background-color);
+  }
+}
+
+// Contact ----------------------------------------- //
+#contact {
+  background: var(--ag-dark-purple-xtra-dark);
+
+  form {
+    margin-top: 0;
+  }
+}

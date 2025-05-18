@@ -1,0 +1,37 @@
+// —————————————————————————————————————————————————————————————————— //
+//  MIXINS
+// —————————————————————————————————————————————————————————————————— //
+
+@use "sass:math";
+
+// FLUID
+// Generate linear interpolated size values through multiple break points.
+// Based on poly-fluid-sizing by Jake Wilson https://github.com/Jakobud
+@mixin fluid($prop, $min, $max, $min-vw: $fluid-min, $max-vw: $fluid-max, $suffix: "") {
+  // Convert all values to `rem`.
+  $min-rem: rem($min);
+  $max-rem: rem($max);
+  $min-vw-rem: rem($min-vw);
+  $max-vw-rem: rem($max-vw);
+
+  // slope
+  $m: math.div(($max-rem - $min-rem), ($max-vw-rem - $min-vw-rem));
+
+  // y-intercept
+  $b: $min-rem - $m * $min-vw-rem;
+
+  // determine if the sign should be positive or negative
+  $sign: "+";
+  @if ($b < 0) {
+    $sign: "-";
+    $b: abs($b);
+  }
+
+  // round off the values.
+  $m: math.div(round($m * 1000), 1000);
+  $b: math.div(round($b * 1000), 1000);
+
+  $clamp: calc(#{$m * 100}vw #{$sign} #{$b});
+
+  #{$prop}: clamp(#{$min-rem}, #{$clamp}, #{$max-rem}) #{$suffix};
+}

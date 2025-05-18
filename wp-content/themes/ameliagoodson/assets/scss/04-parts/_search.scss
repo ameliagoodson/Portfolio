@@ -1,0 +1,148 @@
+/* ------------------------------------------------------------------------------ /*
+/*  SEARCH
+/* ------------------------------------------------------------------------------ */
+
+.search-modal {
+	display: none;
+	opacity: 0;
+	padding-left: 0;
+	position: fixed;
+	bottom: 0;
+	left: -9999rem;
+	right: 0;
+	top: 0;
+	transition: opacity .2s linear, left 0s .2s linear;
+	z-index: 999;
+}
+
+.search-modal:before {
+	background: var(--ag-primary-color);
+	content: "";
+	opacity: .2;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	top: 0;
+}
+
+.search-modal-inner {
+	transform: translateY(-100%);
+	transition: transform .15s linear, box-shadow .15s linear;
+	margin-top: var(--ag-admin-bar-height);
+}
+
+.search-modal-inner .section-inner {
+	display: flex;
+	justify-content: space-between;
+}
+
+.search-modal.active {
+	left: 0;
+	opacity: 1;
+	transition: opacity .2s linear;
+}
+
+.search-modal.active .search-modal-inner {
+	box-shadow: 0 0 2rem 0 rgba(0, 0, 0, .08);
+	transform: translateY(0);
+	transition: transform .25s ease-in-out, box-shadow .1s .25s linear;
+}
+
+.search-untoggle,
+.search-untoggle-inner {
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+
+.search-untoggle {
+	flex-shrink: 0;
+	margin-right: -2.5rem;
+	outline: none;
+	padding: 0 1.2rem;
+}
+
+.search-modal.active .search-untoggle {
+	animation: popIn both .3s .2s;
+}
+
+.search-untoggle-inner {
+	border-radius: 50%;
+	height: 4.4rem;
+	transition: color .1s linear, background-color .1s linear;
+	width: 4.4rem;
+}
+
+.search-untoggle svg {
+	transition: transform .15s ease-in-out;
+}
+
+.search-untoggle:hover svg {
+	transform: scale(1.15);
+}
+
+.search-untoggle:focus .search-untoggle-inner {
+	background-color: var(--ag-primary-color);
+	color: var(--ag-background-color);
+}
+
+/* Modal Search Form ------------------------- */
+
+.modal-search-form {
+	margin: 0;
+	position: relative;
+	width: 100%;
+}
+
+.modal-search-form .search-label {
+	align-items: center;
+	display: flex;
+	margin: 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	top: 0;
+	transition: color .15s linear;
+}
+
+.modal-search-form .search-label svg {
+	transition: transform .15s linear;
+}
+
+.modal-search-form .search-field:focus + label {
+	color: var(--ag-accent-color);
+}
+
+.modal-search-form .search-field:focus + label svg {
+	transform: scale(1.1);
+}
+
+.modal-search-form .search-field {
+	background: none;
+	border: none;
+	border-radius: .8rem;
+	color: inherit;
+	font-size: 2.4rem;
+	height: 12rem;
+	outline: none;
+	padding: 0 2.4rem 0 4.8rem;
+	width: calc(100% - 9rem);
+}
+
+.modal-search-form .search-field::-webkit-input-placeholder { color: inherit; }
+.modal-search-form .search-field:-ms-input-placeholder { color: inherit; }
+.modal-search-form .search-field::-moz-placeholder { color: inherit; line-height: 12rem; }
+.modal-search-form .search-field::placeholder { color: inherit; }
+
+.modal-search-form .search-submit {
+	position: absolute;
+	right: -9999rem;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.modal-search-form .search-submit:focus {
+	outline: none;
+	right: 0;
+}
