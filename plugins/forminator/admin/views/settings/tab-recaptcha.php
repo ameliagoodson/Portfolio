@@ -383,8 +383,8 @@ $new = true;
 										<?php
 										printf(
 											/* Translators: 1. Opening <a> tag, 2. closing <a> tag. */
-											esc_html__( 'Enter your Turnstile API keys below to enable Cloudflare Turnstile option in your form’s CAPTCHA field. See %1$sinstructions%2$s on how to get your API Keys', 'forminator' ),
-											'<a href="https://developers.cloudflare.com/turnstile/get-started/#get-a-sitekey-and-secret-key" target="_blank">',
+											esc_html__( 'Enter your Turnstile API keys below to enable Cloudflare Turnstile option in your form’s CAPTCHA field. See %1$sinstructions%2$s on how to get your API Keys.', 'forminator' ),
+											'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#cloudflare-turnstile-settings" target="_blank" rel="noreferrer">',
 											'</a>'
 										);
 										?>

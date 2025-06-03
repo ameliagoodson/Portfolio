@@ -98,7 +98,6 @@ class Forminator_Phone extends Forminator_Field {
 				'limit_type'  => 'characters',
 				'validation'  => 'none',
 				'field_label' => esc_html__( 'Phone', 'forminator' ),
-				'placeholder' => esc_html__( 'E.g. +1 300 400 5000', 'forminator' ),
 			)
 		);
 	}

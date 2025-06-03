@@ -77,14 +77,10 @@ class Forminator_Name extends Forminator_Field {
 	public function defaults() {
 		return array(
 			'field_label'             => esc_html__( 'Name', 'forminator' ),
-			'placeholder'             => esc_html__( 'E.g. John Doe', 'forminator' ),
 			'prefix_label'            => esc_html__( 'Prefix', 'forminator' ),
 			'fname_label'             => esc_html__( 'First Name', 'forminator' ),
-			'fname_placeholder'       => esc_html__( 'E.g. John', 'forminator' ),
 			'mname_label'             => esc_html__( 'Middle Name', 'forminator' ),
-			'mname_placeholder'       => esc_html__( 'E.g. Smith', 'forminator' ),
 			'lname_label'             => esc_html__( 'Last Name', 'forminator' ),
-			'lname_placeholder'       => esc_html__( 'E.g. Doe', 'forminator' ),
 			'prefix'                  => 'true',
 			'fname'                   => 'true',
 			'mname'                   => 'true',

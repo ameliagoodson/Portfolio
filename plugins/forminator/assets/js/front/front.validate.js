@@ -71,8 +71,10 @@
 			$form.data('validator', null).unbind('validate').validate({
 
 				ignore( index, element ) {
+					const validationDisabled = $( '#forminator-field-disable_validations' ).is(':checked');
 					// Add support for hidden required fields (uploads, wp_editor) and for skipping pagination when required.
 					return (
+						validationDisabled ||
 						( $( element ).is( ':hidden:not(.do-validate)' ) &&
 								! $( element ).closest(
 									'.forminator-pagination'
@@ -396,6 +398,20 @@
 			// Trigger change for the required checkbox field.
 			$( '.forminator-field.required input[type="checkbox"]' ).on( 'input', function () {
 				$( this ).not( ':checked' ).trigger( 'focusout' );
+			});
+
+			// Remove error messages after disabling validation.
+			$(document).on('change', '#forminator-field-disable_validations', function () {
+				const validationDisabled = $(this).is(':checked');
+				const validator = $form.data('validator');
+
+				if (validationDisabled && validator) {
+					validator.resetForm();
+					// Manually call unhighlight to remove error messages.
+					$form.find(':input').each(function () {
+						validator.settings.unhighlight(this);
+					});
+				}
 			});
 		}
 	});

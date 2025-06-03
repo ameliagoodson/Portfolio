@@ -124,7 +124,6 @@ class Forminator_Core {
 		if ( is_admin() ) {
 			$this->admin->add_templates_page();
 			$this->admin->add_entries_page();
-			$this->admin->add_addons_page();
 			if ( Forminator::is_addons_feature_enabled() ) {
 				$this->admin->add_integrations_page();
 			}
@@ -132,6 +131,7 @@ class Forminator_Core {
 				$this->admin->add_reports_page();
 			}
 			$this->admin->add_settings_page();
+			$this->admin->add_addons_page();
 
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();

@@ -42,7 +42,15 @@ $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 
 	<div class="sui-box-body">
 
-		<p><?php echo esc_html( $description ); ?></p>
+		<p>
+		<?php
+		if ( count( $modules ) > 0 ) {
+			echo esc_html( $recent_description );
+		} else {
+			echo esc_html( $description );
+		}
+		?>
+		</p>
 
 		<?php // Strict comparison is removed for a reason! ?>
 		<?php if ( 0 === $total ) { ?>

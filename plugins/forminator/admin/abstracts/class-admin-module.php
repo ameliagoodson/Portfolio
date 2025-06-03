@@ -107,7 +107,7 @@ abstract class Forminator_Admin_Module {
 		remove_submenu_page( 'forminator', $this->page_edit );
 		remove_submenu_page( 'forminator', $this->page_entries );
 		echo '<style>
-			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-addons"] { color: #fecf2f !important; }
+			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-addons"] { color: #1ABC9C !important; }
 			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-templates"] { display: flex; justify-content: space-between; align-items: center; }
 			#toplevel_page_forminator ul.wp-submenu li a[href="admin.php?page=forminator-templates"] .menu-new-tag { font-size: 8px; line-height: 8px; padding: 2px 6px; background: #1ABC9C; border-radius: 9px; text-transform: uppercase; color: #fff; font-weight: 900; height: 100%; letter-spacing: -0.25px; }
 		</style>';

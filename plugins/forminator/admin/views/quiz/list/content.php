@@ -33,7 +33,7 @@ if ( $most_entry ) {
 }
 $empty_title   = esc_html__( 'Create fun or challenging quizzes for your visitors to take and share on social media.', 'forminator' );
 $create_dialog = 'quizzes';
-$preview_title = esc_html__( 'Preview Quiz', 'forminator' );
+$preview_title = esc_html__( 'Preview', 'forminator' );
 
 require_once forminator_plugin_dir() . 'admin/views/common/list/summary.php';
 

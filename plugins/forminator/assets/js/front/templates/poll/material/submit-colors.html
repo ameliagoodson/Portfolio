@@ -1,26 +1,26 @@
 <?php if ( forminator_array_value_exists( $properties, 'poll-colors' ) ) { ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit {
-		<?php if ( forminator_array_value_exists( $properties, 'button-submit-background-static' ) && !empty( $properties['button-submit-background-static'] ) ) { ?>
-			background-color: <?php echo $properties['button-submit-background-static'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'buttonbg' ) && !empty( $properties['buttonbg'] ) ) { ?>
+			background-color: <?php echo $properties['buttonbg'] ?>;
 		<?php } else { ?>
 			background-color: #17A8E3;
 		<?php } ?>
-		<?php if ( forminator_array_value_exists( $properties, 'button-submit-color-static' ) && !empty( $properties['button-submit-color-static'] ) ) { ?>
-			color: <?php echo $properties['button-submit-color-static'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'buttontxt' ) && !empty( $properties['buttontxt'] ) ) { ?>
+			color: <?php echo $properties['buttontxt'] ?>;
 		<?php } else { ?>
 			color: #FFFFFF;
 		<?php } ?>
 	}
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:hover {
-		<?php if ( forminator_array_value_exists( $properties, 'button-submit-background-hover' ) && !empty( $properties['button-submit-background-hover'] ) ) { ?>
-			background-color: <?php echo $properties['button-submit-background-hover'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'buttonbg_hover' ) && !empty( $properties['buttonbg_hover'] ) ) { ?>
+			background-color: <?php echo $properties['buttonbg_hover'] ?>;
 		<?php } else { ?>
 			background-color: #008FCA;
 		<?php } ?>
-		<?php if ( forminator_array_value_exists( $properties, 'button-submit-color-hover' ) && !empty( $properties['button-submit-color-hover'] ) ) { ?>
-			color: <?php echo $properties['button-submit-color-hover'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'buttontxt_hover' ) && !empty( $properties['buttontxt_hover'] ) ) { ?>
+			color: <?php echo $properties['buttontxt_hover'] ?>;
 		<?php } else { ?>
 			color: #FFFFFF;
 		<?php } ?>
@@ -28,13 +28,13 @@
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:active {
-		<?php if ( forminator_array_value_exists( $properties, 'button-submit-background-active' ) && !empty( $properties['button-submit-background-active'] ) ) { ?>
-			background-color: <?php echo $properties['button-submit-background-active'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'buttonbg_active' ) && !empty( $properties['buttonbg_active'] ) ) { ?>
+			background-color: <?php echo $properties['buttonbg_active'] ?>;
 		<?php } else { ?>
 			background-color: #008FCA;
 		<?php } ?>
-		<?php if ( forminator_array_value_exists( $properties, 'button-submit-color-active' ) && !empty( $properties['button-submit-color-active'] ) ) { ?>
-			color: <?php echo $properties['button-submit-color-active'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'buttontxt_active' ) && !empty( $properties['buttontxt_active'] ) ) { ?>
+			color: <?php echo $properties['buttontxt_active'] ?>;
 		<?php } else { ?>
 			color: #FFFFFF;
 		<?php } ?>

@@ -27,7 +27,7 @@ $sql_month_start_date = gmdate( 'Y-m-d H:i:s', strtotime( '-30 days midnight' ) 
 $entry_type    = 'poll';
 $wizard_page   = 'forminator-poll-wizard';
 $create_dialog = 'polls';
-$preview_title = esc_html__( 'Preview Poll', 'forminator' );
+$preview_title = esc_html__( 'Preview', 'forminator' );
 $empty_title   = esc_html__( 'Create interactive polls to collect users opinions, with lots of dynamic options and settings.', 'forminator' );
 
 require_once forminator_plugin_dir() . 'admin/views/common/list/summary.php';

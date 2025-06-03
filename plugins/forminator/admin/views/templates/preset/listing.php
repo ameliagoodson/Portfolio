@@ -7,7 +7,14 @@
 
 ?>
 <li>
-	<div class="sui-box-selector forminator-card">
+	<?php
+	if ( 'blank' === $id ) {
+		?>
+		<div class="sui-box-selector forminator-card forminator-blank-card create-blank-form">
+	<?php } else { ?>
+		<div class="sui-box-selector forminator-card">
+	<?php } ?>
+
 		<div class="forminator-card-image">
 		<?php if ( ! empty( $thumbnail ) ) { ?>
 			<img src="<?php echo esc_url( $thumbnail ); ?>"

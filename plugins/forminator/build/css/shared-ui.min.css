@@ -19767,8 +19767,7 @@ html.sui-has-overlay {
   text-overflow: ellipsis;
 }
 
-.sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--info .fui-field--name .fui-field--label,
-.sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--info .fui-field--name .fui-field--id {
+.sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--info .fui-field--name .fui-field--label {
   display: block;
   white-space: nowrap;
   overflow: hidden;
@@ -19782,11 +19781,6 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--info .fui-field--name .fui-field--label span {
   margin-left: 5px;
-}
-
-.sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--info .fui-field--name .fui-field--id {
-  color: #888;
-  font-size: 12px;
 }
 
 .sui-2-12-23 .sui-wrap .fui-builder-field-block .fui-field--info .fui-field--name:not(:first-child) {
@@ -19900,6 +19894,29 @@ html.sui-has-overlay {
   color: #888;
 }
 
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block:hover>.fui-field--actions .forminator-field-delete {
+  display: inline-block;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block:hover>.fui-field--actions .forminator-field-action-divider {
+  opacity: 1;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block .forminator-field-delete {
+  display: none;
+  color: #ff6d6d;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-field-block .forminator-field-action-divider {
+  opacity: 0;
+  border-right: 1px solid #e6e6e6;
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed {
+  color: #666;
+  border-color: #888;
+}
+
 @media (max-width: 782px) {
   .sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed:not(:last-child) {
     margin-bottom: 20px;
@@ -19910,6 +19927,17 @@ html.sui-has-overlay {
   .sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed:not(:last-child) {
     margin-bottom: 30px;
   }
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed:hover,
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed:focus {
+  border-color: #666;
+  background-color: rgba(0,0,0,.05);
+}
+
+.sui-2-12-23 .sui-wrap .fui-builder-fields .fui-builder-fields--footer .sui-button-dashed:active {
+  border-color: #666;
+  background-color: rgba(0,0,0,.1);
 }
 
 @media (max-width: 782px) {
@@ -20243,14 +20271,14 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-visibility .fui-visibility-empty-message p {
   margin: 0;
-  color: #888;
-  font-size: 13px;
-  line-height: 22px;
+  color: #666;
+  font-size: 15px;
+  line-height: 33px;
 }
 
 @media (min-width: 783px) {
   .sui-2-12-23 .sui-wrap .fui-visibility .fui-visibility-empty-message p {
-    max-width: 400px;
+    max-width: 540px;
     margin: 0 auto;
   }
 }
@@ -20263,7 +20291,7 @@ html.sui-has-overlay {
   border: 1px dashed #aaa;
   border-radius: 4px;
   background-color: rgba(0,0,0,0);
-  color: #888;
+  color: #666;
   font: 500 12px/16px "Roboto",Arial,sans-serif;
   letter-spacing: -0.25px;
   text-transform: uppercase;
@@ -20276,6 +20304,7 @@ html.sui-has-overlay {
 
 .sui-2-12-23 .sui-wrap .fui-visibility .fui-visibility-empty-message button [class*=sui-icon-]:before {
   display: block;
+  color: inherit;
 }
 
 .sui-2-12-23 .sui-wrap .fui-visibility .fui-visibility-empty-message button,
@@ -20313,6 +20342,10 @@ html.sui-has-overlay {
   }
 }
 
+.sui-2-12-23 .sui-wrap .fui-visibility .forminator-visibility-field-empty-message button {
+  margin: 30px 0 8px 0;
+}
+
 .sui-2-12-23 .sui-wrap .fui-visibility .sui-builder-fields:empty+.sui-button {
   margin-top: 0;
 }
@@ -20339,6 +20372,21 @@ html.sui-has-overlay {
     margin: -30px;
     padding: 30px;
   }
+}
+
+.sui-2-12-23 .sui-wrap .fui-visibility-header-message {
+  border-bottom: 1px solid #e6e6e6;
+  margin: 0 -30px 30px -30px;
+  padding: 0 30px 30px 30px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-visibility-header-message.has-conditions p {
+  font-size: 13px;
+  line-height: 22px;
+}
+
+.sui-2-12-23 .sui-wrap .fui-visibility-header-message a {
+  text-decoration: underline;
 }
 
 @media (max-width: 782px) {
@@ -22611,8 +22659,25 @@ html.sui-has-overlay {
   margin-left: auto;
 }
 
+.sui-2-12-23 .sui-wrap #modal-insert-fields input+span {
+  color: #333;
+  font-size: 13px;
+}
+
+.sui-2-12-23 .sui-wrap #modal-insert-fields i:before {
+  color: #888;
+}
+
+.sui-2-12-23 .sui-wrap #modal-insert-fields p {
+  color: #333;
+}
+
 .sui-2-12-23 .sui-wrap .sui-modal {
   overflow-wrap: break-word;
+}
+
+.sui-2-12-23 .sui-wrap .sui-modal.sui-modal-xxl .sui-modal-content {
+  max-width: 1260px;
 }
 
 .sui-2-12-23 .sui-wrap .sui-modal .fui-loading-modal {
@@ -22814,6 +22879,24 @@ html.sui-has-overlay {
   .sui-2-12-23 .sui-wrap #forminator-stripe-sca .sui-box .sui-box-body {
     padding-bottom: 60px;
   }
+}
+
+.sui-2-12-23 .sui-wrap #forminator-modal .sui-box-header .fui-field--icon i:before {
+  font-size: 16px;
+  color: #666;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-modal .sui-box-header .sui-box-title {
+  overflow: unset;
+}
+
+.sui-2-12-23 .sui-wrap #forminator-modal .fp-role-img {
+  display: inline-block;
+  margin-right: 10px;
+  overflow: hidden;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
 }
 
 .sui-2-12-23 .sui-wrap #forminator-new-feature .sui-dialog-content .sui-box-header .sui-dialog-close {
@@ -23622,6 +23705,11 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   font-size: 8px;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.sui-2-12-23 .sui-wrap .sui-dropdown ul li a.forminator-field-remove.sui-option-red:focus,
+.sui-2-12-23 .sui-wrap .sui-dropdown ul li button.forminator-field-remove.sui-option-red:focus {
+  background-color: #ffe5e9;
 }
 
 .sui-2-12-23 .sui-wrap #forminator-modal-body--group .sui-side-tabs.forminator-float>.sui-tabs-menu {
@@ -24537,6 +24625,10 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   right: 12px;
 }
 
+.sui-2-12-23 .forminator-card.forminator-blank-card {
+  cursor: pointer;
+}
+
 .sui-2-12-23 .forminator-card-image img,
 .sui-2-12-23 .forminator-template-image img {
   object-fit: cover;
@@ -25283,6 +25375,99 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   color: #666;
 }
 
+.sui-box .forminator-dashboard-create-first-form,
+.sui-box .forminator-dashboard-other-form-types {
+  margin: 0 auto;
+  width: 600px;
+  max-width: 100%;
+  text-align: center;
+}
+
+.sui-box .forminator-dashboard-create-first-form {
+  border-bottom: 1px solid #d9d9d9;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+}
+
+.sui-box .forminator-dashboard-create-first-form .sui-box-title.forminator-create-form-title {
+  font-size: 22px;
+  margin-top: 10px;
+}
+
+.sui-box .forminator-dashboard-create-first-form button.sui-button {
+  padding: 10px 20px;
+  font-size: 15px;
+  margin: 20px 0;
+}
+
+.sui-box .forminator-dashboard-no-form-block {
+  padding: 60px 30px;
+}
+
+.sui-box .forminator-dashboard-other-form-types {
+  margin-top: 50px;
+}
+
+.sui-box .forminator-dashboard-other-form-types .sui-box-title.forminator-other-form-title {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.sui-box .forminator-dashboard-other-form-types .sui-row {
+  margin-top: 30px;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form {
+  display: flex;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #fff;
+  width: 100%;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form:hover,
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form:focus {
+  border: 1px solid #aaa;
+  cursor: pointer;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form p {
+  margin: 0;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-icon {
+  border-radius: 8px;
+  background-color: #e6e6e6;
+  align-content: center;
+  height: 50px;
+  width: 50px;
+  margin-right: 8px;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-icon [class*=sui-icon-] {
+  font-size: 20px;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-icon [class*=sui-icon-]:before {
+  color: #333;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-title {
+  text-align: left;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-title .sui-box-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+.sui-box .forminator-dashboard-other-form-types .forminator-dashboard-other-form .forminator-dashboard-form-title p {
+  font-size: 12px;
+  line-height: 22px;
+}
+
 .sui-2-12-23 .sui-wrap #fui-stripe-plans .sui-accordion-item {
   box-shadow: 0 2px 7px 0 rgba(0,0,0,.05);
 }
@@ -25765,11 +25950,12 @@ body.forminator_page_forminator-upgrade #wpbody-content .update-nag:empty+.sui-w
   display: block;
   border-top: 1px solid rgba(230,230,230,.5);
   padding: 12px 20px;
-  font-size: 13px;
+  font-size: 15px;
   line-height: 30px;
   font-weight: 500;
   background: #fff;
   transition: ease all .3s;
+  color: #666;
 }
 
 .sui-2-12-23 .sui-wrap .forminator-create-popup-sidebar .forminator-preset-template .sui-box-selector:hover .forminator-template-name {

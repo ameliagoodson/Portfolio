@@ -20,6 +20,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @return array
 	 */
 	protected function custom_entry_fields( $submitted_data, $current_entry_fields ): array {
+		$entry                = func_get_args()[2];
 		$addon_setting_values = $this->settings_instance->get_settings_values();
 		$data                 = array();
 
@@ -29,7 +30,7 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 				// exec only on completed connection.
 				$data[] = array(
 					'name'  => 'status-' . $key,
-					'value' => $this->get_status_on_contact_sync( $key, $submitted_data, $addon_setting_value, $current_entry_fields ),
+					'value' => $this->get_status_on_contact_sync( $key, $submitted_data, $addon_setting_value, $current_entry_fields, $entry ),
 				);
 			}
 		}
@@ -46,11 +47,12 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 	 * @param array  $submitted_data Submitted data.
 	 * @param array  $connection_settings Connection settings.
 	 * @param array  $form_entry_fields Form entry fields.
+	 * @param object $entry Entry instance.
 	 *
 	 * @return array `is_sent` true means its success send data to HubSpot, false otherwise.
 	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
-	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $form_entry_fields ) {
+	private function get_status_on_contact_sync( $connection_id, $submitted_data, $connection_settings, $form_entry_fields, $entry ) {
 		// initialize as null.
 		$api = null;
 
@@ -170,9 +172,9 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 			if ( '1' === $create_ticket ) {
 				$ticket['pipeline_id']        = $connection_settings['pipeline_id'];
 				$ticket['status_id']          = $connection_settings['status_id'];
-				$ticket_name                  = forminator_addon_replace_custom_vars( $connection_settings['ticket_name'], $submitted_data, $this->module, $form_entry_fields, false );
+				$ticket_name                  = forminator_addon_replace_custom_vars( $connection_settings['ticket_name'], $submitted_data, $this->module, $form_entry_fields, false, $entry );
 				$ticket['ticket_name']        = $ticket_name;
-				$ticket_description           = forminator_addon_replace_custom_vars( $connection_settings['ticket_description'], $submitted_data, $this->module, $form_entry_fields, false );
+				$ticket_description           = forminator_addon_replace_custom_vars( $connection_settings['ticket_description'], $submitted_data, $this->module, $form_entry_fields, false, $entry );
 				$ticket['ticket_description'] = $ticket_description;
 				$ticket['supported_file']     = isset( $submitted_data[ $connection_settings['supported_file'] ] ) ? $submitted_data[ $connection_settings['supported_file'] ] : '';
 

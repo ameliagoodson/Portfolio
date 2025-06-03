@@ -84,7 +84,6 @@ class Forminator_Email extends Forminator_Field {
 	public function defaults() {
 		return array(
 			'validation'                => false,
-			'placeholder'               => esc_html__( 'E.g. john@doe.com', 'forminator' ),
 			'field_label'               => esc_html__( 'Email Address', 'forminator' ),
 			'confirm-email-label'       => esc_html__( 'Confirm Email Address', 'forminator' ),
 			'confirm-email-placeholder' => esc_html__( 'Re-type Email Address', 'forminator' ),

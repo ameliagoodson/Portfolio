@@ -85,7 +85,6 @@ class Forminator_Website extends Forminator_Field {
 	public function defaults() {
 		return array(
 			'field_label' => esc_html__( 'Website', 'forminator' ),
-			'placeholder' => esc_html__( 'E.g. http://www.example.com', 'forminator' ),
 		);
 	}
 

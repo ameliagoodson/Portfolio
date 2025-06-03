@@ -54,7 +54,7 @@ return array(
 			'admin_url_page'  => 'wp-defender',
 			'logo'            => 'defender-security.png',
 			'title'           => __( 'Defender', 'plugin-cross-sell-textdomain' ),
-			'description'     => __( 'Automated and reliable WordPress security in a matter of clicks.', 'plugin-cross-sell-textdomain' ),
+			'description'     => __( 'Keep your site’s security on lockdown.', 'plugin-cross-sell-textdomain' ),
 			'features'        => array(),
 			'installed'       => false,
 			'active'          => false,
@@ -209,7 +209,7 @@ return array(
 			'admin_url_page'  => 'wp-defender',
 			'logo'            => 'defender-security.png',
 			'title'           => __( 'Defender Pro', 'plugin-cross-sell-textdomain' ),
-			'description'     => __( 'Automated and reliable WordPress security in a matter of clicks.', 'plugin-cross-sell-textdomain' ),
+			'description'     => __( 'Keep your site’s security on lockdown.', 'plugin-cross-sell-textdomain' ),
 			'features'        => array(
 				__( 'Scheduled malware scanning', 'plugin-cross-sell-textdomain' ),
 				__( 'AntiBot Global Firewall', 'plugin-cross-sell-textdomain' ),

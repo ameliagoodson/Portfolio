@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.43.0
+Stable tag: 1.44
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -230,6 +230,27 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.44.1 ( 2025-05-20 ) =
+
+- Fix: Remove unused files
+
+
+= 1.44.0 ( 2025-05-13 ) =
+
+- Enhancement: Disable validation on Preview
+- Enhancement: Adjustments to Dashboard page
+- Enhancement: Adjustments to Form Editor
+- Enhancement: Adjustments to Preset Template flow
+- Enhancement: Update Cloud Templates page behavior
+- Enhancement: Allow closing modals with Escape key
+- Enhancement: Improve process for deleting fields
+- Enhancement: Improve text readability of gray text
+- Fix: Email field visibility rules do not work correctly with other fields in the same row
+- Fix: Form submit success JS event not triggered when using Stripe field
+- Fix: Currency formatting missing in emails when using single placeholder
+- Fix: Poll submit button colors not applied correctly
+- Fix: Submission ID placeholder not passed to HubSpot integration
 
 = 1.43.1 ( 2025-05-12 ) =
 

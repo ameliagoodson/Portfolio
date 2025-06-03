@@ -2497,6 +2497,7 @@ var PRO_PLUGINS = Object.values(PRO_PLUGINS_OBJ);
 var PluginsPro = function PluginsPro() {
   return wp.element.createElement(Section, {
     title: (0,external_wp_i18n_namespaceObject.__)("Get a high-powered web-building suite, at no extra cost", "plugin-cross-sell-textdomain"),
+    description: (0,external_wp_i18n_namespaceObject.__)("Just activate and start using!", "plugin-cross-sell-textdomain"),
     className: "cross-sell-plugins--pro",
     __self: plugins_pro_this,
     __source: {
@@ -2509,7 +2510,7 @@ var PluginsPro = function PluginsPro() {
     __self: plugins_pro_this,
     __source: {
       fileName: plugins_pro_jsxFileName,
-      lineNumber: 21,
+      lineNumber: 25,
       columnNumber: 9
     }
   }, PRO_PLUGINS.map(function (plugin) {
@@ -2520,7 +2521,7 @@ var PluginsPro = function PluginsPro() {
       __self: plugins_pro_this,
       __source: {
         fileName: plugins_pro_jsxFileName,
-        lineNumber: 23,
+        lineNumber: 27,
         columnNumber: 13
       }
     }));
@@ -2529,7 +2530,7 @@ var PluginsPro = function PluginsPro() {
     __self: plugins_pro_this,
     __source: {
       fileName: plugins_pro_jsxFileName,
-      lineNumber: 27,
+      lineNumber: 31,
       columnNumber: 7
     }
   }, wp.element.createElement("a", {
@@ -2542,7 +2543,7 @@ var PluginsPro = function PluginsPro() {
     __self: plugins_pro_this,
     __source: {
       fileName: plugins_pro_jsxFileName,
-      lineNumber: 28,
+      lineNumber: 32,
       columnNumber: 9
     }
   }, (0,external_wp_i18n_namespaceObject.__)("View all pro plugins", "plugin-cross-sell-textdomain"))));
@@ -2607,7 +2608,7 @@ var FEATURES = [{
 }, {
   icon: SettingsIcon,
   title: (0,external_wp_i18n_namespaceObject.__)("Site management", "plugin-cross-sell-textdomain"),
-  description: (0,external_wp_i18n_namespaceObject.__)("Take command of all your WordPress sites with one simple dashboard to automate updates, monitor performance, and generate white-label client reports.", "plugin-cross-sell-textdomain"),
+  description: (0,external_wp_i18n_namespaceObject.__)("Take command of your WordPress sites in one simple dashboard. Automate updates, track performance, and create white-label client reports.", "plugin-cross-sell-textdomain"),
   link: getUtmUrl("https://wpmudev.com/site-management/", {
     utm_campaign: 'cross-sell_service_hub'
   })
@@ -2628,14 +2629,14 @@ var FEATURES = [{
 }, {
   icon: EmailIcon,
   title: (0,external_wp_i18n_namespaceObject.__)("Get Pro Email", "plugin-cross-sell-textdomain"),
-  description: (0,external_wp_i18n_namespaceObject.__)("Add-on private, ad-free IMAP webmail for easily managed, auto-synced, professional emails for you and your clients with 5-50GB storage options.", "plugin-cross-sell-textdomain"),
+  description: (0,external_wp_i18n_namespaceObject.__)("Get easily managed, auto-synced, professional emails for you and your clients with private ad-free IMAP webmail with 5-50GB storage options.", "plugin-cross-sell-textdomain"),
   link: getUtmUrl("https://wpmudev.com/webmail/", {
     utm_campaign: 'cross-sell_service_email'
   })
 }, {
   icon: SupportIcon,
-  title: (0,external_wp_i18n_namespaceObject.__)("Unparalleled support", "plugin-cross-sell-textdomain"),
-  description: (0,external_wp_i18n_namespaceObject.__)("Chat with our support team anytime—24/7, 365 days a year—with an average response time of 2 minutes. We’ll even log in and fix issues for you and your clients!", "plugin-cross-sell-textdomain"),
+  title: (0,external_wp_i18n_namespaceObject.__)("First-rate support", "plugin-cross-sell-textdomain"),
+  description: (0,external_wp_i18n_namespaceObject.__)("Need an issue fixed? Chat with our support team anytime—24/7, 365 days a year—with an average response time of 2 minutes. ", "plugin-cross-sell-textdomain"),
   link: getUtmUrl("https://wpmudev.com/get-support/", {
     utm_campaign: 'cross-sell_service_support'
   })
@@ -2735,21 +2736,21 @@ var services_jsxFileName = "/opt/atlassian/pipelines/agent/build/src/components/
 var SERVICES_ITEMS = [{
   icon: development_namespaceObject,
   title: (0,external_wp_i18n_namespaceObject.__)("On-Demand Development", "plugin-cross-sell-textdomain"),
-  description: (0,external_wp_i18n_namespaceObject.__)("Need assistance with CSS or custom functionality? Our experts create scripts to solve WordPress issues and enhance your site.", "plugin-cross-sell-textdomain"),
+  description: (0,external_wp_i18n_namespaceObject.__)("Our experienced WordPress developers, on-call for a simple monthly fee.", "plugin-cross-sell-textdomain"),
   link: getUtmUrl("https://wpmudev.com/expert-services/", {
     utm_campaign: 'cross-sell_expert_odd'
   })
 }, {
   icon: monitoring_namespaceObject,
   title: (0,external_wp_i18n_namespaceObject.__)("Proactive Monitoring", "plugin-cross-sell-textdomain"),
-  description: (0,external_wp_i18n_namespaceObject.__)("We monitor WPMU DEV hosted sites 24/7 and fix them fast if they go down, you don’t have to do anything.", "plugin-cross-sell-textdomain"),
+  description: (0,external_wp_i18n_namespaceObject.__)("Sleep better knowing we’ve got your sites covered 24/7. If your site goes offline, we’ll fix it immediately.", "plugin-cross-sell-textdomain"),
   link: getUtmUrl("https://wpmudev.com/expert-services/", {
     utm_campaign: 'cross-sell_expert_uptime'
   })
 }, {
   icon: optimization_namespaceObject,
   title: (0,external_wp_i18n_namespaceObject.__)("Speed Optimization", "plugin-cross-sell-textdomain"),
-  description: (0,external_wp_i18n_namespaceObject.__)("Page Speed lagging behind? Our experts will give your site a guaranteed scores of 90+ on desktop and 75+ on mobile.", "plugin-cross-sell-textdomain"),
+  description: (0,external_wp_i18n_namespaceObject.__)("Supercharge your client’s sites, with guaranteed PageSpeed scores of 90+ on desktop and 75+ on mobile.", "plugin-cross-sell-textdomain"),
   link: getUtmUrl("https://wpmudev.com/expert-services/", {
     utm_campaign: 'cross-sell_expert_speed'
   })
@@ -2908,7 +2909,7 @@ var ProContent = function ProContent() {
     }
   }, wp.element.createElement(Section, {
     title: (0,external_wp_i18n_namespaceObject.__)("Did you know WPMU DEV Membership includes ", "plugin-cross-sell-textdomain"),
-    titleUnderline: (0,external_wp_i18n_namespaceObject.__)("ALL our Pro Plugins?", "plugin-cross-sell-textdomain"),
+    titleUnderline: (0,external_wp_i18n_namespaceObject.__)("ALL these Pro Plugins?", "plugin-cross-sell-textdomain"),
     description: (0,external_wp_i18n_namespaceObject.__)("Plus, everything your agency needs for hosting, reselling and more.", "plugin-cross-sell-textdomain"),
     className: "cross-sell-section-membership",
     __self: pro_this,

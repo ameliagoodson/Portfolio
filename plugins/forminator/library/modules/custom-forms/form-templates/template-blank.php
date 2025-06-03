@@ -56,7 +56,7 @@ class Forminator_Template_Blank extends Forminator_Template {
 			'submission-behaviour'              => 'behaviour-thankyou',
 			'thankyou-message'                  => esc_html__( 'Thank you for contacting us, we will be in touch shortly.', 'forminator' ),
 			'submitData'                        => array(
-				'custom-submit-text'          => esc_html__( 'Send Message', 'forminator' ),
+				'custom-submit-text'          => esc_html__( 'Submit', 'forminator' ),
 				'custom-invalid-form-message' => esc_html__( 'Error: Your form is not valid, please fix the errors!', 'forminator' ),
 			),
 			'enable-ajax'                       => 'true',

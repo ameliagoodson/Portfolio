@@ -94,7 +94,6 @@ class Forminator_Textarea extends Forminator_Field {
 			'input_type'  => 'line',
 			'limit_type'  => 'characters',
 			'field_label' => esc_html__( 'Text', 'forminator' ),
-			'placeholder' => esc_html__( "E.g. text placeholder\nYou can add new line", 'forminator' ),
 		);
 	}
 

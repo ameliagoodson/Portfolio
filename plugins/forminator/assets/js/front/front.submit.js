@@ -523,11 +523,11 @@
 										});
 
 										self.multi_upload_disable( $this, false );
-										$this.trigger('forminator:form:submit:success', formData);
 
 										// restart condition after form reset to ensure values of input already reset-ed too
 										$this.trigger('forminator.front.condition.restart');
 									}
+									$this.trigger('forminator:form:submit:success', formData);
 
 									if (typeof data.data.url !== "undefined") {
 

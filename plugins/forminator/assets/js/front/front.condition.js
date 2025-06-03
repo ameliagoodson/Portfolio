@@ -881,6 +881,8 @@
 				$hidden_signature = $column_field.find('[id ^=ctlSignature][id $=_data]'),
 				$hidden_wp_editor = $column_field.find('.forminator-wp-editor-required'),
 				$row_field = $column_field.closest('.forminator-row'),
+				$sub_row_field = $column_field.closest('.forminator-row-inside'), // Used for Email Confirmation.
+				$sub_row_fields = $sub_row_field.add($sub_row_field.parent()), // Include Email Confirmation parent column.
 				$pagination_next_field = this.$el.find('.forminator-pagination-footer').find('.forminator-button-next'),
 				submit_selector = 'submit' === element_id ? '.forminator-button-submit' : '#forminator-paypal-submit',
 				$pagination_field = this.$el.find( submit_selector )
@@ -890,6 +892,7 @@
 			if (action === "show") {
 				if (type === "valid") {
 					$row_field.removeClass('forminator-hidden');
+					$sub_row_fields.removeClass('forminator-hidden');
 					$column_field.removeClass('forminator-hidden');
 					$pagination_next_field.removeClass('forminator-hidden');
 					if ($hidden_upload.length > 0) {
@@ -938,6 +941,9 @@
 					if ($hidden_signature.length > 0) {
 						$hidden_signature.removeClass('do-validate');
 					}
+					if ($sub_row_field.find('> .forminator-col:not(.forminator-hidden)').length === 0) {
+						$sub_row_fields.addClass('forminator-hidden');
+					}
 					if ($row_field.find('> .forminator-col:not(.forminator-hidden)').length === 0) {
 						$row_field.addClass('forminator-hidden');
 					}
@@ -961,6 +967,9 @@
 					if ($row_field.find('> .forminator-col:not(.forminator-hidden)').length === 0) {
 						$row_field.addClass('forminator-hidden');
 					}
+					if ($sub_row_field.find('> .forminator-col:not(.forminator-hidden)').length === 0) {
+						$sub_row_fields.addClass('forminator-hidden');
+					}
 					setTimeout(
 						function() {
 							$pagination_field = self.$el.find( submit_selector );
@@ -976,6 +985,7 @@
 					);
 				} else {
 					$row_field.removeClass('forminator-hidden');
+					$sub_row_fields.removeClass('forminator-hidden');
 					$column_field.removeClass('forminator-hidden');
 					$pagination_field.removeClass('forminator-hidden');
 					if ($hidden_upload.length > 0) {
@@ -1005,7 +1015,7 @@
 
 			this.$el.trigger('forminator:field:condition:toggled');
 
-			this.toggle_confirm_password( $element_id );
+			this.toggle_confirm_field( element_id, action, type );
 		},
 
 		clear_value: function(element_id, e) {
@@ -1180,15 +1190,13 @@
             }
 		},
 
-        // Maybe toggle confirm password field if necessary
-		toggle_confirm_password: function ( $element ) {
-			if ( 0 !== $element.length && $element.attr( 'id' ) && -1 !== $element.attr( 'id' ).indexOf( 'password' ) ) {
-				var column = $element.closest( '.forminator-col' );
-				if ( column.hasClass( 'forminator-hidden' ) ) {
-					column.parent( '.forminator-row' ).next( '.forminator-row' ).addClass( 'forminator-hidden' );
-				} else {
-					column.parent( '.forminator-row' ).next( '.forminator-row' ).removeClass( 'forminator-hidden' );
-				}
+		// Maybe toggle confirm field if necessary.
+		toggle_confirm_field: function ( element_id, action, type ) {
+			const confirmFieldId = 'confirm_' + element_id,
+				$confirmField = this.get_form_field( confirmFieldId );
+
+			if ( $confirmField.length ) {
+				this.toggle_field(confirmFieldId, action, type);
 			}
 		},
 	});

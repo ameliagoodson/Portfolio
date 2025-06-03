@@ -12,12 +12,16 @@
 		alt="<?php esc_attr_e( 'Forminator no result', 'forminator' ); ?>"
 		class="sui-image sui-image-center fui-image">
 	<div class="sui-message-content">
-		<h2><?php esc_html_e( 'No templates available', 'forminator' ); ?></h2>
+		<h2><?php esc_html_e( 'No saved templates yet', 'forminator' ); ?></h2>
 		<p>
+			<?php
+			esc_html_e( 'Save any of your forms as cloud templates to reuse them across your sites connected to the Hub – no need to start from scratch. Your saved templates will appear here. ', 'forminator' );
+			?>
+			<br/>
 			<?php
 			printf(
 				/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
-				esc_html__( 'You have not saved any form templates yet. All your saved form templates will be displayed here. Click %1$shere%2$s to learn more on how to create form templates.', 'forminator' ),
+				esc_html__( '%1$sLearn how to save forms as cloud template%2$s.', 'forminator' ),
 				'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates" target="_blank">',
 				'</a>'
 			);

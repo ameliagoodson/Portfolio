@@ -272,7 +272,7 @@ class CrossSell {
 
 		$submenu_params = $this->utilities->validate_schema( $this->submenu_params, $this->get_submenu_schema() ) ? wp_parse_args( $this->submenu_params, $default_params ) : $default_params;
 
-		if ( empty( $submenu_params['parent_slug'] ) ) {
+		if ( empty( $submenu_params['parent_slug'] ) || $this->submenu_exists( $submenu_params['parent_slug'], $submenu_params['menu_slug'] ) ) {
 			return false;
 		}
 
@@ -305,6 +305,30 @@ class CrossSell {
 		add_action( 'load-' . $page, array( $this, 'internal_admin_actions' ) );
 
 		return $page;
+	}
+
+	/**
+	 * Check if a submenu already exists under a given top‐level menu.
+	 *
+	 * @param string $parent_slug  The plugin parent menu’s slug.
+	 * @param string $submenu_slug The submenu slug per plugin.
+	 * @return bool True if it’s already registered, false otherwise.
+	 */
+	public function submenu_exists( string $parent_slug = '', string $submenu_slug = '' ): bool {
+		global $submenu;
+
+		if ( empty( $submenu[ $parent_slug ] ) ) {
+			return false;
+		}
+
+		foreach ( $submenu[ $parent_slug ] as $item ) {
+			// $item is [ 0 => menu title, 1 => capability, 2 => slug, … ]
+			if ( isset( $item[2] ) && $item[2] === $submenu_slug ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
