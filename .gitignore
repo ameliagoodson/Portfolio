@@ -22,27 +22,26 @@ readme.html
 local-xdebuginfo.php
 .htaccess
 
-
 # ------------------------------------------------------------------------------
 # Ignore media and runtime
-wp-content/uploads/
-wp-content/cache/
-wp-content/upgrade/
+uploads/
+cache/
+upgrade/
 
 # ------------------------------------------------------------------------------
 # ✅ Track your theme and everything inside it
-!wp-content/themes/
-!wp-content/themes/ameliagoodson/
-!wp-content/themes/ameliagoodson/**
+!themes/
+!themes/ameliagoodson/
+!themes/ameliagoodson/**
 
 # ✅ ACF JSON
-!wp-content/themes/ameliagoodson/acf-json/
-!wp-content/themes/ameliagoodson/acf-json/**
+!themes/ameliagoodson/acf-json/
+!themes/ameliagoodson/acf-json/**
 
 # ✅ Optionally include plugins (if custom)
-!wp-content/plugins/
-!wp-content/plugins/**
-
+!plugins/
+!plugins/**
+  
 # ------------------------------------------------------------------------------
 # Dev clutter
 *.log
