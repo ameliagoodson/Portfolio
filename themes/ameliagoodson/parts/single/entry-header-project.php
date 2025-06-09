@@ -10,6 +10,7 @@
 
 $project = get_field('project');
 $project_image = $project['project_image'] ?? null;
+$show_project_image = $project['show_project_image'] ?? null;
 $project_type = $project['project_type'] ?? '';
 $project_company = $project['project_company'] ?? '';
 $project_company_link = $project['project_link_company'] ?? null;
@@ -99,16 +100,18 @@ $live_link = $project['project_link_live'] ?? null;
       </tbody>
     </table>
   </div>
-  <?php if ($project_image || has_post_thumbnail()) : ?>
-    <figure class="featured-media section-inner mw-medium reveal">
-      <div class="media-wrapper">
-        <?php if ($project_image) : ?>
-          <img src="<?php echo esc_url($project_image['url']); ?>" alt="<?php echo esc_attr($project_image['alt']); ?>" />
-        <?php else : ?>
-          <?php the_post_thumbnail(); ?>
-        <?php endif; ?>
-      </div>
-    </figure>
+  <?php if ($show_project_image) : ?>
+    <?php if ($project_image || has_post_thumbnail()) : ?>
+      <figure class="featured-media section-inner mw-medium reveal">
+        <div class="media-wrapper">
+          <?php if ($project_image) : ?>
+            <img src="<?php echo esc_url($project_image['url']); ?>" alt="<?php echo esc_attr($project_image['alt']); ?>" />
+          <?php else : ?>
+            <?php the_post_thumbnail(); ?>
+          <?php endif; ?>
+        </div>
+      </figure>
+    <?php endif; ?>
   <?php endif; ?>
 
 

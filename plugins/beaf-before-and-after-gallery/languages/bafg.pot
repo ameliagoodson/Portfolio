@@ -1,0 +1,508 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Ultimate Before After Image Slider & Gallery - BEAF\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-24 09:57+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.3; wp-5.6.4\n"
+"X-Domain: bafg"
+
+#: inc/templates/bafg-gallery-generator.php:8
+msgid "-Select category-"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:23
+#: inc/templates/bafg-gallery-generator.php:63
+msgid "2 Columns"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:24
+#: inc/templates/bafg-gallery-generator.php:64
+msgid "3 Columns"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:25
+#: inc/templates/bafg-gallery-generator.php:65
+msgid "4 Columns"
+msgstr ""
+
+#: before-and-after-gallery.php:108
+msgid "Add New"
+msgstr ""
+
+#: before-and-after-gallery.php:140
+msgid "Add New Item"
+msgstr ""
+
+#: before-and-after-gallery.php:109
+msgid "Add New Slider"
+msgstr ""
+
+#: before-and-after-gallery.php:145
+msgid "Add or remove items"
+msgstr ""
+
+#: admin/bafg-admin.php:32
+msgid "After Image"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:81
+msgid "After image"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:278
+msgid "After Label"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:388
+msgid "After Label Background"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:397
+msgid "After Text Color"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:430
+msgid "Alignment"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:48
+msgid "All"
+msgstr ""
+
+#: before-and-after-gallery.php:136
+msgid "All Items"
+msgstr ""
+
+#: before-and-after-gallery.php:113
+msgid "All Sliders"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:347
+msgid ""
+"Allow a user to click (or tap) anywhere on the image to move the slider to "
+"that location."
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:95
+#: inc/templates/bafg-gallery-generator.php:103
+msgid "Background Color:"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:86
+msgid "BEAF Filter Buttons Style"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:44
+msgid "BEAF Filterable Gallery"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:4
+msgid "BEAF Gallery"
+msgstr ""
+
+#: inc/bafg-elementor/widgets/bafg-slider.php:36
+msgid "BEAF Slider"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:230
+msgid "BEAF Template Style"
+msgstr ""
+
+#: admin/bafg-admin.php:31
+msgid "Before Image"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:72
+msgid "Before image"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:268
+msgid "Before Label"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:370
+msgid "Before Label Background"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:379
+msgid "Before Text Color"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:87
+msgid "Border Radius(px):"
+msgstr ""
+
+#: before-and-after-gallery.php:135
+msgid "Category"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:6
+#: inc/templates/bafg-gallery-generator.php:46
+msgid "Category:"
+msgstr ""
+
+#: before-and-after-gallery.php:146
+msgid "Choose from the most used"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:5
+#: inc/templates/bafg-gallery-generator.php:45
+msgid "Click here"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:338
+msgid "Click to Move"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:98
+msgid "Colors(Hover and Active):"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:90
+msgid "Colors(Normal):"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:21
+#: inc/templates/bafg-gallery-generator.php:61
+msgid "Columns:"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:41 inc/bafg-elementor/widgets/bafg-slider.php:109
+msgid "Content"
+msgstr ""
+
+#: inc/bafg-elementor/widgets/bafg-slider.php:101
+msgid "Create a Slide First"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:409
+msgid "Custom Width_Height"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:235
+msgid "Default"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:257
+msgid "Default Offset"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:473
+msgid "Description"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:30
+#: inc/templates/bafg-gallery-generator.php:68
+msgid "Display Slider Title, Description and Read more link"
+msgstr ""
+
+#: before-and-after-gallery.php:141
+msgid "Edit Item"
+msgstr ""
+
+#: before-and-after-gallery.php:111
+msgid "Edit Slider"
+msgstr ""
+
+#: inc/widget/bafg-widget.php:86
+msgid "Enter Shortcode:"
+msgstr ""
+
+#: admin/bafg-admin.php:128 admin/bafg-admin.php:129
+msgid "Gallery Generator"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:448
+msgid "Heading"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:264
+msgid "How much of the before image is visible when the page loads. (e.g: 0.7)"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://themefic.com/"
+msgstr ""
+
+#. URI of the plugin
+msgid "https://themefic.com/plugins/beaf/"
+msgstr ""
+
+#: admin/bafg-admin.php:158
+msgid ""
+"Introducing: Gallery Generator for Ultimate Before After Image Slider - BEAF"
+msgstr ""
+
+#: before-and-after-gallery.php:151
+msgid "Items list"
+msgstr ""
+
+#: before-and-after-gallery.php:152
+msgid "Items list navigation"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:27
+msgid "Max Items:"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:326
+msgid "Move slider on mouse hover?"
+msgstr ""
+
+#: before-and-after-gallery.php:139
+msgid "New Item Name"
+msgstr ""
+
+#: before-and-after-gallery.php:110
+msgid "New Slider"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:333 metabox/bafg-metaboxs.php:345
+#: metabox/bafg-metaboxs.php:358
+msgid "No"
+msgstr ""
+
+#: before-and-after-gallery.php:150
+msgid "No items"
+msgstr ""
+
+#: before-and-after-gallery.php:116
+msgid "No slider found in Trash."
+msgstr ""
+
+#: before-and-after-gallery.php:115
+msgid "No slider found."
+msgstr ""
+
+#: before-and-after-gallery.php:149
+msgid "Not Found"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:112 metabox/bafg-metaboxs.php:122
+#: metabox/bafg-metaboxs.php:132
+msgid "Optional"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:42
+msgid "Options"
+msgstr ""
+
+#: inc/widget/bafg-widget.php:84
+msgid "Or:"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:214
+msgid "Orientation Style"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:109
+msgid "Padding(Left - Right):"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:106
+msgid "Padding(Top - Bottom):"
+msgstr ""
+
+#: before-and-after-gallery.php:137
+msgid "Parent Item"
+msgstr ""
+
+#: before-and-after-gallery.php:138
+msgid "Parent Item:"
+msgstr ""
+
+#: before-and-after-gallery.php:147
+msgid "Popular Items"
+msgstr ""
+
+#: inc/functions.php:44 inc/functions.php:46
+msgid "Read more"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:498
+msgid "Read More Button"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:130
+msgid "Read More Link"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:139
+msgid "Read More Link Target"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:152
+msgid "Read More Text"
+msgstr ""
+
+#: before-and-after-gallery.php:148
+msgid "Search Items"
+msgstr ""
+
+#: before-and-after-gallery.php:114
+msgid "Search Sliders"
+msgstr ""
+
+#: inc/widget/bafg-widget.php:71 inc/bafg-elementor/widgets/bafg-slider.php:95
+msgid "Select a Slider"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:244
+msgid "Select a style for the before and after label."
+msgstr ""
+
+#: inc/bafg-elementor/widgets/bafg-slider.php:116
+msgid "Select slider"
+msgstr ""
+
+#: inc/widget/bafg-widget.php:61
+msgid "Select Slider:"
+msgstr ""
+
+#: before-and-after-gallery.php:144
+msgid "Separate items with commas"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:284
+msgid "Set a custom label for the title \"After\"."
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:274
+msgid "Set a custom label for the title \"Before\"."
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:418
+#, php-format
+msgid "Set a specific height and width for this slider. (e.g: 100% or 400px)"
+msgstr ""
+
+#: admin/bafg-admin.php:30
+msgid "Shortcode"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:38
+#: inc/templates/bafg-gallery-generator.php:74
+msgid "Shortcode Copied!"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:36
+#: inc/templates/bafg-gallery-generator.php:72
+msgid "Shortcode:"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:351
+msgid "Show Overlay"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:360
+msgid "Show overlay on the before and after image."
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:120
+msgid "Slider Description"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:110
+msgid "Slider Title"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:43
+msgid "Style"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:236
+msgid "Style 1"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:237
+msgid "Style 2"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:238
+msgid "Style 3"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:239
+msgid "Style 4"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:240
+msgid "Style 5"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:241
+msgid "Style 6"
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:242
+msgid "Style 7"
+msgstr ""
+
+#: before-and-after-gallery.php:133
+msgctxt "Taxonomy General Name"
+msgid "Categories"
+msgstr ""
+
+#: before-and-after-gallery.php:134
+msgctxt "Taxonomy Singular Name"
+msgid "Category"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:92
+#: inc/templates/bafg-gallery-generator.php:100
+msgid "Text Color:"
+msgstr ""
+
+#. Author of the plugin
+msgid "Themefic"
+msgstr ""
+
+#: admin/bafg-admin.php:29
+msgid "Title"
+msgstr ""
+
+#: inc/widget/bafg-widget.php:57
+msgid "Title:"
+msgstr ""
+
+#: inc/templates/bafg-gallery-generator.php:5
+#: inc/templates/bafg-gallery-generator.php:45
+msgid "to learn more."
+msgstr ""
+
+#. Name of the plugin
+msgid "Ultimate Before After Image Slider & Gallery - BEAF"
+msgstr ""
+
+#: before-and-after-gallery.php:142
+msgid "Update Item"
+msgstr ""
+
+#: before-and-after-gallery.php:143
+msgid "View Item"
+msgstr ""
+
+#: before-and-after-gallery.php:112
+msgid "View Slider"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"Want to show comparison of two images? With BEAF, you can easily create "
+"before and after image slider or image gallery. Elementor Supported."
+msgstr ""
+
+#: metabox/bafg-metaboxs.php:332 metabox/bafg-metaboxs.php:344
+#: metabox/bafg-metaboxs.php:357
+msgid "Yes"
+msgstr ""
