@@ -14,7 +14,16 @@ $hero_button_url = get_theme_mod('hero_button_url', '/work');
 
 <main class="hero">
   <div class="section-inner mw-<?php echo $hero_width ?>">
-    <div class="hero-content">
+    <div class="hero-content <?php
+                              if ($text_alignment === 'left') {
+                                echo "justify-content-start";
+                              } elseif ($text_alignment === 'right') {
+                                echo "justify-content-end";
+                              } else {
+                                echo "justify-content-center";
+                              }
+
+                              ?>">
       <div class="hero-copy <?php echo "align-" . strtolower($text_alignment) ?>">
         <?php if ($hero_title) : ?>
           <div class="h1 hero-title reveal"><?php echo $hero_title; ?></div>

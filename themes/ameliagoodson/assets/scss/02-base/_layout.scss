@@ -450,6 +450,25 @@ section:not(.hero) {
 .justify-content-evenly {
   justify-content: space-evenly;
 }
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-around {
+  justify-content: space-around;
+}
+
+.justify-evenly {
+  justify-content: space-evenly;
+}
 
 /* Cover Modals ------------------------------ */
 
