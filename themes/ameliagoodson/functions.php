@@ -28,44 +28,30 @@ function agtheme_register_scripts()
 {
   error_log('agtheme_register_scripts function called');
 
-  // Register vendor scripts first
-  wp_register_script('agtheme-css-vars-ponyfill', get_template_directory_uri() . '/assets/js/vendor/css-vars-ponyfill.min.js', array(), '3.6.0', true);
-  wp_register_script('isotope', get_template_directory_uri() . '/assets/js/vendor/isotope.pkgd.min.js', array(), '3.0.6', true);
-  wp_register_script('scroll-reveal', get_template_directory_uri() . '/assets/js/vendor/scrollreveal.min.js', array(), '4.0.5', true);
-  wp_register_script('threejs', 'https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.min.js', array(), '0.172.0', true);
-  wp_register_script('agtheme-threejs-hero', get_template_directory_uri() . '/assets/js/threejs-hero.js', array('threejs'), filemtime(get_template_directory() . '/assets/js/threejs-hero.js'), true);
+  wp_enqueue_script('jquery');
 
-  // Enqueue main theme script with all dependencies
-  $js_dependencies = array(
-    'jquery',
-    'imagesloaded',
-    'agtheme-css-vars-ponyfill',
-    'isotope',
-    'scroll-reveal'
-  );
-
+  // Enqueue single Vite bundle (includes all vendor libs + your code)
   wp_enqueue_script(
-    'agtheme-scripts',
-    get_template_directory_uri() . '/assets/js/scripts-ag.js',
-    $js_dependencies,
-    filemtime(get_template_directory() . '/assets/js/scripts-ag.js'),
-    true // Load in footer
+    'agtheme-bundle',
+    get_template_directory_uri() . '/dist/bundle.js',
+    array(),
+    filemtime(get_template_directory() . '/dist/bundle.js'),
+    true
   );
-
-  wp_enqueue_script('agtheme-threejs-hero');
 
   // AJAX config
   $ajax_url = admin_url('admin-ajax.php');
 
-  wp_localize_script('agtheme-scripts', 'agtheme_ajax_load_more', array(
+  wp_localize_script('agtheme-bundle', 'agtheme_ajax_load_more', array(
     'ajaxurl' => esc_url($ajax_url),
   ));
 
-  wp_localize_script('agtheme-scripts', 'agtheme_ajax_filters', array(
+  wp_localize_script('agtheme-bundle', 'agtheme_ajax_filters', array(
     'ajaxurl' => esc_url($ajax_url),
   ));
 }
 add_action('wp_enqueue_scripts', 'agtheme_register_scripts');
+
 
 
 function check_enqueued_scripts()

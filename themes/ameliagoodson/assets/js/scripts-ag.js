@@ -1,10 +1,13 @@
+import * as THREE from "three";
+import Isotope from "isotope-layout";
+import ScrollReveal from "scrollreveal";
+
+console.log("Three.js version:", THREE.REVISION);
+console.log("Scripts loaded");
+
 /* ------------------------------------------------------------------------------ /*
 /*  NAMESPACE
 /* ------------------------------------------------------------------------------ */
-
-// let is used here because we need to declare agtheme first, and then conditionally initialize it.
-// const cannot be used because it requires initialization at the time of declaration.
-// Use $ instead of writing "jQuery" (shorthand)
 let agtheme;
 if (typeof agtheme === "undefined") {
   agtheme = {};
@@ -29,7 +32,8 @@ agtheme.grid = {
     var $postsGrid = $(".posts-grid");
     if ($postsGrid.length) {
       // Make sure the grid-sizer has proper classes for posts grid
-      var postsColumnClasses = $postsGrid.attr("class").match(/cols-[^ ]*/g) || [];
+      var postsColumnClasses =
+        $postsGrid.attr("class").match(/cols-[^ ]*/g) || [];
       if (postsColumnClasses.length > 0) {
         $postsGrid.find(".grid-sizer").addClass(postsColumnClasses.join(" "));
       }
@@ -68,7 +72,8 @@ agtheme.grid = {
     var $postsGrid = $(".posts-grid");
     if ($postsGrid.length) {
       // Make sure the grid-sizer has proper classes for posts grid
-      var postsColumnClasses = $postsGrid.attr("class").match(/cols-[^ ]*/g) || [];
+      var postsColumnClasses =
+        $postsGrid.attr("class").match(/cols-[^ ]*/g) || [];
       if (postsColumnClasses.length > 0) {
         $postsGrid.find(".grid-sizer").addClass(postsColumnClasses.join(" "));
       }
@@ -114,10 +119,12 @@ document.addEventListener("DOMContentLoaded", function () {
       viewFactor: 0, // Show even if not fully in viewport
       beforeReveal: function (el) {
         // Make all items visible before the animation starts
-        document.querySelectorAll(".posts-grid .js-grid-item").forEach(function (item) {
-          item.style.opacity = "1";
-          item.style.transform = "none";
-        });
+        document
+          .querySelectorAll(".posts-grid .js-grid-item")
+          .forEach(function (item) {
+            item.style.opacity = "1";
+            item.style.transform = "none";
+          });
       },
       afterReveal: function (el) {
         // Force Isotope layout after revelation

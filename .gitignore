@@ -1,48 +1,17 @@
-# ------------------------------------------------------------------------------
-# Ignore WordPress core (keep your theme only)
-wp-admin/
-wp-includes/
-wp-activate.php
-wp-blog-header.php
-wp-comments-post.php
-wp-config-sample.php
-wp-config.php
-wp-cron.php
-wp-links-opml.php
-wp-load.php
-wp-login.php
-wp-mail.php
-wp-settings.php
-wp-signup.php
-wp-trackback.php
-xmlrpc.php
-index.php
-license.txt
-readme.html
-local-xdebuginfo.php
-.htaccess
-
-# ------------------------------------------------------------------------------
 # Ignore media and runtime
 uploads/
 cache/
 upgrade/
-
-# ------------------------------------------------------------------------------
-# ✅ Track your theme and everything inside it
-!themes/
-!themes/ameliagoodson/
-!themes/ameliagoodson/**
+wflogs/
 
 # ✅ ACF JSON
 !themes/ameliagoodson/acf-json/
 !themes/ameliagoodson/acf-json/**
 
-# ✅ Optionally include plugins (if custom)
+# ✅ Optionally include plugins 
 !plugins/
 !plugins/**
-  
-# ------------------------------------------------------------------------------
+
 # Dev clutter
 *.log
 .DS_Store
