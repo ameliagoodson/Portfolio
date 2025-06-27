@@ -32,6 +32,7 @@ class AG_Customizer
 			'section' => 'hero_layout_section',
 			'type' => 'select',
 			'choices' => array(
+				'Three JS' => __('Three JS', 'agtheme'),
 				'Half image' => __('Half Image', 'agtheme'),
 				'Full image' => __('Full Image', 'agtheme'),
 				'No image' => __('No Image', 'agtheme'),

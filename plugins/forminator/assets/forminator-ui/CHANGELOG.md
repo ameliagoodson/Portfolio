@@ -1,5 +1,22 @@
 # Change Log
 
+## [1.12.30](https://github.com/wpmudev/forminator-ui/compare/v1.12.29...v1.12.30) (2025-06-02)
+####
+fix
+- `rating`
+  - fix(rating): rating field XSS vulnerability fix. [#100](https://github.com/wpmudev/forminator-ui/pull/100) ([FOR-5514](https://incsub.atlassian.net/browse/FOR-5514) ([@creador-dev](https://github.com/creador-dev))
+
+## [1.12.29](https://github.com/wpmudev/forminator-ui/compare/v1.12.28...v1.12.29) (2025-06-02)
+####  
+fix
+- `rating`
+  - fix(rating): rating field XSS vulnerability fix. [#99](https://github.com/wpmudev/forminator-ui/pull/99) ([FOR-5514](https://incsub.atlassian.net/browse/FOR-5514) ([@creador-dev](https://github.com/creador-dev))
+
+## [1.12.28](https://github.com/wpmudev/forminator-ui/compare/v1.12.27...v1.12.28) (2025-05-28)
+####  :sparkles: Improvement
+- `slider`
+  - new(slider): aria attributes for slider field. [#98](https://github.com/wpmudev/forminator-ui/pull/98) ([FOR-5432](https://incsub.atlassian.net/browse/FOR-5432) ([@creador-dev](https://github.com/creador-dev))
+
 ## [1.12.27](https://github.com/wpmudev/forminator-ui/compare/v1.12.26...v1.12.27) (2025-03-27)
 #### ✨ Improvement
 - `row`

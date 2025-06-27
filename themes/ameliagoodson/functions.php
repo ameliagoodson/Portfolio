@@ -32,6 +32,8 @@ function agtheme_register_scripts()
   wp_register_script('agtheme-css-vars-ponyfill', get_template_directory_uri() . '/assets/js/vendor/css-vars-ponyfill.min.js', array(), '3.6.0', true);
   wp_register_script('isotope', get_template_directory_uri() . '/assets/js/vendor/isotope.pkgd.min.js', array(), '3.0.6', true);
   wp_register_script('scroll-reveal', get_template_directory_uri() . '/assets/js/vendor/scrollreveal.min.js', array(), '4.0.5', true);
+  wp_register_script('threejs', 'https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.min.js', array(), '0.172.0', true);
+  wp_register_script('agtheme-threejs-hero', get_template_directory_uri() . '/assets/js/threejs-hero.js', array('threejs'), filemtime(get_template_directory() . '/assets/js/threejs-hero.js'), true);
 
   // Enqueue main theme script with all dependencies
   $js_dependencies = array(
@@ -49,6 +51,8 @@ function agtheme_register_scripts()
     filemtime(get_template_directory() . '/assets/js/scripts-ag.js'),
     true // Load in footer
   );
+
+  wp_enqueue_script('agtheme-threejs-hero');
 
   // AJAX config
   $ajax_url = admin_url('admin-ajax.php');

@@ -13,9 +13,12 @@ $hero_layout = get_theme_mod('hero_layout');
 global $icons;
 ?>
 
+
 <?php if ($hero_layout == 'Full image' || $hero_layout == "No image") {
 
   get_template_part('parts/single/hero-full');
+} elseif ($hero_layout == "Three JS") {
+  get_template_part('parts/single/hero-threejs');
 } else {
   get_template_part('parts/single/hero-half');
 } ?>

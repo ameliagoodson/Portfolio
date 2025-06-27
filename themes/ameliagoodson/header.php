@@ -18,7 +18,7 @@
   $is_transparent = is_front_page() && $transparent_header;
   ?>
 
-  <?php if ($background_image && $is_transparent && $hero_layout != "No image") : ?>
+  <?php if ($background_image && $is_transparent && $hero_layout != "No image" && $hero_layout != "Three JS") : ?>
     <div class="background-image" style="background-image: url(<?php echo esc_url($background_image); ?>);">
     <?php endif; ?>
 

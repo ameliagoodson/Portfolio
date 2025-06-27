@@ -834,6 +834,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           // Format the slider values using the template
           var $formattedValue = valueTemplate($element, $value);
           var $formattedValueMax = $isRange ? valueTemplate($element, $valueMax) : null;
+          var $sliderHandles = $(this).find('.ui-slider-handle');
 
           // add data-attribute to check intialization.
           $slide.data('init', true);
@@ -847,6 +848,19 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
 
           // Create the UI with the formatted values.
           updateSliderValues($element, $formattedValue, $formattedValueMax, $value, $valueMax);
+
+          // Update the slider handle attributes.
+          $sliderHandles.each(function (index) {
+            var isFirst = 0 === index;
+            var currentValue = isFirst ? $value : $valueMax;
+            $(this).attr({
+              role: 'slider',
+              'aria-valuemin': $minRange,
+              'aria-valuemax': $maxRange,
+              'aria-valuenow': currentValue,
+              'aria-valuetext': currentValue
+            });
+          });
         },
         slide: function slide(event, ui) {
           // Format the slider values using the template
@@ -854,9 +868,27 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
           var $valueMax = $isRange ? ui.values[1] : null;
           var $formattedValue = valueTemplate($element, $value);
           var $formattedValueMax = $isRange ? valueTemplate($element, $valueMax) : null;
+          var $sliderHandles = $(this).find('.ui-slider-handle');
 
           // Update the UI with the formatted values
           updateSliderValues($element, $formattedValue, $formattedValueMax, $value, $valueMax);
+
+          // Update the slider handle attributes.
+          if ($isRange) {
+            $sliderHandles.eq(0).attr({
+              'aria-valuenow': ui.values[0],
+              'aria-valuetext': ui.values[0]
+            });
+            $sliderHandles.eq(1).attr({
+              'aria-valuenow': ui.values[1],
+              'aria-valuetext': ui.values[1]
+            });
+          } else {
+            $sliderHandles.eq(0).attr({
+              'aria-valuenow': ui.value,
+              'aria-valuetext': ui.value
+            });
+          }
         },
         stop: function stop(event, ui) {
           // Format the slider values using the template
@@ -988,11 +1020,11 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         var $options = $element.find('option').not(':disabled');
         var numOptions = $options.length;
 
-        // Get the icon type from the data-type attribute
-        var iconType = $element.attr('data-type') || 'star';
+        // Get the icon type from the data-type attribute and sanitize it
+        var iconType = ($element.attr('data-type') || 'star').replace(/[^a-z0-9_-]/gi, '');
 
-        // Get the icon type from the data-type attribute
-        var iconSize = $element.attr('data-size') || 'md';
+        // Get the icon size from the data-size attribute and sanitize it
+        var iconSize = ($element.attr('data-size') || 'md').replace(/[^a-z0-9_-]/gi, '');
 
         // Calculate the selected value.
         var selectedValue = Number($element.find('option:selected').val()) || 0;
@@ -1001,7 +1033,7 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         var $wrapper = $('<div class="forminator-rating-wrapper"></div>');
 
         // Create the rating items container
-        var $ratingItemsContainer = $('<span data-id="' + id + '" data-selected-value="' + selectedValue + '" class="forminator-rating-items forminator-rating-' + iconSize + '"></span>');
+        var $ratingItemsContainer = $('<span></span>').attr('data-id', id).attr('data-selected-value', selectedValue).addClass('forminator-rating-items').addClass('forminator-rating-' + iconSize.replace(/[^a-z0-9_-]/gi, ''));
 
         // Intialized
         var isInitialized = $element.attr('data-init') || 'false';
@@ -1013,7 +1045,13 @@ function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == 
         for (i = 0; i < numOptions; i++) {
           var optionValue = Number($options.eq(i).val());
           var itemClass = optionValue <= selectedValue ? 'forminator-rating-item forminator-rating-selected' : 'forminator-rating-item';
-          $ratingItemsContainer.append('<span class="' + itemClass + '" data-value="' + optionValue + '">' + '<i class="forminator-icon-' + iconType + '" aria-hidden="true"></i>' + '</span>');
+          $ratingItemsContainer.append($('<span>', {
+            'class': itemClass,
+            'data-value': optionValue
+          }).append($('<i>', {
+            'class': 'forminator-icon-' + iconType,
+            'aria-hidden': 'true'
+          })));
         }
 
         // Add selected-value and total-value in select.

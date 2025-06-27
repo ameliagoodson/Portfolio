@@ -496,9 +496,9 @@ if ( ! class_exists( 'BEAF_Settings' ) ) {
 				return;
 			}
 
-			// if ( ! current_user_can( 'manage_options' ) ) {
-			// 	wp_die( __( 'You are not allowed to perform this action.', 'bafg' ) );
-			// }
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_die( __( 'You are not allowed to perform this action.', 'bafg' ) );
+			}
 
 			// Check nonce
 			if ( ! wp_verify_nonce( $_POST['beaf_option_nonce'], 'beaf_option_nonce_action' ) ) {
