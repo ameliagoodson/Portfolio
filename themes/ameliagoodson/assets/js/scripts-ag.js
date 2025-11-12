@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import Isotope from "isotope-layout";
 import ScrollReveal from "scrollreveal";
+import "./threejs-hero";
 
 console.log("Three.js version:", THREE.REVISION);
 console.log("Scripts loaded");

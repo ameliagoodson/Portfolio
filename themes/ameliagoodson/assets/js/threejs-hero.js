@@ -1,30 +1,38 @@
+import * as THREE from "three";
+import ChromeTextScene from "./chrome-text.js";
+
+// Initialize the Three.js chrome text effect in the hero section
 document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("three-hero");
-  if (!canvas) return;
 
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  if (!canvas) {
+    console.warn("Canvas element #three-hero not found");
+    return;
+  }
+
+  console.log("Initializing Chrome Text Scene...");
+
+  // Create WebGL renderer with alpha for transparency
+  const renderer = new THREE.WebGLRenderer({
+    canvas,
+    alpha: true,
+    antialias: true
+  });
+
+  // Set pixel ratio for sharp rendering on high-DPI displays
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // Set initial size
   renderer.setSize(window.innerWidth, window.innerHeight);
 
-  const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshNormalMaterial();
-  const cube = new THREE.Mesh(geometry, material);
-  scene.add(cube);
+  // Initialize the chrome text scene
+  // Scene handles its own animation loop internally
+  new ChromeTextScene(renderer, canvas);
 
-  camera.position.z = 5;
+  console.log("✅ Chrome Text Scene initialized");
 
-  const animate = () => {
-    requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    renderer.render(scene, camera);
-  };
-
-  animate();
+  // Handle window resize
+  window.addEventListener("resize", () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
 });

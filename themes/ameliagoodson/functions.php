@@ -49,6 +49,11 @@ function agtheme_register_scripts()
   wp_localize_script('agtheme-bundle', 'agtheme_ajax_filters', array(
     'ajaxurl' => esc_url($ajax_url),
   ));
+
+  // Pass theme directory URI for Three.js textures
+  wp_localize_script('agtheme-bundle', 'agtheme_config', array(
+    'themeUrl' => get_template_directory_uri(),
+  ));
 }
 add_action('wp_enqueue_scripts', 'agtheme_register_scripts');
 
