@@ -168,6 +168,7 @@ add_filter('acf/settings/load_json', function ($paths) {
 
 function ag_body_classes($classes)
 {
+  // Add transparent header class when enabled in customizer
   if (is_front_page() && get_theme_mod('hero_transparent_header')) {
     $classes[] = 'has-transparent-header';
   }

@@ -3246,7 +3246,13 @@ ul.social-icons li {
 }
 
 .has-transparent-header #site-header {
-  background-color: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(24, 0, 45, 0.2);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   width: 100%;
   z-index: 100;
 }
@@ -3255,14 +3261,9 @@ ul.social-icons li {
   width: 100%;
   display: flex;
   color: var(--ag-site-header-text-color);
-  padding: 1.2rem 0;
+  padding: 0.4rem 0;
   transition-property: background, color, min-height;
   transition: var(--ag-trans-speed-slow) var(--ag-trans-ease);
-}
-@media (min-width: 700px) {
-  .header-inner-wrapper {
-    padding: 1.6rem 0;
-  }
 }
 
 #site-header.scrolled .header-inner-wrapper {
