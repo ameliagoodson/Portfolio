@@ -64,6 +64,9 @@ $templates_categories = $custom_form_instance->get_templates_categories();
 								/>
 							</div>
 						</div>
+						<?php
+						echo forminator_template( 'templates/more-actions' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						?>
 
 <!--						<div class="sui-actions-right">-->
 <!--							<div class="sui-pagination-wrap">-->

@@ -34,7 +34,7 @@ $reports = Forminator_Admin_Report_Page::get_instance()->forminator_report_data(
 								<option value="<?php echo esc_attr( $form_post_type ); ?>" <?php echo selected( $form_post_type, $form_type ); ?>><?php echo esc_html( $name ); ?></option>
 							<?php } ?>
 						</select>
-						<?php static::render_form_switcher( $form_type, $form_id ); ?>
+						<?php Forminator_Reports_Page::render_form_switcher( $form_type, $form_id ); ?>
 						<button class="sui-button sui-button-blue view-reports"
 							onclick="submit()"><?php esc_html_e( 'View Reports', 'forminator' ); ?></button>
 					</form>

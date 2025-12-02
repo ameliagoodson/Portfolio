@@ -38,6 +38,13 @@ class Forminator_Addons_Page extends Forminator_Admin_Page {
 				),
 			);
 
+			if ( ! forminator_form_abandonment_disabled() ) {
+				// Extension Pack Add-on.
+				$project_info[] = array(
+					'pid' => Forminator_Admin_Addons_Page::EXTENSION_PACK_PID,
+				);
+			}
+
 			foreach ( $project_info as $project ) {
 				$project_data[] = Forminator_Admin_Addons_Page::get_project_info_from_wpmudev_dashboard( $project['pid'] );
 			}

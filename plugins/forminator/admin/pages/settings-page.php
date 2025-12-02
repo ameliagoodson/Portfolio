@@ -192,6 +192,13 @@ class Forminator_Settings_Page extends Forminator_Admin_Page {
 
 			'use-custom-css',
 			'custom_css',
+
+			'slider-track',
+			'slider-track-fill',
+			'slider-handle',
+			'slider-selected-value',
+			'slider-steps-value',
+			'slider-handle-drag',
 		);
 
 		$settings = array();

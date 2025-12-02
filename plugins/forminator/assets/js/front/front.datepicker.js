@@ -89,6 +89,11 @@
 				add_class = "forminator-calendar--basic";
 			}
 
+			// if parent has data-color-option add it to the datepicker
+			if ( parent.data( 'color-option' ) ) {
+				add_class += ' forminator-color-option--' + parent.data( 'color-option' );
+			}
+
 
 			this.$el.datepicker({
 				"beforeShow": function (input, inst) {

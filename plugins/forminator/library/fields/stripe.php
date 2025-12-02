@@ -251,9 +251,9 @@ class Forminator_Stripe extends Forminator_Field {
 		$data_font_color_focus = '#000000';
 		$data_font_color_error = '#000000';
 		$data_icon_color       = '#777771';
-		$data_icon_color_hover = '#17A8E3';
-		$data_icon_color_focus = '#17A8E3';
-		$data_icon_color_error = '#E04562';
+		$data_icon_color_hover = '#097BAA';
+		$data_icon_color_focus = '#097BAA';
+		$data_icon_color_error = '#E51919';
 
 		if ( ! empty( $settings[ $prefix . 'cform-color-settings' ] ) ) {
 			$data_placeholder      = $this->get_form_setting( $prefix . 'input-placeholder', $settings, $data_placeholder );
@@ -699,7 +699,8 @@ class Forminator_Stripe extends Forminator_Field {
 			// to achieve minimum Stripe charge amount .5 euro. Use $field['currency'] to get currency code.
 			$amount = apply_filters( 'forminator_stripe_default_payment_intent_amount', $amount, $field );
 		}
-		$payment_intent_key = $mode . '_' . $currency . '_' . $amount . '_' . substr( $key, -5 );
+		$payment_method     = filter_var( $field['automatic_payment_methods'], FILTER_VALIDATE_BOOLEAN ) ? 'dynamic' : 'card';
+		$payment_intent_key = $mode . '_' . $currency . '_' . $amount . '_' . substr( $key, -5 ) . '_' . $payment_method;
 		$is_intent          = ! empty( $submitted_data['stripe-intent'] );
 		// Check if we already have payment ID, if not generate new one.
 		if ( empty( $id ) ) {

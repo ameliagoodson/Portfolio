@@ -44,6 +44,14 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'basic-input-focus-outline-color' ) && !empty( $properties['basic-input-focus-outline-color'] ) ) { ?>
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input:focus,
+	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-phone .iti__country-container .iti__selected-country:focus {
+			outline: 2px solid <?php echo $properties['basic-input-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input input,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input input:hover,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-input input:focus,

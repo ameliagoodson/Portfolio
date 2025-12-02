@@ -67,6 +67,9 @@ class Forminator_Consent extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Consent', 'forminator' );
+		$required   = __( 'This field is required. Please check it.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -91,7 +94,6 @@ class Forminator_Consent extends Forminator_Field {
 				'<a href="#" target="_blank">',
 				'</a>'
 			),
-			'required_message'    => esc_html__( 'This field is required. Please check it.', 'forminator' ),
 		);
 	}
 
@@ -193,10 +195,10 @@ class Forminator_Consent extends Forminator_Field {
 		$field            = $this->field;
 		$id               = $this->get_id( $field );
 		$is_required      = $this->is_required( $field );
-		$required_message = self::get_property( 'required_message', $field, '' );
+		$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 		$required_message = apply_filters(
 			'forminator_consent_field_required_validation_message',
-			( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please check it.', 'forminator' ) ),
+			$required_message,
 			$id,
 			$field
 		);
@@ -219,10 +221,10 @@ class Forminator_Consent extends Forminator_Field {
 		// value of consent checkbox is `string` *checked*.
 		$id = $this->get_id( $field );
 		if ( $this->is_required( $field ) && ( empty( $data ) || 'checked' !== $data ) ) {
-			$required_message                = self::get_property( 'required_message', $field, '' );
+			$required_message                = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			$this->validation_message[ $id ] = apply_filters(
 				'forminator_consent_field_required_validation_message',
-				( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please check it.', 'forminator' ) ),
+				$required_message,
 				$id,
 				$field
 			);

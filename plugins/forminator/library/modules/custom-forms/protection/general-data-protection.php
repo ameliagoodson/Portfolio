@@ -559,6 +559,9 @@ class Forminator_CForm_General_Data_Protection extends Forminator_General_Data_P
 	 * Cleanup User's Geolocation data based on settings
 	 */
 	public function cleanup_geolocation() {
+		if ( forminator_addons_disabled() ) {
+			return false;
+		}
 		$retain_number = get_option( 'forminator_retain_geolocation_interval_number', 0 );
 		$retain_unit   = get_option( 'forminator_retain_geolocation_interval_unit', 'days' );
 

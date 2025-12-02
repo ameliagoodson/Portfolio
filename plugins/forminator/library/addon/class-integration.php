@@ -203,6 +203,13 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	private $steps = array();
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array();
+
+	/**
 	 * Nonce option name
 	 *
 	 * @var string
@@ -1257,10 +1264,13 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 	 *
 	 * @see     before_get_settings_values
 	 *
+	 * @since   1.47
+	 * @param bool $decrypt Decrypt sensitive data.
+	 *
 	 * @since   1.1
 	 * @return array
 	 */
-	final public function get_settings_values() {
+	final public function get_settings_values( $decrypt = false ) {
 		$all_values = $this->get_all_settings_values();
 
 		if ( is_null( $this->multi_global_id ) ) {
@@ -1273,6 +1283,10 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 
 		$addon_slug = $this->get_slug();
 
+		if ( true === $decrypt ) {
+			$values = $this->decrypt_sensitive_data( $values );
+		}
+
 		/**
 		 * Filter retrieved saved addon's settings values from db
 		 *
@@ -1283,6 +1297,104 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 		$values = apply_filters( 'forminator_addon_' . $addon_slug . '_get_settings_values', $values );
 
 		return $values;
+	}
+
+	/**
+	 * Encrypt sensitive data if it isn't encrypted for backward compatibility.
+	 *
+	 * @since 1.47
+	 * @param mixed $settings All settings.
+	 * @return mixed
+	 */
+	private function may_be_encrypt_sensitive_data( $settings ) {
+		if ( ! is_array( $settings ) || empty( $settings ) || empty( $this->_sensitive_keys ) ) {
+			return $settings;
+		}
+		$resave_option = false;
+		foreach ( $settings as $key => $setting ) {
+			if ( is_array( $setting ) ) {
+				foreach ( $this->_sensitive_keys as $sensitive_key ) {
+					$encrypted_key_name = $sensitive_key . '_encrypted';
+					if ( ! empty( $setting['is_salty'] ) && defined( 'FORMINATOR_ENCRYPTION_KEY' ) ) {
+						// Re-encrypt settings after setting FORMINATOR_ENCRYPTION_KEY constant.
+						$settings[ $key ][ $sensitive_key ] = Forminator_Encryption::decrypt( $setting[ $encrypted_key_name ], true );
+						$settings[ $key ]                   = $this->encrypt_sensitive_data( $settings[ $key ] );
+						$resave_option                      = true;
+					} elseif ( ! empty( $setting[ $sensitive_key ] ) && empty( $setting[ $encrypted_key_name ] ) ) {
+						// Re-save the setting to encrypt sensitive data.
+						$settings[ $key ] = $this->encrypt_sensitive_data( $setting );
+						$resave_option    = true;
+					}
+				}
+			}
+		}
+		if ( true === $resave_option ) {
+			update_option( $this->get_settings_options_name(), $settings );
+			$settings = $this->get_all_settings_values();
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Encrypt sensitive data
+	 *
+	 * @since 1.47
+	 * @param array $settings Settings.
+	 * @return array
+	 */
+	private function encrypt_sensitive_data( $settings ) {
+		if ( ! is_array( $settings ) || empty( $settings ) ) {
+			return $settings;
+		}
+
+		if ( ! empty( $this->_sensitive_keys ) ) {
+			$settings = Forminator_Encryption::encrypt_secret_keys(
+				$this->_sensitive_keys,
+				$settings
+			);
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Decrypt sensitive data
+	 *
+	 * @since 1.47
+	 * @param array $settings Settings.
+	 * @return array
+	 */
+	protected function decrypt_sensitive_data( $settings ) {
+		if ( ! is_array( $settings ) || empty( $settings ) || empty( $this->_sensitive_keys ) ) {
+			return $settings;
+		}
+		foreach ( $this->_sensitive_keys as $sensitive_key ) {
+			$encrypted_key_name = $sensitive_key . '_encrypted';
+			if ( ! empty( $settings[ $encrypted_key_name ] ) ) {
+				$settings[ $sensitive_key ] = Forminator_Encryption::decrypt( $settings[ $encrypted_key_name ] );
+			}
+		}
+
+		return $settings;
+	}
+
+	/**
+	 * Get decrypted real value if the value is the same as saved value
+	 *
+	 * @param string $value Post value.
+	 * @param string $key_name Key name.
+	 * @return string
+	 */
+	protected function get_real_value( $value, $key_name ) {
+		$saved_settings = $this->get_settings_values();
+		if ( isset( $saved_settings[ $key_name ] ) ) {
+			if ( $saved_settings[ $key_name ] === $value ) {
+				$decrypted_settings = $this->get_settings_values( true );
+				return $decrypted_settings[ $key_name ];
+			}
+		}
+		return $value;
 	}
 
 	/**
@@ -1320,6 +1432,9 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 				}
 			}
 		}
+
+		// Backward compatibility encrypt data if not encrypted.
+		$all_values = $this->may_be_encrypt_sensitive_data( $all_values );
 
 		return $all_values;
 	}
@@ -1378,6 +1493,8 @@ abstract class Forminator_Integration implements Forminator_Integration_Interfac
 			);
 		}
 
+		// Encrypt sensitive data.
+		$all_values[ $this->multi_global_id ] = $this->encrypt_sensitive_data( $all_values[ $this->multi_global_id ] );
 		update_option( $this->get_settings_options_name(), $all_values );
 	}
 

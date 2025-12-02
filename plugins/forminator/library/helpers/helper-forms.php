@@ -64,17 +64,16 @@ function forminator_get_user_data( $property ) {
  */
 function forminator_get_post_data( $property, $post_id = null, $default_value = '' ) {
 	global $post;
-
+	$current_post_object = $post;
 	if ( $post_id ) {
 		$post_object = get_post( $post_id );
 		// make sure its wp_post.
 		if ( $post_object instanceof WP_Post ) {
-			// set global $post as $post_object retrieved from `get_post` for next usage.
-			$post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			$current_post_object = $post_object;
 		}
 	}
 
-	if ( ! $post ) {
+	if ( ! $current_post_object ) {
 		// fallback on wp_ajax, `global $post` not available.
 		$wp_referer = wp_get_referer();
 		if ( $wp_referer ) {
@@ -83,14 +82,13 @@ function forminator_get_post_data( $property, $post_id = null, $default_value = 
 				$post_object = get_post( $post_id );
 				// make sure its wp_post.
 				if ( $post_object instanceof WP_Post ) {
-					// set global $post as $post_object retrieved from `get_post` for next usage.
-					$post = $post_object; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+					$current_post_object = $post_object;
 				}
 			}
 		}
 	}
 
-	$post_data = forminator_object_to_array( $post );
+	$post_data = forminator_object_to_array( $current_post_object );
 	if ( isset( $post_data[ $property ] ) ) {
 		return $post_data[ $property ];
 	} else {

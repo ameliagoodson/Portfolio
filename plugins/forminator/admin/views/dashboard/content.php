@@ -10,7 +10,11 @@ $total_modules = forminator_total_forms();
 <section class="wpmudev-dashboard-section">
 	<?php
 	if ( 0 === $total_modules ) {
-		$this->template( 'dashboard/widgets/widget-dashboard' );
+		$custom_form_instance = Forminator_Custom_Forms::get_instance();
+		$args                 = array(
+			'main_templates' => $custom_form_instance->get_main_templates(),
+		);
+		$this->template( 'dashboard/widgets/widget-dashboard', $args );
 	} else {
 		?>
 
@@ -47,7 +51,7 @@ $total_modules = forminator_total_forms();
 		</div>
 		<?php
 	}
-	$notice_dismissed = get_option( 'forminator_dismiss_feature_1420', false );
+	$notice_dismissed = get_option( 'forminator_dismiss_feature_1470', false );
 	$version_upgraded = get_option( 'forminator_version_upgraded', false );
 
 	// phpcs:ignore WordPress.Security.NonceVerification.Recommended

@@ -15,6 +15,7 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 	<?php
 	$chart_data = array(
 		'form_id'         => $args['form_id'],
+		'form_type'       => $args['form_type'],
 		'last_entry_time' => $reports['last_entry_time'],
 		'start_date'      => $reports['start_date'],
 		'end_date'        => $reports['end_date'],
@@ -37,17 +38,19 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
-			// Conversion rate box.
-			Forminator_Admin_Addons_Page::get_instance()->render_template(
-				'admin/views/common/reports/single-report',
-				array(
-					'title'       => esc_html__( 'Conversion Rate', 'forminator' ),
-					'description' => esc_html__( 'Conversion rate for the selected period.', 'forminator' ),
-					'icon'        => 'sui-icon forminator-icon-conversion',
-					'data_class'  => 'conversion',
-					'attrs'       => $report_data['conversion'],
-				)
-			);
+			if ( forminator_global_tracking() ) {
+				// Conversion rate box.
+				Forminator_Admin_Addons_Page::get_instance()->render_template(
+					'admin/views/common/reports/single-report',
+					array(
+						'title'       => esc_html__( 'Conversion Rate', 'forminator' ),
+						'description' => esc_html__( 'Conversion rate for the selected period.', 'forminator' ),
+						'icon'        => 'sui-icon forminator-icon-conversion',
+						'data_class'  => 'conversion',
+						'attrs'       => $report_data['conversion'],
+					)
+				);
+			}
 
 			// Payment box.
 			if ( 'forminator_forms' === $args['form_type'] && ! forminator_payments_disabled() ) {
@@ -95,6 +98,63 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
+			// Abandonment box.
+			if ( 'forminator_forms' === $args['form_type'] && ! forminator_form_abandonment_disabled() ) {
+				$abandonment_status = Forminator_Abandonment::get_abandoned_status( $args['form_id'] );
+
+				if ( 'active' === $abandonment_status ) {
+					// TODO: Move it to the Free Add-on.
+					$vars = array(
+						'title'       => esc_html__( 'Form Abandonment', 'forminator' ),
+						'description' => esc_html__( 'Form abandonment for the selected period.', 'forminator' ),
+						'icon'        => 'sui-icon-tracking-disabled',
+						'title_text'  => esc_html__( 'View entries', 'forminator' ),
+						'title_link'  => esc_url( admin_url( 'admin.php?page=forminator-entries&form_type=' . forminator_get_prefix( $args['form_type'] ) . '&form_id=' . $args['form_id'] . '&entry_status=abandoned' ) ),
+						'data_class'  => 'abandoned',
+						'data'        => array(
+							array(
+								'title' => esc_html__( 'Abandoned', 'forminator' ),
+								'attrs' => $report_data['abandoned'],
+							),
+							array(
+								'title' => esc_html__( 'Drop-off Rate', 'forminator' ),
+								'attrs' => $report_data['drop_off'],
+							),
+						),
+						'attrs'       => $report_data['abandoned'],
+					);
+				} else {
+					if ( 'inactive' === $abandonment_status ) {
+						$notice = sprintf(
+							/* translators: 1. Open link tag. 2. Close link tag. */
+							__( 'Form Abandonment is currently disabled for this form. Go to %1$sForm Abandonment%2$s to enable it and start tracking partial entries and viewing related stats here.', 'forminator' ),
+							'<a href="' . esc_url( admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $args['form_id'] . '&gotosection=abandonment' ) ) . '" target="_blank">',
+							'</a>'
+						);
+					} else {
+						$abandonment_link = Forminator_Abandonment::get_abandoned_cta_link( $abandonment_status, 'report_widget' );
+						$notice           = __( 'Collect partial entries if users exit without submission.', 'forminator' ) . ' ' . $abandonment_link;
+						$notice           = str_replace( 'sui-tooltip ', '', $notice ); // Remove tooltip from notices.
+					}
+					$vars = apply_filters(
+						'forminator_reports_abandonment_widget',
+						array(
+							'id'          => 'forminator_reports_abandonment_widget',
+							'title'       => __( 'Form Abandonment', 'forminator' ),
+							'description' => __( 'Form abandonment for the selected period.', 'forminator' ),
+							'icon'        => 'sui-icon-tracking-disabled',
+							'notice'      => $notice,
+						),
+						$args
+					);
+				}
+
+				Forminator_Admin_Addons_Page::get_instance()->render_template(
+					! empty( $vars['notice'] ) ? 'admin/views/common/reports/basic-widget' : 'admin/views/common/reports/single-report',
+					$vars
+				);
+			}
+
 			// Integration box.
 			Forminator_Admin_Addons_Page::get_instance()->render_template(
 				'admin/views/common/reports/integration-report',
@@ -105,7 +165,7 @@ $report_data = Forminator_Admin_Report_Page::get_instance()->forminator_report_a
 				)
 			);
 
-			if ( 'forminator_forms' === $args['form_type'] ) {
+			if ( ! forminator_addons_disabled() && 'forminator_forms' === $args['form_type'] ) {
 				// Geolocation widget.
 				$vars = apply_filters(
 					'forminator_reports_geolocation_widget',

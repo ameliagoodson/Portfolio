@@ -80,6 +80,13 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	public $connected_account = null;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'api_key' );
+
+	/**
 	 * Forminator_Activecampaign constructor.
 	 *
 	 * @since 1.0 Activecampaign Integration
@@ -202,7 +209,8 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 			}
 
 			try {
-				$api_key = $this->validate_api_key( $api_key );
+				$real_api_key = $this->get_real_value( $api_key, 'api_key' );
+				$api_key      = $this->validate_api_key( $real_api_key );
 			} catch ( Forminator_Integration_Exception $e ) {
 				$template_params['api_key_error'] = $e->getMessage();
 				$has_errors                       = true;
@@ -358,7 +366,7 @@ final class Forminator_Activecampaign extends Forminator_Integration {
 	 */
 	public function get_api( $api_url = null, $api_key = null ) {
 		if ( is_null( $api_key ) || is_null( $api_url ) ) {
-			$setting_values = $this->get_settings_values();
+			$setting_values = $this->get_settings_values( true );
 			$api_key        = '';
 			$api_url        = '';
 			if ( isset( $setting_values['api_url'] ) ) {

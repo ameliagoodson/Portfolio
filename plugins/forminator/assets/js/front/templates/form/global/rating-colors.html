@@ -33,6 +33,13 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'rating-focus-outline-color' ) && !empty( $properties['rating-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-rating-wrapper.forminator-rating-focused .forminator-rating-items {
+			outline: 2px solid <?php echo $properties['rating-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 <?php } else { ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-rating-suffix {
@@ -47,5 +54,12 @@
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-rating-item.forminator-rating-selected [class*=forminator-icon-]:before {
 		color: #ff7e41;
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'rating-focus-outline-color' ) && !empty( $properties['rating-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-rating-wrapper.forminator-rating-focused .forminator-rating-items {
+			outline: 2px solid #254DEB;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 <?php } ?>

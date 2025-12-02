@@ -4,7 +4,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'button-submit-background-static' ) && !empty( $properties['button-submit-background-static'] ) ) { ?>
 			background-color: <?php echo $properties['button-submit-background-static'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			background-color: #17A8E3;
+			background-color: #097BAA;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'button-submit-color-static' ) && !empty( $properties['button-submit-color-static'] ) ) { ?>
 			color: <?php echo $properties['button-submit-color-static'] ?>;
@@ -17,7 +17,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'button-submit-background-hover' ) && !empty( $properties['button-submit-background-hover'] ) ) { ?>
 			background-color: <?php echo $properties['button-submit-background-hover'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			background-color: #008FCA;
+			background-color: #086A91;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'button-submit-color-hover' ) && !empty( $properties['button-submit-color-hover'] ) ) { ?>
 			color: <?php echo $properties['button-submit-color-hover'] ?>;
@@ -31,7 +31,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'button-submit-background-active' ) && !empty( $properties['button-submit-background-active'] ) ) { ?>
 			background-color: <?php echo $properties['button-submit-background-active'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			background-color: #008FCA;
+			background-color: #086A91;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'button-submit-color-active' ) && !empty( $properties['button-submit-color-active'] ) ) { ?>
 			color: <?php echo $properties['button-submit-color-active'] ?>;
@@ -40,22 +40,36 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'button-submit-focus-outline-color' ) && !empty( $properties['button-submit-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:focus {
+			outline: 2px solid <?php echo $properties['button-submit-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 <?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit {
-		background-color: #17A8E3;
+		background-color: #097BAA;
 		color: #FFFFFF;
 	}
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:hover {
-		background-color: #008FCA;
+		background-color: #086A91;
 		color: #FFFFFF;
 	}
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:focus,
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:active {
-		background-color: #008FCA;
+		background-color: #086A91;
 		color: #FFFFFF;
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'button-submit-focus-outline-color' ) && !empty( $properties['button-submit-focus-outline-color'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-button-submit:focus {
+			outline: 2px solid #254DEB;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 <?php } ?>

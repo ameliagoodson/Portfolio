@@ -30,6 +30,9 @@ class Forminator_Slider extends Forminator_Field {
 		$this->slug = 'slider';
 		$this->type = 'slider';
 		$this->icon = 'sui-icon-settings-slider-control';
+		$required   = __( 'This field is required.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 
 		$this->position = 27;
 
@@ -234,14 +237,18 @@ class Forminator_Slider extends Forminator_Field {
 	 * @return string
 	 */
 	private static function create_slider( array $field, $draft_value ): string {
-		$name          = self::get_property( 'element_id', $field );
-		$required      = self::get_property( 'required', $field );
-		$min           = self::get_min_limit( $field );
-		$max           = self::get_max_limit( $field );
-		$step          = self::get_property( 'slider_step', $field, 1 );
-		$value         = self::get_property( 'slider_default', $field, $min );
-		$is_range      = self::is_range_slider( $field );
-		$slider_handle = self::get_property( 'show_slider_handle', $field, true );
+		$name               = self::get_property( 'element_id', $field );
+		$required           = self::get_property( 'required', $field );
+		$min                = self::get_min_limit( $field );
+		$max                = self::get_max_limit( $field );
+		$step               = self::get_property( 'slider_step', $field, 1 );
+		$value              = self::get_property( 'slider_default', $field, $min );
+		$is_range           = self::is_range_slider( $field );
+		$slider_handle      = self::get_property( 'show_slider_handle', $field, true );
+		$use_custom_labels  = self::get_property( 'use_custom_labels', $field, false );
+		$display_step_value = self::get_property( 'display_step_value', $field, false );
+		$slider_min_label   = self::get_property( 'slider_min_label', $field, esc_html__( 'Bad', 'forminator' ) );
+		$slider_max_label   = self::get_property( 'slider_max_label', $field, esc_html__( 'Excellent', 'forminator' ) );
 
 		if ( isset( $draft_value['value'] ) && is_numeric( $draft_value['value'] ) ) {
 			$value = $draft_value['value'];
@@ -263,6 +270,10 @@ class Forminator_Slider extends Forminator_Field {
 			'data-max'      => $max,
 			'data-step'     => $step,
 		);
+		if ( $display_step_value && $use_custom_labels ) {
+			$attr['data-min-label'] = $slider_min_label;
+			$attr['data-max-label'] = $slider_max_label;
+		}
 
 		if ( self::get_property( 'description', $field ) ) {
 			$attr['aria-describedby'] = $name . '-description';
@@ -386,9 +397,7 @@ class Forminator_Slider extends Forminator_Field {
 		}
 
 		if ( $this->is_required( $field ) && $is_empty ) {
-			$require_message             = self::get_property( 'required_message', $field );
-			$required_validation_message = ! empty( $require_message ) ? $require_message : esc_html__( 'This field is required.', 'forminator' );
-
+			$required_validation_message         = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 			$this->validation_message[ $sub_id ] = apply_filters(
 				'forminator_field_slider_required_field_validation_message',
 				$required_validation_message,

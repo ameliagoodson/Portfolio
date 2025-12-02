@@ -40,10 +40,18 @@ $reports = $args['reports']; ?>
 						<strong><?php esc_html_e( 'Submissions', 'forminator' ); ?></strong>
 						<span><?php echo intval( $reports['entries']['selected'] ); ?></span>
 					</li>
-					<li data-col="small" class="chart-conversion">
-						<strong><?php esc_html_e( 'Conversion Rate', 'forminator' ); ?></strong>
-						<span><?php echo esc_html( $reports['conversion']['selected'] ); ?></span>
-					</li>
+					<?php if ( forminator_global_tracking() ) { ?>
+						<li data-col="small" class="chart-conversion">
+							<strong><?php esc_html_e( 'Conversion Rate', 'forminator' ); ?></strong>
+							<span><?php echo esc_html( $reports['conversion']['selected'] ); ?></span>
+						</li>
+					<?php } ?>
+					<?php if ( 'forminator_forms' === $args['form_type'] && ! forminator_form_abandonment_disabled() ) { ?>
+						<li data-col="small" class="chart-abandoned">
+							<strong><?php esc_html_e( 'Abandoned', 'forminator' ); ?></strong>
+							<span><?php Forminator_Abandonment::get_abandoned_entries( $args['form_id'], intval( $reports['abandoned']['selected'] ) ); ?></span>
+						</li>
+					<?php } ?>
 				</ul>
 				<div class="sui-chartjs sui-chartjs-animated sui-chartjs-loaded forminator-stats-chart"
 					data-chart-id="<?php echo esc_attr( $args['form_id'] ); ?>">

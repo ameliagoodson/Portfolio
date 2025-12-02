@@ -121,7 +121,7 @@ class Forminator_Html extends Forminator_Field {
 
 			$html .= sprintf(
 				'<label class="forminator-label">%s</label>',
-				$label
+				self::convert_markdown( $label )
 			);
 		}
 

@@ -25,7 +25,9 @@ if ( ! isset( $addons ) ) {
 
 				<button class="sui-button-icon sui-button-float--right" data-modal-close>
 					<span class="sui-icon-close sui-md" aria-hidden="true"></span>
-					<span class="sui-screen-reader-text">Close this modal</span>
+					<span class="sui-screen-reader-text">
+						<?php esc_html_e( 'Close this modal', 'forminator' ); ?>
+					</span>
 				</button>
 
 				<h3 id="forminator-activate-popup-<?php echo esc_attr( $addons->pid ); ?>__title" class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;"><?php /* translators: %s: Add-on name */ printf( esc_html__( '%s installed!', 'forminator' ), esc_html( $addons->name ) ); ?></h3>

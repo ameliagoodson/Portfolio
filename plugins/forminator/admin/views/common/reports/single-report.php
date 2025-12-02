@@ -60,28 +60,39 @@
 	<?php
 	if ( ( ! isset( $has_payment ) && ! isset( $has_live_payment ) )
 				|| ( isset( $has_live_payment ) && $has_live_payment ) ) {
+
+		if ( ! isset( $data ) ) {
+			// Support for old data structure.
+			$data = array(
+				array(
+					'title' => $title,
+					'attrs' => $attrs,
+				),
+			);
+		}
 		?>
 	<div class="sui-flushed">
 		<table class="sui-table sui-table-flushed report-<?php echo esc_attr( $data_class ); ?>">
 			<tbody>
+			<?php foreach ( $data as $item ) { ?>
 			<tr>
 				<td>
 					<div class="fui-table-title">
-						<?php echo esc_html( $title ); ?>
+						<?php echo esc_html( $item['title'] ); ?>
 					</div>
 					<div class="fui-table-content">
-						<san class="selected-<?php echo esc_attr( $data_class ); ?>">
-							<?php echo esc_html( $attrs['selected'] ); ?>
-						</san>
+						<span class="selected-<?php echo esc_attr( $data_class ); ?>">
+							<?php echo esc_html( $item['attrs']['selected'] ); ?>
+						</span>
 						<?php
-							$arrow_color = 'high' === $attrs['difference'] ? 'fui-trend-green' : 'fui-trend-red';
-							$arrow_icon  = 'high' === $attrs['difference'] ? 'sui-icon-arrow-up' : 'sui-icon-arrow-down';
+							$arrow_color = 'high' === $item['attrs']['difference'] ? 'fui-trend-green' : 'fui-trend-red';
+							$arrow_icon  = 'high' === $item['attrs']['difference'] ? 'sui-icon-arrow-up' : 'sui-icon-arrow-down';
 						?>
 							<span class="fui-trend <?php echo esc_html( $arrow_color ); ?> increment-<?php echo esc_attr( $data_class ); ?>">
-								<?php if ( $attrs['increment'] > 0 ) { ?>
+								<?php if ( $item['attrs']['increment'] > 0 ) { ?>
 									<i class="<?php echo esc_html( $arrow_icon ); ?> sui-sm" aria-hidden="true"></i>
 									<?php
-									echo esc_html( $attrs['increment'] );
+									echo esc_html( $item['attrs']['increment'] );
 								}
 								?>
 							</span>
@@ -98,10 +109,11 @@
 						</button>
 					</div>
 					<div class="fui-table-content previous-<?php echo esc_attr( $data_class ); ?>">
-						<?php echo esc_html( $attrs['previous'] ); ?>
+						<?php echo esc_html( $item['attrs']['previous'] ); ?>
 					</div>
 				</td>
 			</tr>
+			<?php } ?>
 			<?php if ( isset( $has_payment ) && $has_payment ) { ?>
 				<tr>
 					<td>

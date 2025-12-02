@@ -1,9 +1,12 @@
 <?php
 /**
- * Adds helpful debugging information to a new "Advanced Custom Fields"
- * panel in the WordPress Site Health screen.
- *
  * @package ACF
+ * @author  WP Engine
+ *
+ * © 2025 Advanced Custom Fields (ACF®). All rights reserved.
+ * "ACF" is a trademark of WP Engine.
+ * Licensed under the GNU General Public License v2 or later.
+ * https://www.gnu.org/licenses/gpl-2.0.html
  */
 
 namespace ACF\Site_Health;
@@ -460,7 +463,13 @@ class Site_Health {
 
 			foreach ( $field_group['location'] as $rules ) {
 				foreach ( $rules as $rule ) {
-					$all_rules[] = $rule['param'] . $rule['operator'] . $rule['value'];
+					if ( empty( $rule['param'] ) ) {
+						continue;
+					}
+
+					$operator    = ! empty( $rule['operator'] ) ? $rule['operator'] : '';
+					$value       = ! empty( $rule['value'] ) ? $rule['value'] : '';
+					$all_rules[] = $rule['param'] . $operator . $value;
 
 					if ( ! $is_pro ) {
 						continue;

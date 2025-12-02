@@ -11,11 +11,14 @@ $banner_2x = forminator_plugin_url() . 'assets/images/Feature_highlight@2x.png';
 $url       = add_query_arg(
 	array(
 		'page'        => 'forminator-templates',
-		'tab'         => 'cloud',
+		'feature'     => 'preset-template',
+		'from'        => 'new-features-modal',
 		'page_action' => 'hub_connection',
 	),
 	admin_url( 'admin.php' )
 );
+
+$hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 ?>
 
 <div class="sui-modal sui-modal-md">
@@ -29,7 +32,8 @@ $url       = add_query_arg(
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1420" data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1470"
+			data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
 
@@ -47,66 +51,20 @@ $url       = add_query_arg(
 				</button>
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
-					<?php esc_html_e( 'New: Additional Spam Protection Features', 'forminator' ); ?>
+				<?php
+					esc_html_e( 'New: Visibility conditions for Page Break', 'forminator' );
+				?>
 				</h3>
 
 				<p class="sui-description">
-					<?php
-					printf(
-						/* translators: 1. Admin name */
-						esc_html__( 'Hey %s, we’ve added new anti-spam tools to help you block spam submissions and keep your forms secure and clean. These updates make it easier to manage submissions and ensure genuine engagement.', 'forminator' ),
-						esc_html( ucfirst( $user->display_name ) ),
-					);
-					?>
+				<?php
+				printf(
+					/* translators: 1. Admin name */
+					esc_html__( 'Hey %s! Are you creating multi-page forms? Then we have good news for you! You can now apply rules to your form to show or hide any page based on conditional logic.', 'forminator' ),
+					esc_html( ucfirst( $user->display_name ) ),
+				);
+				?>
 				</p>
-
-				<div class="sui-modal-list" style="text-align: left; background-color: #F8F8F8; padding: 15px; border-radius: 5px;">
-					<h4><?php esc_html_e( 'What\'s New?', 'forminator' ); ?></h4>
-					<ul>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Cloudflare Turnstile CAPTCHA', 'forminator' ); ?></h3>
-							<p class="sui-description" style="margin: 5px 0 20px 25px;">
-								<?php esc_html_e( 'Stop bots with Cloudflare’s Turnstile CAPTCHA.', 'forminator' ); ?>
-								<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/cloudflare-turnstile-field" target="_blank" class="sui-link">
-									<?php esc_html_e( 'Learn more', 'forminator' ); ?>
-								</a>
-							</p>
-						</li>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Email Input Filtering', 'forminator' ); ?>
-							</h3>
-							<p class="sui-description" style="margin: 5px 0 20px 25px;">
-								<?php esc_html_e( 'Allow or block specific email addresses or domains from submitting your forms.', 'forminator' ); ?>
-								<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#email-settings" target="_blank" class="sui-link">
-									<?php esc_html_e( 'Learn more', 'forminator' ); ?>
-								</a>
-							</p>
-						</li>
-
-						<li>
-							<h3 style="margin-bottom: 0;">
-								<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
-								&nbsp;&nbsp;
-								<?php esc_html_e( 'Email Confirmation', 'forminator' ); ?>
-							</h3>
-							<p class="sui-description" style="margin: 5px 0 0 25px;">
-								<?php esc_html_e( 'Ask users to confirm their email before submitting.', 'forminator' ); ?>
-								<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#email-lables" target="_blank" class="sui-link">
-									<?php esc_html_e( 'Learn more', 'forminator' ); ?>
-								</a>
-							</p>
-						</li>
-
-					</ul>
-				</div>
 
 			</div>
 
@@ -119,7 +77,7 @@ $url       = add_query_arg(
 			</div>
 
 			<?php
-			if ( ! Forminator_Core::is_tracking_active() ) {
+			if ( ! forminator_usage_tracking_disabled() && ! Forminator_Core::is_tracking_active() ) {
 				$settings_url = add_query_arg(
 					array(
 						'page'    => 'forminator-settings',

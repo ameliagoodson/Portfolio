@@ -73,6 +73,11 @@
 		<?php } ?>
 	}
 
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-field-textarea .forminator-is_filled .forminator-label[class*="forminator-floating-"],
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-field-textarea .forminator-is_active .forminator-label[class*="forminator-floating-"] {
+		transform: translateY(calc(-100% + 10px));
+	}
+
 <?php } else { ?>
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-label[class*="forminator-floating-"] {
@@ -92,6 +97,11 @@
 		font-size: 12px;
 		font-family: inherit;
 		font-weight: 700;
+	}
+
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-field-textarea .forminator-is_filled .forminator-label[class*="forminator-floating-"],
+	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-field-textarea .forminator-is_active .forminator-label[class*="forminator-floating-"] {
+		transform: translateY(calc(-100% + 10px));
 	}
 
 <?php } ?>

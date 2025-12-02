@@ -66,6 +66,13 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	protected $_position = 6;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'api_key', 'client_id' );
+
+	/**
 	 * Forminator_Campaignmonitor constructor.
 	 *
 	 * @since 1.0 Campaignmonitor Integration
@@ -182,7 +189,8 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 			$identifier = $submitted_data['identifier'] ?? '';
 
 			try {
-				$api_key = $this->validate_api_key( $api_key );
+				$real_api_key = $this->get_real_value( $api_key, 'api_key' );
+				$api_key      = $this->validate_api_key( $real_api_key );
 			} catch ( Forminator_Integration_Exception $e ) {
 				$template_params['api_key_error'] = $e->getMessage();
 				$has_errors                       = true;
@@ -197,6 +205,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 					$client_details = null;
 
 					if ( ! empty( $client_id ) ) {
+						$client_id      = $this->get_real_value( $client_id, 'client_id' );
 						$client_details = $this->validate_client( $api_key, $client_id );
 					} else {
 						// find first client.
@@ -301,7 +310,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	 */
 	public function get_api( $api_key = null ) {
 		if ( is_null( $api_key ) ) {
-			$setting_values = $this->get_settings_values();
+			$setting_values = $this->get_settings_values( true );
 			$api_key        = '';
 			if ( isset( $setting_values['api_key'] ) ) {
 				$api_key = $setting_values['api_key'];
@@ -372,7 +381,7 @@ final class Forminator_Campaignmonitor extends Forminator_Integration {
 	 * @return string
 	 */
 	public function get_client_id() {
-		$settings_values = $this->get_settings_values();
+		$settings_values = $this->get_settings_values( true );
 		$client_id       = '';
 		if ( isset( $settings_values ['client_id'] ) ) {
 			$client_id = $settings_values ['client_id'];

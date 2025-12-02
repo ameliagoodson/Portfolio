@@ -62,7 +62,6 @@ class Forminator_Template_Login extends Forminator_Template {
 						'type'                   => 'password',
 						'cols'                   => '12',
 						'required'               => 'true',
-						'required_message'       => esc_html__( 'Your password is required', 'forminator' ),
 						'field_label'            => esc_html__( 'Password', 'forminator' ),
 						/* translators: 1. Open <a>, 2. Close </a>. */
 						'description'            => sprintf( esc_html__( '%1$sLost your password?%2$s', 'forminator' ), '<a href="{lostpassword_url}" title="Lost Password" target="_blank">', '</a>' ),

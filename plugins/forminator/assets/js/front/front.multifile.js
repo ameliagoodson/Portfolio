@@ -221,6 +221,7 @@
 								self.form.find('.forminator-button-submit').attr( 'disabled', false ).removeAttr( 'data-uploading' );
 							}
 							self.$el.trigger('complete:forminator:multiple:upload', uploadData);
+							self.$el.find('input[type="file"]').trigger('forminator.change', 'forminator_emulate_trigger' );
 						},
 						error: function (err) {
 							self.upload_fail_response( unique_id, window.ForminatorFront.cform.process_error );
@@ -242,6 +243,7 @@
 					} else {
 						self.upload_success_response( unique_id );
 					}
+					self.$el.find('input[type="file"]').trigger('forminator.change', 'forminator_emulate_trigger' );
 				}
 			});
 
@@ -566,6 +568,7 @@
 					self.form.trigger( 'forminator:uploads:valid' );
 					self.form.find('.forminator-button-submit').attr( 'disabled', false );
 				}
+				fileInput.trigger( 'forminator.change', 'forminator_emulate_trigger' );
 			})
 		},
 

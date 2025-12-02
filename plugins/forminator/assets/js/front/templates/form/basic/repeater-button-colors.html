@@ -24,6 +24,13 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'basic-repeater-button-outline-focus' ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-repeater-action-button:focus {
+			outline: 2px solid <?php echo $properties['basic-repeater-button-outline-focus'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-repeater-action-button:active {
 		<?php if ( forminator_array_value_exists( $properties, 'basic-repeater-button-background-focus' ) ) { ?>
 			background-color: <?php echo $properties['basic-repeater-button-background-focus'] ?>;

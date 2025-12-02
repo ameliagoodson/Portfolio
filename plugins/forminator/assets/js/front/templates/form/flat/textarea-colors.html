@@ -21,6 +21,13 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'input-focus-outline-color' ) && !empty( $properties['input-focus-outline-color'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:focus {
+			outline: 2px solid <?php echo $properties['input-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:focus,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:active {
 		<?php if ( forminator_array_value_exists( $properties, 'input-active-color' ) && !empty( $properties['input-active-color'] ) ) { ?>
@@ -52,9 +59,9 @@
 			-moz-box-shadow: inset 2px 0 0 0 <?php echo $properties['input-border-error'] ?>;
 			-webkit-box-shadow: inset 2px 0 0 0 <?php echo $properties['input-border-error'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			box-shadow: inset 2px 0 0 0 #E04562;
-			-moz-box-shadow: inset 2px 0 0 0 #E04562;
-			-webkit-box-shadow: inset 2px 0 0 0 #E04562;
+			box-shadow: inset 2px 0 0 0 #E51919;
+			-moz-box-shadow: inset 2px 0 0 0 #E51919;
+			-webkit-box-shadow: inset 2px 0 0 0 #E51919;
 		<?php } ?>
 	}
 
@@ -108,6 +115,13 @@
 		color: #000000;
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'input-focus-outline-color' ) && !empty( $properties['input-focus-outline-color'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:focus {
+			outline: 2px solid #254DEB;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-is_hover .forminator-textarea {
 		background-color: #E6E6E6;
 	}
@@ -117,9 +131,9 @@
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-has_error .forminator-textarea {
-		box-shadow: inset 2px 0 0 0 #E04562;
-		-moz-box-shadow: inset 2px 0 0 0 #E04562;
-		-webkit-box-shadow: inset 2px 0 0 0 #E04562;
+		box-shadow: inset 2px 0 0 0 #E51919;
+		-moz-box-shadow: inset 2px 0 0 0 #E51919;
+		-webkit-box-shadow: inset 2px 0 0 0 #E51919;
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea::placeholder {

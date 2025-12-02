@@ -61,6 +61,13 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	protected $_position = 4;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'api_key' );
+
+	/**
 	 * Forminator_Mailerlite constructor.
 	 * - Set dynamic translatable text(s) that will be displayed to end-user
 	 * - Set dynamic icons and images
@@ -124,7 +131,7 @@ class Forminator_Mailerlite extends Forminator_Integration {
 	 * @return string|null
 	 */
 	private function get_api_key() {
-		$setting_values = $this->get_settings_values();
+		$setting_values = $this->get_settings_values( true );
 		if ( isset( $setting_values['api_key'] ) ) {
 			return $setting_values['api_key'];
 		}
@@ -200,7 +207,8 @@ class Forminator_Mailerlite extends Forminator_Integration {
 			if ( empty( $api_key ) ) {
 				$api_key_error_message = esc_html__( 'Please add valid MailerLite API Key.', 'forminator' );
 			} else {
-				$api_key_validated = $this->validate_api_keys( $api_key );
+				$real_api_key      = $this->get_real_value( $api_key, 'api_key' );
+				$api_key_validated = $this->validate_api_keys( $real_api_key );
 
 				/**
 				 * Filter validating api key result
@@ -215,7 +223,7 @@ class Forminator_Mailerlite extends Forminator_Integration {
 					$api_key_error_message = esc_html__( 'Invalid API key. Please check and try again.', 'forminator' );
 				} else {
 					$save_values = array(
-						'api_key'    => $api_key,
+						'api_key'    => $real_api_key,
 						'identifier' => $identifier,
 					);
 
@@ -282,7 +290,7 @@ class Forminator_Mailerlite extends Forminator_Integration {
 		$html .= '<label class="sui-label">' . esc_html__( 'API Key', 'forminator' ) . '</label>';
 		$html .= '<div class="sui-control-with-icon">';
 		/* translators: ... */
-		$html .= '<input name="api_key" value="' . esc_attr( $api_key ) . '" placeholder="' . /* translators: 1: Add-on name */ sprintf( esc_html__( 'Enter %1$s API Key', 'forminator' ), 'MailerLite' ) . '" class="sui-form-control" />';
+		$html .= '<input name="api_key" value="' . esc_attr( $setting_values['api_key'] ?? '' ) . '" placeholder="' . /* translators: 1: Add-on name */ sprintf( esc_html__( 'Enter %1$s API Key', 'forminator' ), 'MailerLite' ) . '" class="sui-form-control" />';
 		$html .= '<i class="sui-icon-key" aria-hidden="true"></i>';
 		$html .= '</div>';
 		$html .= ( ! empty( $api_key_error_message ) ? '<span class="sui-error-message">' . esc_html( $api_key_error_message ) . '</span>' : '' );

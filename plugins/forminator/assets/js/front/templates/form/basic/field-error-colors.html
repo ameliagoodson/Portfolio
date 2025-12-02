@@ -9,7 +9,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'basic-label-validation-color' ) && !empty( $properties['basic-label-validation-color'] ) ) { ?>
 			color: <?php echo $properties['basic-label-validation-color'] ?>;
 		<?php } else { ?>
-			color: #E04562;
+			color: #333333;
 		<?php } ?>
 	}
 
@@ -17,7 +17,7 @@
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-error-message {
 		background-color: #F9E4E8;
-		color: #E04562;
+		color: #333333;
 	}
 
 <?php } ?>

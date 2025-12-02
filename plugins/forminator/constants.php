@@ -11,7 +11,7 @@
  */
 
 if ( ! defined( 'FORMINATOR_VERSION' ) ) {
-	define( 'FORMINATOR_VERSION', '1.44.2' );
+	define( 'FORMINATOR_VERSION', '1.48.3' );
 }
 
 if ( ! defined( 'FORMINATOR_SUI_VERSION' ) ) {
@@ -19,7 +19,7 @@ if ( ! defined( 'FORMINATOR_SUI_VERSION' ) ) {
 }
 
 if ( ! defined( 'FORMINATOR_STRIPE_LIB_VERSION' ) ) {
-	define( 'FORMINATOR_STRIPE_LIB_VERSION', '14.6.0' );
+	define( 'FORMINATOR_STRIPE_LIB_VERSION', '17.4.0' );
 }
 
 if ( ! defined( 'FORMINATOR_STRIPE_LIB_DATE' ) ) {

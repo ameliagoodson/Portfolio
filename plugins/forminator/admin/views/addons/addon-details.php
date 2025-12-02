@@ -10,7 +10,6 @@ if ( ! isset( $pid ) ) {
 }
 
 $pid = intval( $pid );
-
 $res = Forminator_Admin_Addons_Page::forminator_addon_by_pid( $pid );
 
 // Skip invalid projects.
@@ -22,6 +21,9 @@ if ( empty( $res->pid ) || empty( $res->name ) ) {
 if ( $res->is_hidden ) {
 	return;
 }
+
+$free_addon             = ! empty( $res->is_free );
+$unconnected_free_addon = $free_addon && ! Forminator_Hub_Connector::hub_connector_connected();
 
 $has_features = false;
 $features     = array(
@@ -54,7 +56,9 @@ $addon_slug = Forminator_Admin_Addons_Page::get_addon_slug( $pid );
 
 				<button class="sui-button-icon sui-button-float--right" data-modal-close>
 					<span class="sui-icon-close sui-md" aria-hidden="true"></span>
-					<span class="sui-screen-reader-text">Close this modal</span>
+					<span class="sui-screen-reader-text">
+						<?php esc_html_e( 'Close this modal', 'forminator' ); ?>
+					</span>
 				</button>
 
 				<div class="forminator-details-header">
@@ -68,8 +72,8 @@ $addon_slug = Forminator_Admin_Addons_Page::get_addon_slug( $pid );
 						<h3 class="forminator-details-header--title">
 							<?php echo esc_html( $res->name ); ?>
 							<?php
-							if ( ! FORMINATOR_PRO ) {
-								echo '<span class="sui-tag sui-tag-purple sui-tag-sm">' . esc_html__( 'PRO', 'forminator' ) . '</span>';
+							if ( ! FORMINATOR_PRO && $unconnected_free_addon ) {
+								echo '<span class="sui-tag sui-tag-free-plan sui-tag-sm">' . esc_html__( 'FREE PLAN', 'forminator' ) . '</span>';
 							}
 							?>
 						</h3>
@@ -77,7 +81,7 @@ $addon_slug = Forminator_Admin_Addons_Page::get_addon_slug( $pid );
 						<div class="forminator-details-header--tags">
 
 							<?php
-							if ( FORMINATOR_PRO ) {
+							if ( FORMINATOR_PRO || $free_addon ) {
 								$version = $res->is_installed ? $res->version_installed : $res->version_latest;
 								/* translators: Plugin latest version */
 								echo '<span class="sui-tag sui-tag-sm addons-version">' . /* translators: %s: Installed version */ sprintf( esc_html__( 'Version %s', 'forminator' ), esc_html( $version ) ) . '</span>';
@@ -95,35 +99,7 @@ $addon_slug = Forminator_Admin_Addons_Page::get_addon_slug( $pid );
 
 						</div>
 
-						<?php
-						if ( FORMINATOR_PRO && $res->is_installed && $res->has_update ) {
-							Forminator_Admin_Addons_Page::get_instance()->render_template(
-								'admin/views/addons/action-button',
-								array(
-									'label' => esc_html__( 'Update', 'forminator' ),
-									'icon'  => 'update',
-									'color' => 'blue',
-									'class' => 'addons-actions',
-									'attrs' => array(
-										'data-action'  => 'addons-update',
-										'data-addon'   => esc_attr( $res->pid ),
-										'data-nonce'   => esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ),
-										'data-version' => /* translators: %s: Latest version */ sprintf( esc_html__( 'Version %s', 'forminator' ), esc_html( $res->version_latest ) ),
-									),
-								)
-							);
-						}
-						?>
-
-						<?php if ( ! FORMINATOR_PRO ) { ?>
-							<a
-								href="https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_<?php echo esc_html( $addon_slug ); ?>-addon"
-								target="_blank"
-								class="sui-button sui-button-purple"
-							>
-								<?php esc_html_e( 'Upgrade to Pro', 'forminator' ); ?>
-							</a>
-						<?php } ?>
+						<?php Forminator_Admin_Addons_Page::get_instance()->addons_render( 'addon-cta-button', $res->pid, $res ); ?>
 
 					</div>
 

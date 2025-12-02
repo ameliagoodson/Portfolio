@@ -70,6 +70,9 @@ class Forminator_Assets_Enqueue_Form extends Forminator_Assets_Enqueue {
 			|| $render_obj->has_field_type( 'number' ) ) {
 			$this->load_number_scripts();
 		}
+
+		// ACTION: Enqueue custom form scripts.
+		do_action( 'forminator_custom_forms_enqueue_scripts', $render_obj );
 	}
 
 	/**

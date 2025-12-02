@@ -14,12 +14,17 @@ if ( ! class_exists( 'BEAF_Options' ) ) {
 		public static function instance() {
 			if ( self::$instance == null ) {
 				self::$instance = new self;
+				self::$instance->init();
 			}
 
 			return self::$instance;
 		}
 
 		public function __construct() {
+			
+		}
+
+		public function init() {
 			//load files
 			$this->load_files();
 
@@ -317,12 +322,12 @@ if ( ! class_exists( 'BEAF_Options' ) ) {
 						<?php echo esc_html__( $field['label'], "bafg" ) ?>
 						<?php if ( $is_pro ) : ?>
 							<div class="tf-csf-badge"><span class="tf-pro">
-									<?php esc_attr_e( "Pro", "bafg" ); ?>
+									<?php esc_html_e( "Pro", "bafg" ); ?>
 								</span></div>
 						<?php endif; ?>
 						<?php if ( $badge_up ) : ?>
 							<div class="tf-csf-badge"><span class="tf-upcoming">
-									<?php esc_attr_e( "Upcoming", "bafg" ); ?>
+									<?php esc_html_e( "Upcoming", "bafg" ); ?>
 								</span></div>
 						<?php endif; ?>
 					</label>
@@ -341,7 +346,7 @@ if ( ! class_exists( 'BEAF_Options' ) ) {
 						$_field = new $fieldClass( $field, $value, $settings_id, $parent );
 						$_field->render();
 					} else {
-						echo '<p>' . esc_attr_e( 'Field not found!', 'bafg' ) . '</p>';
+						echo '<p>' . esc_html__( 'Field not found!', 'bafg' ) . '</p>';
 					}
 					?>
 				</div>
@@ -364,5 +369,3 @@ if ( ! class_exists( 'BEAF_Options' ) ) {
 
 	}
 }
-
-BEAF_Options::instance();

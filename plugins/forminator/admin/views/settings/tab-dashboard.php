@@ -6,7 +6,7 @@
  */
 
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-dashboard" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'Dashboard', 'forminator' ); ?></span>

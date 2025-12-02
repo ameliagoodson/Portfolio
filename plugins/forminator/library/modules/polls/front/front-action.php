@@ -103,7 +103,7 @@ class Forminator_Poll_Front_Action extends Forminator_Front_Action {
 		$user_can_vote = apply_filters( 'forminator_poll_handle_form_user_can_vote', $user_can_vote, self::$module_id );
 
 		if ( ! $user_can_vote ) {
-			self::$response_attrs['notice'] = 'notice';
+			self::$response_attrs['notice'] = 'error';
 			throw new Exception( esc_html__( 'You have already submitted a vote to this poll', 'forminator' ) );
 		}
 	}

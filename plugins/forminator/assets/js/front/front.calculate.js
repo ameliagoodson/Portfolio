@@ -61,7 +61,7 @@
 
 					// isHidden
 					if ($(this).data('isHidden')) {
-						$(this).closest('.forminator-col').addClass('forminator-hidden forminator-hidden-option');
+						$(this).closest('.forminator-col').addClass('forminator-hidden forminator-hidden-option forminator-hidden-calculator');
 						var rowField = $(this).closest('.forminator-row');
 						rowField.addClass('forminator-hidden-option');
 
@@ -344,9 +344,9 @@
 					continue;
 				}
 
-				if(this.is_hidden(inputName)) {
+				const $element = this.get_form_field(inputName);
+				if(forminatorUtils().is_hidden($element)) {
 					replace = 0;
-					const $element = this.get_form_field(inputName);
 					if ( 'zero' !== $element.data('hidden-behavior') ) {
 						var quotedOperand = fullMatch.replace(/([\\\.\+\*\?\[\^\]\$\(\)\{\}\=\!\<\>\|\:])/g, "\\$1");
 						var regexp = new RegExp('([\\+\\-\\*\\/]?)[^\\+\\-\\*\\/\\(]*' + quotedOperand + '[^\\)\\+\\-\\*\\/]*([\\+\\-\\*\\/]?)');
@@ -384,23 +384,6 @@
 				if(this.calculationFields[i].name === element_id) {
 					return this.calculationFields[i];
 				}
-			}
-
-			return false;
-		},
-
-		is_hidden: function (element_id) {
-			var $element_id = this.get_form_field(element_id),
-				$column_field = $element_id.closest('.forminator-col'),
-				$row_field = $column_field.closest('.forminator-row')
-			;
-
-			if( $row_field.hasClass("forminator-hidden-option") || $column_field.hasClass("forminator-hidden-option") ) {
-				return false;
-			}
-
-			if( $row_field.hasClass("forminator-hidden") || $column_field.hasClass("forminator-hidden") ) {
-				return true;
 			}
 
 			return false;

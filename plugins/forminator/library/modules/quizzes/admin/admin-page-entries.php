@@ -188,6 +188,7 @@ class Forminator_Quiz_View_Page extends Forminator_Admin_View_Page {
 			foreach ( $entries as $entry ) {
 				$entries_data = array(
 					'entry_id'   => $entry->entry_id,
+					'status'     => $entry->status,
 					'entry_date' => $entry->time_created,
 					'summary'    => array(),
 					'detail'     => array(),

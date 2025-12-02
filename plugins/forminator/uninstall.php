@@ -120,6 +120,7 @@ $clear_data = get_option( 'forminator_uninstall_clear_data', false );
 
 require_once plugin_dir_path( __FILE__ ) . 'library/class-core.php';
 require_once plugin_dir_path( __FILE__ ) . 'constants.php';
+require_once plugin_dir_path( __FILE__ ) . 'functions.php';
 Forminator_Core::init_mixpanel();
 
 /**

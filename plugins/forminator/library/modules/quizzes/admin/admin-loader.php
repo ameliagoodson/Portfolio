@@ -293,27 +293,27 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		return array(
 			// Pagination.
 			'page-indicator-color'                    => '#888888',
-			'start-button-background-static'          => '#17A8E3',
-			'start-button-background-hover'           => '#008FCA',
-			'start-button-background-active'          => '#008FCA',
+			'start-button-background-static'          => '#097BAA',
+			'start-button-background-hover'           => '#086A91',
+			'start-button-background-active'          => '#086A91',
 			'start-button-color-static'               => '#FFFFFF',
 			'start-button-color-hover'                => '#FFFFFF',
 			'start-button-color-active'               => '#FFFFFF',
 			'start-button-font-family'                => 'Roboto',
 			'start-button-font-size'                  => '14',
 			'start-button-font-weight'                => '500',
-			'navigation-button-background-static'     => '#1ABCA1',
-			'navigation-button-background-hover'      => '#159C85',
-			'navigation-button-background-active'     => '#159C85',
+			'navigation-button-background-static'     => '#067963',
+			'navigation-button-background-hover'      => '#05614F',
+			'navigation-button-background-active'     => '#05614F',
 			'navigation-button-color-static'          => '#FFFFFF',
 			'navigation-button-color-hover'           => '#FFFFFF',
 			'navigation-button-color-active'          => '#FFFFFF',
 			'navigation-button-font-family'           => 'Roboto',
 			'navigation-button-font-size'             => '14',
 			'navigation-button-font-weight'           => '500',
-			'back-questions-button-background-static' => '#1ABCA1',
-			'back-questions-button-background-hover'  => '#159C85',
-			'back-questions-button-background-active' => '#159C85',
+			'back-questions-button-background-static' => '#067963',
+			'back-questions-button-background-hover'  => '#05614F',
+			'back-questions-button-background-active' => '#05614F',
 			'back-questions-button-color-static'      => '#FFFFFF',
 			'back-questions-button-color-hover'       => '#FFFFFF',
 			'back-questions-button-color-active'      => '#FFFFFF',
@@ -383,8 +383,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 				'knowledge-aright-background'              => '#F4FCF2',
 				'knowledge-awrong-background'              => '#FDF2F2',
 				'knowledge-answer-border-static'           => '#EBEDEB',
-				'knowledge-answer-border-hover'            => '#17A8E3',
-				'knowledge-answer-border-active'           => '#17A8E3',
+				'knowledge-answer-border-hover'            => '#097BAA',
+				'knowledge-answer-border-active'           => '#097BAA',
 				'knowledge-aright-border'                  => '#0BC30B',
 				'knowledge-awrong-border'                  => '#DA0000',
 				'knowledge-answer-color-static'            => '#888888',
@@ -395,11 +395,11 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 				'knowledge-answer-font-family'             => 'Roboto',
 				'knowledge-answer-font-weight'             => '500',
 				'knowledge-answer-check-border-static'     => '#BFBFBF',
-				'knowledge-answer-check-border-active'     => '#17A8E3',
+				'knowledge-answer-check-border-active'     => '#097BAA',
 				'knowledge-answer-check-border-correct'    => '#0BC30B',
 				'knowledge-answer-check-border-incorrect'  => '#DA0000',
 				'knowledge-answer-check-background-static' => '#FFFFFF',
-				'knowledge-answer-check-background-active' => '#17A8E3',
+				'knowledge-answer-check-background-active' => '#097BAA',
 				'knowledge-answer-check-background-correct' => '#0BC30B',
 				'knowledge-answer-check-background-incorrect' => '#DA0000',
 				'knowledge-phrasing-color'                 => '#4D4D4D',
@@ -407,9 +407,9 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 				'knowledge-phrasing-font-family'           => 'Roboto',
 				'knowledge-phrasing-font-weight'           => '700',
 				// KNOWLEDGE button.
-				'knowledge-submit-background-static'       => '#17A8E3',
-				'knowledge-submit-background-hover'        => '#008FCA',
-				'knowledge-submit-background-active'       => '#008FCA',
+				'knowledge-submit-background-static'       => '#097BAA',
+				'knowledge-submit-background-hover'        => '#086A91',
+				'knowledge-submit-background-active'       => '#086A91',
 				'knowledge-submit-color-static'            => '#FFFFFF',
 				'knowledge-submit-color-hover'             => '#FFFFFF',
 				'knowledge-submit-color-active'            => '#FFFFFF',
@@ -498,22 +498,22 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 				// NOWRONG answer.
 				'nowrong-answer-settings'                 => false,
 				'nowrong-answer-border-static'            => '#EBEDEB',
-				'nowrong-answer-border-hover'             => '#17A8E3',
-				'nowrong-answer-border-active'            => '#17A8E3',
+				'nowrong-answer-border-hover'             => '#097BAA',
+				'nowrong-answer-border-active'            => '#097BAA',
 				'nowrong-answer-background-static'        => '#FAFAFA',
 				'nowrong-answer-background-hover'         => '#F3FBFE',
 				'nowrong-answer-background-active'        => '#F3FBFE',
 				'nowrong-answer-chkbo-static'             => '#BFBFBF',
-				'nowrong-answer-chkbo-active'             => '#17A8E3',
+				'nowrong-answer-chkbo-active'             => '#097BAA',
 				'nowrong-answer-color-static'             => '#888888',
 				'nowrong-answer-color-active'             => '#333333',
 				'nowrong-answer-font-size'                => '14',
 				'nowrong-answer-font-family'              => 'Roboto',
 				'nowrong-answer-font-weight'              => '500',
 				// NOWRONG submit.
-				'nowrong-submit-background-static'        => '#17A8E3',
-				'nowrong-submit-background-hover'         => '#008FCA',
-				'nowrong-submit-background-active'        => '#008FCA',
+				'nowrong-submit-background-static'        => '#097BAA',
+				'nowrong-submit-background-hover'         => '#086A91',
+				'nowrong-submit-background-active'        => '#086A91',
 				'nowrong-submit-color-static'             => '#FFFFFF',
 				'nowrong-submit-color-hover'              => '#FFFFFF',
 				'nowrong-submit-color-active'             => '#FFFFFF',
@@ -523,7 +523,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 				// NOWRONG result.
 				'nowrong-result-background-main'          => '#FAFAFA',
 				'nowrong-result-background-header'        => '#FAFAFA',
-				'nowrong-result-border-color'             => '#17A8E3',
+				'nowrong-result-border-color'             => '#097BAA',
 				'nowrong-result-quiz-color'               => '#888888',
 				'nowrong-result-quiz-font-family'         => 'Roboto',
 				'nowrong-result-quiz-font-size'           => '15',
@@ -756,7 +756,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 			return;
 		}
 
-		$wizard_url = admin_url( 'admin.php?page=forminator-' . $quiz_type . '-wizard&id=' . $id );
+		$wizard_url = admin_url( 'admin.php?page=forminator-' . $quiz_type . '-wizard&create-status=success&id=' . $id );
 
 		wp_safe_redirect( $wizard_url );
 	}
@@ -964,6 +964,8 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+		// Remove temporary settings.
+		Forminator_Base_Form_Model::remove_temp_settings( $id );
 
 		$type = $form_model->quiz_type;
 
@@ -1027,7 +1029,7 @@ class Forminator_Quiz_Admin extends Forminator_Admin_Module {
 		$model->settings = $settings;
 
 		// status.
-		$model->status = 'leads';
+		$model->status = Forminator_Form_Model::STATUS_PUBLISH;
 
 		// Save data.
 		$id = $model->save();

@@ -1374,6 +1374,7 @@ function forminator_reset_settings() {
 	delete_option( 'forminator_stripe_payment_intents' );
 	delete_option( 'forminator_paypal_configuration' );
 	delete_option( 'forminator_usage_tracking' );
+	delete_option( 'forminator_auto_saving' );
 
 	/**
 	 * Forminator_delete_addon_options
@@ -1948,7 +1949,6 @@ function forminator_recursive_array_search( $needle, $haystack ) {
 function forminator_get_accessible_user_roles() {
 	// Get the current user object.
 	$current_user = wp_get_current_user();
-
 	// Check if user is logged in | Have access to create user.
 	if ( empty( $current_user ) || ! current_user_can( 'create_users' ) ) {
 		return array();
@@ -2011,6 +2011,31 @@ function forminator_validate_registration_form_settings( $settings ) {
 		}
 	}
 	return true;
+}
+
+/**
+ * Can the current user approve a user and create a site.
+ *
+ * @param object $signup Signup.
+ * @return bool
+ */
+function forminator_can_approve_user_and_create_site( $signup ) {
+	$roles = forminator_get_accessible_user_roles();
+	if ( ! empty( $signup->user_data['role'] ) ) {
+		if ( forminator_is_main_site() ) {
+			// Either the 'Don't create a user' option is chosen, or the current user has access to the required user roles.
+			if ( 'notCreate' === $signup->user_data['role'] || isset( $roles[ $signup->user_data['role'] ] ) ) { // Respect the "Don't create a user in the network's main site" option.
+				$option_create_site = forminator_get_property( $signup->settings, 'site-registration' );
+				// Either the 'site-registration' option is disabled, or the current user has access to create sites.
+				if ( 'enable' !== $option_create_site || current_user_can( 'create_sites' ) ) {
+					return true;
+				}
+			}
+		} elseif ( isset( $roles[ $signup->user_data['role'] ] ) ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -2087,4 +2112,39 @@ function forminator_cloud_templates_disabled(): bool {
 	}
 
 	return $is_disabled;
+}
+
+/**
+ * Check if user registration is enabled in WordPress settings.
+ *
+ * @return bool
+ */
+function forminator_is_user_registration_enabled() {
+	if ( is_multisite() ) {
+		$registration_option = get_site_option( 'registration' );
+		if ( in_array( $registration_option, array( 'all', 'user' ), true ) ) {
+			return true;
+		}
+	} elseif ( get_option( 'users_can_register' ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Check if site registration is enabled in WordPress settings.
+ *
+ * @return bool
+ */
+function forminator_is_site_registration_enabled() {
+	// Allow site registration only if on the main site and site registration is enabled.
+	if ( forminator_is_main_site() ) {
+		$registration_option = get_site_option( 'registration' );
+		// Site registration is enabled only if the option is set to 'all'.
+		// For the 'blog' option, only logged-in users can register new sites, so we don't support that here.
+		if ( 'all' === $registration_option ) {
+			return true;
+		}
+	}
+	return false;
 }

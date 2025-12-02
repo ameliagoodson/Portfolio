@@ -66,6 +66,21 @@ class Forminator_Address extends Forminator_Field {
 	public function __construct() {
 		parent::__construct();
 		$this->name = esc_html__( 'Address', 'forminator' );
+
+		// Set default required error messages.
+		$street_required  = __( 'This field is required. Please enter the street address.', 'forminator' );
+		$line_required    = __( 'This field is required. Please enter address line.', 'forminator' );
+		$city_required    = __( 'This field is required. Please enter the city.', 'forminator' );
+		$state_required   = __( 'This field is required. Please enter the state.', 'forminator' );
+		$zip_required     = __( 'This field is required. Please enter the zip code.', 'forminator' );
+		$country_required = __( 'This field is required. Please select the country.', 'forminator' );
+
+		self::$default_required_messages[ 'street_address_' . $this->type ]  = $street_required;
+		self::$default_required_messages[ 'address_line_' . $this->type ]    = $line_required;
+		self::$default_required_messages[ 'address_city_' . $this->type ]    = $city_required;
+		self::$default_required_messages[ 'address_state_' . $this->type ]   = $state_required;
+		self::$default_required_messages[ 'address_zip_' . $this->type ]     = $zip_required;
+		self::$default_required_messages[ 'address_country_' . $this->type ] = $country_required;
 	}
 
 	/**
@@ -76,25 +91,19 @@ class Forminator_Address extends Forminator_Field {
 	 */
 	public function defaults() {
 		return array(
-			'street_address'                   => 'true',
-			'address_city'                     => 'true',
-			'address_state'                    => 'true',
-			'address_zip'                      => 'true',
-			'address_country'                  => 'true',
-			'address_line'                     => 'true',
-			'field_label'                      => esc_html__( 'Address', 'forminator' ),
-			'street_address_label'             => esc_html__( 'Street Address', 'forminator' ),
-			'address_city_label'               => esc_html__( 'City', 'forminator' ),
-			'address_state_label'              => esc_html__( 'State/Province', 'forminator' ),
-			'address_zip_label'                => esc_html__( 'ZIP / Postal Code', 'forminator' ),
-			'address_country_label'            => esc_html__( 'Country', 'forminator' ),
-			'address_line_label'               => esc_html__( 'Apartment, suite, etc', 'forminator' ),
-			'street_address_required_message'  => esc_html__( 'This field is required. Please enter the street address.', 'forminator' ),
-			'address_zip_required_message'     => esc_html__( 'This field is required. Please enter the zip code.', 'forminator' ),
-			'address_country_required_message' => esc_html__( 'This field is required. Please select the country.', 'forminator' ),
-			'address_city_required_message'    => esc_html__( 'This field is required. Please enter the city.', 'forminator' ),
-			'address_state_required_message'   => esc_html__( 'This field is required. Please enter the state.', 'forminator' ),
-			'address_line_required_message'    => esc_html__( 'This field is required. Please enter address line.', 'forminator' ),
+			'street_address'        => 'true',
+			'address_city'          => 'true',
+			'address_state'         => 'true',
+			'address_zip'           => 'true',
+			'address_country'       => 'true',
+			'address_line'          => 'true',
+			'field_label'           => esc_html__( 'Address', 'forminator' ),
+			'street_address_label'  => esc_html__( 'Street Address', 'forminator' ),
+			'address_city_label'    => esc_html__( 'City', 'forminator' ),
+			'address_state_label'   => esc_html__( 'State/Province', 'forminator' ),
+			'address_zip_label'     => esc_html__( 'ZIP / Postal Code', 'forminator' ),
+			'address_country_label' => esc_html__( 'Country', 'forminator' ),
+			'address_line_label'    => esc_html__( 'Apartment, suite, etc', 'forminator' ),
 		);
 	}
 
@@ -207,6 +216,18 @@ class Forminator_Address extends Forminator_Field {
 			'aria-required' => $ariareq,
 		);
 
+		// Add autocomplete attribute for browser autofill.
+		$browser_autofill = self::get_property( $slug . '_browser_autofill', $field, 'enabled' );
+		if ( 'enabled' === $browser_autofill ) {
+			if ( 'street_address' === $slug ) {
+				$address['autocomplete'] = 'address-line1';
+			} elseif ( 'address_line' === $slug ) {
+				$address['autocomplete'] = 'address-line2';
+			}
+		} else {
+			$address['autocomplete'] = 'off';
+		}
+
 		if ( empty( $draft_value ) ) {
 
 			$address = $this->replace_from_prefill( $field, $address, $slug );
@@ -288,8 +309,8 @@ class Forminator_Address extends Forminator_Field {
 			$html .= sprintf( '<div class="forminator-row" data-multiple="%s">', $multirow );
 
 			if ( $city ) {
-
-				$city_data = array(
+				$browser_autofill = self::get_property( 'address_city_browser_autofill', $field, 'enabled' );
+				$city_data        = array(
 					'type'          => 'text',
 					'name'          => $city_id,
 					'placeholder'   => $this->sanitize_value( self::get_property( 'address_city_placeholder', $field ) ),
@@ -297,6 +318,7 @@ class Forminator_Address extends Forminator_Field {
 					'class'         => 'forminator-input',
 					'data-required' => $city_required,
 					'aria-required' => $city_ariareq,
+					'autocomplete'  => 'enabled' === $browser_autofill ? 'address-level2' : 'off',
 				);
 
 				if ( isset( $draft_value['city'] ) ) {
@@ -328,8 +350,8 @@ class Forminator_Address extends Forminator_Field {
 			}
 
 			if ( $state ) {
-
-				$state_data = array(
+				$browser_autofill = self::get_property( 'address_state_browser_autofill', $field, 'enabled' );
+				$state_data       = array(
 					'type'          => 'text',
 					'name'          => $state_id,
 					'placeholder'   => $this->sanitize_value( self::get_property( 'address_state_placeholder', $field ) ),
@@ -337,6 +359,7 @@ class Forminator_Address extends Forminator_Field {
 					'class'         => 'forminator-input',
 					'data-required' => $state_required,
 					'aria-required' => $state_ariareq,
+					'autocomplete'  => 'enabled' === $browser_autofill ? 'address-level1' : 'off',
 				);
 
 				if ( isset( $draft_value['state'] ) ) {
@@ -418,13 +441,14 @@ class Forminator_Address extends Forminator_Field {
 			$html .= sprintf( '<div class="forminator-row" data-multiple="%s">', $multirow );
 
 			if ( $address_zip ) {
-
-				$zip_data = array(
-					'type'        => 'text',
-					'name'        => $zip_id,
-					'placeholder' => $this->sanitize_value( self::get_property( 'address_zip_placeholder', $field ) ),
-					'id'          => self::get_field_id( $zip_id ),
-					'class'       => 'forminator-input',
+				$browser_autofill = self::get_property( 'address_zip_browser_autofill', $field, 'enabled' );
+				$zip_data         = array(
+					'type'         => 'text',
+					'name'         => $zip_id,
+					'placeholder'  => $this->sanitize_value( self::get_property( 'address_zip_placeholder', $field ) ),
+					'id'           => self::get_field_id( $zip_id ),
+					'class'        => 'forminator-input',
+					'autocomplete' => 'enabled' === $browser_autofill ? 'postal-code' : 'off',
 				);
 
 				if ( isset( $draft_value['zip'] ) ) {
@@ -456,13 +480,14 @@ class Forminator_Address extends Forminator_Field {
 			}
 
 			if ( $address_country ) {
-
-				$country_data = array(
+				$browser_autofill = self::get_property( 'address_country_browser_autofill', $field, 'enabled' );
+				$country_data     = array(
 					'name'             => $country_id,
 					'id'               => self::get_field_id( $this->form_settings['form_id'] . '__field--' . $country_id ),
 					'class'            => 'forminator-select2',
 					'data-search'      => 'true',
 					'data-placeholder' => esc_html__( 'Select country', 'forminator' ),
+					'autocomplete'     => 'enabled' === $browser_autofill ? 'country-name country' : 'off',
 				);
 
 				$countries = array(
@@ -702,7 +727,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'street_address_required_message',
 				'street_address',
-				esc_html__( 'This field is required. Please enter the street address.', 'forminator' )
+				self::$default_required_messages[ 'street_address_' . $this->type ]
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '-street_address": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -712,7 +737,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_line_required_message',
 				'address_line',
-				esc_html__( 'This field is required. Please enter address line.', 'forminator' )
+				self::$default_required_messages[ 'address_line_' . $this->type ]
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '-address_line": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -723,7 +748,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_city_required_message',
 				'address_city',
-				esc_html__( 'This field is required. Please enter the city.', 'forminator' )
+				self::$default_required_messages[ 'address_city_' . $this->type ]
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '-city": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -734,7 +759,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_state_required_message',
 				'address_state',
-				esc_html__( 'This field is required. Please enter the state.', 'forminator' )
+				self::$default_required_messages[ 'address_state_' . $this->type ]
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '-state": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -745,7 +770,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_zip_required_message',
 				'address_zip',
-				esc_html__( 'This field is required. Please enter the zip code.', 'forminator' )
+				self::$default_required_messages[ 'address_zip_' . $this->type ]
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '-zip": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -756,7 +781,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_country_required_message',
 				'address_country',
-				esc_html__( 'This field is required. Please select the country.', 'forminator' )
+				self::$default_required_messages[ 'address_country_' . $this->type ]
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '-country": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
@@ -802,7 +827,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'street_address_required_message',
 				'street_address',
-				esc_html__( 'This field is required. Please enter the street address.', 'forminator' )
+				esc_html( self::$default_required_messages[ 'street_address_' . $this->type ] )
 			);
 		}
 		if ( $line && $line_required && empty( $line_data ) ) {
@@ -811,7 +836,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_line_required_message',
 				'address_line',
-				esc_html__( 'This field is required. Please enter address line.', 'forminator' )
+				esc_html( self::$default_required_messages[ 'address_line_' . $this->type ] )
 			);
 		}
 
@@ -821,7 +846,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_city_required_message',
 				'address_city',
-				esc_html__( 'This field is required. Please enter the city.', 'forminator' )
+				esc_html( self::$default_required_messages[ 'address_city_' . $this->type ] )
 			);
 		}
 
@@ -831,7 +856,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_state_required_message',
 				'address_state',
-				esc_html__( 'This field is required. Please enter the state.', 'forminator' )
+				esc_html( self::$default_required_messages[ 'address_state_' . $this->type ] )
 			);
 		}
 
@@ -841,7 +866,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_zip_required_message',
 				'address_zip',
-				esc_html__( 'This field is required. Please enter the zip code.', 'forminator' )
+				esc_html( self::$default_required_messages[ 'address_zip_' . $this->type ] )
 			);
 		}
 
@@ -851,7 +876,7 @@ class Forminator_Address extends Forminator_Field {
 				$field,
 				'address_country_required_message',
 				'address_country',
-				esc_html__( 'This field is required. Please select the country.', 'forminator' )
+				esc_html( self::$default_required_messages[ 'address_country_' . $this->type ] )
 			);
 		}
 	}

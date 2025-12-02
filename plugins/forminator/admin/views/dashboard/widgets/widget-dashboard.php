@@ -5,9 +5,11 @@
  * @package Forminator
  */
 
+echo forminator_template( 'templates/preset/popup' ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */
+
 ?>
 
-<div class="sui-box <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
+<div id="forminator-dashboard-box-on-board" class="sui-box <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
 	<div class="forminator-dashboard-no-form-block">
 		<div class="forminator-dashboard-create-first-form">
 			<svg width="120" height="123" viewBox="0 0 120 123" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -46,40 +48,133 @@
 				</linearGradient>
 				</defs>
 			</svg>
-			<h3 class="sui-box-title forminator-create-form-title"><?php esc_html_e( 'You haven’t created any forms yet', 'forminator' ); ?></h3>
-			<p><?php esc_html_e( 'With Forminator, you can collect any type of information using Forms, gather opinions with Polls, and boost engagement with Quizzes.', 'forminator' ); ?></p>
+			<h3 class="sui-box-title forminator-create-form-title"><?php esc_html_e( 'Welcome to Forminator', 'forminator' ); ?> 🎉</h3>
+			<p><?php esc_html_e( 'Let’s create your first form! Start from scratch or pick a template to begin.', 'forminator' ); ?></p>
 
-			<p>
-				<button class="sui-button sui-button-blue wpmudev-open-modal"
-					data-modal="custom_forms">
-					<i class="sui-icon-plus" aria-hidden="true"></i> <?php esc_html_e( 'Create Your First Form', 'forminator' ); ?>
-				</button>
-			</p>
+			<div class="forminator-popup-create--cform">
+				<div class="forminator-create-popup-sidebar" style="padding: 30px;">
+					<div class="sui-box forminator-preset-template">
+						<div class="sui-box-selectors sui-padding--hidden sui-box-selectors-col-4">
+							<ul>
+								<?php foreach ( $args['main_templates'] as $t_number => $template ) { ?>
+								<li>
+									<?php if ( 'blank' === $template['id'] ) { ?>
+									<div class="sui-box-selector forminator-card forminator-blank-card create-blank-form forminator-dashboard-blank-template">
+										<div class="forminator-template-image">
+											<span class="forminator-template-icon" style="border: unset;">
+												<svg width="39" height="34" viewBox="0 0 39 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<path d="M4.55572 30.8125H17.6512L17.3147 32.1539C17.163 32.7781 17.196 33.4156 17.4071 34H4.55572C2.2269 34 0.333496 32.0941 0.333496 29.75V4.25C0.333496 1.90586 2.2269 0 4.55572 0H15.4741C16.5957 0 17.671 0.444922 18.4627 1.2418L24.4332 7.25156C25.2248 8.04844 25.6668 9.13086 25.6668 10.2598V19.8953L22.5002 23.0828V10.625H17.2224C16.0547 10.625 15.1113 9.67539 15.1113 8.5V3.1875H4.55572C3.97516 3.1875 3.50016 3.66563 3.50016 4.25V29.75C3.50016 30.3344 3.97516 30.8125 4.55572 30.8125ZM36.605 15.652L37.555 16.6082C38.5842 17.6441 38.5842 19.3242 37.555 20.3668L35.6154 22.3191L30.9314 17.6043L32.871 15.652C33.9002 14.616 35.5693 14.616 36.605 15.652ZM20.9102 27.6914L29.4338 19.1117L34.1179 23.8266L25.5943 32.3996C25.3238 32.6719 24.9873 32.8645 24.6113 32.9574L20.6463 33.9535C20.2835 34.0465 19.9075 33.9402 19.6436 33.6746C19.3797 33.409 19.2741 33.0305 19.3665 32.6652L20.3561 28.6742C20.4484 28.3023 20.6397 27.957 20.9102 27.6848V27.6914Z" fill="#888888"></path>
+												</svg>
+											</span>
+										</div>
+										<div style="padding: 10px 20px;">
+											<button class="sui-button sui-button-blue create-form"
+												data-id="<?php echo esc_attr( $template['id'] ); ?>"
+												data-name="<?php echo esc_attr( $template['name'] ); ?>"
+												style="width: 100%;"
+											>
+												<span class="sui-loading-text">
+													<?php esc_html_e( 'Start from scratch', 'forminator' ); ?>
+												</span>
+												<!-- Spinning loading icon -->
+												<span class="sui-icon-loader sui-loading" aria-hidden="true"></span>
+											</button>
+										</div>
+									</div>
+									<?php } else { ?>
+									<div class="sui-box-selector forminator-card">
+										<div class="forminator-template-image">
+											<div class="forminator-template-image-wrapper">
+												<img
+													src="<?php echo esc_url( $template['thumbnail'] ); ?>"
+													alt="<?php echo esc_attr( $template['name'] ); ?>"
+													class="sui-image"
+												/>
+											</div>
+											<div class="forminator-preview-cta">
+												<button class="sui-button sui-button-ghost forminator-template-preview"
+													data-modal-open="forminator-modal-template-preview"
+													data-screenshot="<?php echo esc_url( $template['screenshot'] ); ?>"
+													data-title="<?php echo esc_attr( $template['name'] ); ?>"
+												>
+													<?php esc_html_e( 'Preview', 'forminator' ); ?>
+												</button>
+											</div>
+										</div>
+
+										<span class="forminator-template-name">
+											<?php echo esc_html( $template['name'] ); ?>
+										</span>
+										<div class="forminator-card-cta">
+											<button class="sui-button sui-button-blue create-form"
+												data-id="<?php echo esc_attr( $template['id'] ); ?>"
+												data-name="<?php echo esc_attr( $template['name'] ); ?>"
+											>
+												<span class="sui-loading-text">
+													<?php esc_html_e( 'Create Form', 'forminator' ); ?>
+												</span>
+												<!-- Spinning loading icon -->
+												<span class="sui-icon-loader sui-loading" aria-hidden="true"></span>
+											</button>
+										</div>
+									</div>
+									<?php } ?>
+
+								</li>
+								<?php } ?>
+							</ul>
+						</div>
+					</div>
+					<p>
+						<button id="forminator_view_all_templates" class="sui-button  sui-button-ghost sui-button-icon-right wpmudev-open-modal"
+							data-modal="custom_forms">
+							<?php esc_html_e( 'View all templates', 'forminator' ); ?>
+							<span class="sui-icon-chevron-right" aria-hidden="true"></span>
+						</button>
+					</p>
+				</div>
+			</div>
 		</div>
 		<div class="forminator-dashboard-other-form-types">
-			<h3 class="sui-box-title forminator-other-form-title"><?php esc_html_e( 'Other form types', 'forminator' ); ?></h3>
+			<h3 class="sui-box-title forminator-other-form-title"><?php esc_html_e( 'Prefer something more interactive? Try a Quiz or a Poll.', 'forminator' ); ?></h3>
 			<div class="sui-row">
 				<div class="sui-col-md-6">
-					<button class="forminator-dashboard-other-form wpmudev-open-modal" data-modal="polls">
-						<div class="forminator-dashboard-form-icon">
-							<i class="sui-icon-graph-bar" aria-hidden="true"></i>
+					<div class="sui-box forminator-dashboard-other-form">
+						<div class="sui-box-body sui-content-left">
+							<h3 class="sui-box-title">
+								<i class="sui-icon-academy" aria-hidden="true"></i>
+								<?php esc_html_e( 'Quizzes', 'forminator' ); ?>
+							</h3>
+							<p class="sui-description">
+								<?php esc_html_e( 'Create fun or challenging quizzes your visitors can take and share on social media.', 'forminator' ); ?>
+							</p>
+							<p>
+								<button class="sui-button sui-button-blue wpmudev-open-modal" data-modal="quizzes">
+									<i class="sui-icon-plus" aria-hidden="true"></i>
+									<?php esc_html_e( 'Create a Quiz', 'forminator' ); ?>
+								</button>
+							</p>
 						</div>
-						<div class="forminator-dashboard-form-title">
-							<h3 class="sui-box-title"><?php esc_html_e( 'Create Poll', 'forminator' ); ?></h3>
-							<p><?php esc_html_e( 'Gather opinions with polls', 'forminator' ); ?></p>
-						</div>
-					</button>
+					</div>
 				</div>
 				<div class="sui-col-md-6">
-					<button class="forminator-dashboard-other-form wpmudev-open-modal" data-modal="quizzes">
-						<div class="forminator-dashboard-form-icon">
-							<i class="sui-icon-academy" aria-hidden="true"></i>
+					<div class="sui-box forminator-dashboard-other-form">
+						<div class="sui-box-body sui-content-left">
+							<h3 class="sui-box-title">
+								<i class="sui-icon-graph-bar" aria-hidden="true"></i>
+								<?php esc_html_e( 'Polls', 'forminator' ); ?>
+							</h3>
+							<p class="sui-description">
+								<?php esc_html_e( 'Create interactive polls to collect users\' opinions, with lots of dynamic options and settings.', 'forminator' ); ?>
+							</p>
+							<p>
+								<button class="sui-button sui-button-blue wpmudev-open-modal" data-modal="polls">
+									<i class="sui-icon-plus" aria-hidden="true"></i>
+									<?php esc_html_e( 'Create a Poll', 'forminator' ); ?>
+								</button>
+							</p>
 						</div>
-						<div class="forminator-dashboard-form-title">
-							<h3 class="sui-box-title"><?php esc_html_e( 'Create Quiz', 'forminator' ); ?></h3>
-							<p><?php esc_html_e( 'Test knowledge with quizzes', 'forminator' ); ?></p>
-						</div>
-					</button>
+					</div>
 				</div>
 			</div>
 		</div>

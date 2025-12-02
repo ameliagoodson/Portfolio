@@ -75,6 +75,9 @@ class Forminator_Select extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Select', 'forminator' );
+		$required   = __( 'This field is required. Please select a value.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -161,10 +164,12 @@ class Forminator_Select extends Forminator_Field {
 		$placeholder   = esc_html( self::get_property( 'placeholder', $field, '' ) );
 		$calc_enabled  = self::get_property( 'calculations', $field, false, 'bool' );
 		$field_style   = self::get_property( 'multiselect_style', $field, 'standard' );
+		$draft_values  = $draft_value;
 
 		$hidden_behavior      = self::get_property( 'hidden_behavior', $field );
 		$checkbox_in_dropdown = self::get_property( 'checkbox_in_dropdown', $field, 'hide' );
 		$descr_position       = self::get_description_position( $field, $settings );
+		$custom_input_name    = $name;
 
 		$html .= '<div class="forminator-field">';
 
@@ -452,6 +457,12 @@ class Forminator_Select extends Forminator_Field {
 			$html .= sprintf( '</select>' );
 		}
 
+		$custom_input_attributes = array(
+			'id'   => 'custom-' . $id,
+			'name' => 'custom-' . $custom_input_name,
+		);
+		$html                   .= self::maybe_add_custom_option( $field, $options, $custom_input_attributes, $draft_values );
+
 		if ( 'above' !== $descr_position ) {
 			$html .= self::get_description( $description, $id, $descr_position );
 		}
@@ -482,6 +493,21 @@ class Forminator_Select extends Forminator_Field {
 			$rules .= '"' . $this->get_id( $field ) . '[]": "required",';
 		}
 
+		$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+		if ( $enable_custom_option && $is_required ) {
+			$field_style = self::get_property( 'multiselect_style', $field, 'standard' );
+			if ( 'multiselect' !== $field_type ) {
+				$rule_param = 'single-select';
+			} elseif ( 'modern' === $field_style ) {
+				$rule_param = 'multi-select';
+			} else {
+				$rule_param = 'checkbox';
+			}
+			$rules .= '"custom-' . $this->get_id( $field ) . '": {' . "\n";
+			$rules .= '"customInputForOtherOption": "' . $rule_param . '",';
+			$rules .= '},' . "\n";
+		}
+
 		return apply_filters( 'forminator_field_single_validation_rules', $rules, $id, $field );
 	}
 
@@ -499,7 +525,7 @@ class Forminator_Select extends Forminator_Field {
 		$field_type  = self::get_property( 'value_type', $field, '' );
 
 		if ( $is_required ) {
-			$required_message = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please select a value.', 'forminator' ) );
+			$required_message = self::get_property( 'required_message', $field, $this->get_required_error_message() );
 			$required_message = apply_filters(
 				'forminator_single_field_required_validation_message',
 				$required_message,
@@ -511,6 +537,18 @@ class Forminator_Select extends Forminator_Field {
 				$messages .= '"' . $this->get_id( $field ) . '[]": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 			} else {
 				$messages .= '"' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
+			}
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( $enable_custom_option ) {
+				$custom_value_required_message = self::get_property( 'custom_value_error_message', $field, '' );
+				$custom_value_required_message = apply_filters(
+					'forminator_custom_value_field_required_validation_message',
+					( ! empty( $custom_value_required_message ) ? $custom_value_required_message : esc_html__( 'Please, enter a custom value', 'forminator' ) ),
+					'custom-' . $id,
+					$field
+				);
+				$messages                     .= '"custom-' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $custom_value_required_message ) . '",' . "\n";
 			}
 		}
 
@@ -597,13 +635,32 @@ class Forminator_Select extends Forminator_Field {
 				( 'single' === $select_type && $this->is_single_select_empty( $data ) ) ||
 				( 'multiselect' === $select_type && empty( $data ) )
 			) {
-				$required_message                = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please select a value.', 'forminator' ) );
+				$required_message                = self::get_property( 'required_message', $field, esc_html( $this->get_required_error_message() ) );
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_single_field_required_validation_message',
 					$required_message,
 					$id,
 					$field
 				);
+			}
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( ! empty( $data ) && $enable_custom_option &&
+					( ( 'single' === $select_type && 'custom_option' === $data ) ||
+					( 'multiselect' === $select_type && in_array( 'custom_option', $data, true ) ) )
+				) {
+				$custom_value_required_message = self::get_property( 'custom_value_error_message', $field, '' );
+				$custom_value                  = Forminator_CForm_Front_Action::$prepared_data[ 'custom-' . $id ] ?? '';
+				if ( trim( $custom_value ) === '' ) {
+					// For cloned fields, use the original ID.
+					$custom_input_name                              = empty( $field['original_id'] ) ? 'custom-' . $id : 'custom-' . $field['original_id'];
+					$this->validation_message[ $custom_input_name ] = apply_filters(
+						'forminator_custom_value_field_required_validation_message',
+						( ! empty( $custom_value_required_message ) ? esc_html( $custom_value_required_message ) : esc_html__( 'Please, enter a custom value', 'forminator' ) ),
+						$custom_input_name,
+						$field
+					);
+				}
 			}
 		}
 	}

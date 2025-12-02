@@ -247,6 +247,7 @@ class Forminator_Mixpanel_Modules extends Events {
 		$property['Design Style']        = $form_style;
 		$property['Save and Continue']   = self::settings_value( $settings, 'use_save_and_continue', false );
 		$property['Email Notifications'] = self::settings_value( $settings, 'notification_count', 0 );
+		$property['CAPTCHA Type']        = self::captcha_type( $fields );
 
 		if ( isset( self::$stripe_ocs['payment_method'] ) ) {
 			if ( 'false' === self::$stripe_ocs['payment_method'] ) {
@@ -255,6 +256,10 @@ class Forminator_Mixpanel_Modules extends Events {
 				$property['Stripe Payment Method'] = 'dynamic';
 			}
 		}
+
+		list( $confirm_email, $filter_type ) = self::email_field_properties( $fields );
+		$property['Confirm Email']           = $confirm_email;
+		$property['Filter Email Provider']   = $filter_type;
 
 		if ( isset( self::$stripe_ocs['mode'] ) ) {
 			$property['Stripe Mode'] = 'live' === self::$stripe_ocs['mode'] ? 'live' : 'test';
@@ -458,6 +463,59 @@ class Forminator_Mixpanel_Modules extends Events {
 		}
 
 		return $field_array;
+	}
+
+	/**
+	 * Get captcha provider label.
+	 *
+	 * @param array $fields Fields.
+	 *
+	 * @return string
+	 */
+	private static function captcha_type( $fields ) {
+		$captcha_data = self::fields_array( $fields, 'captcha' );
+		$captcha_type = '';
+		if ( ! empty( $captcha_data ) ) {
+			$provider = $captcha_data[0]['captcha_provider'] ?? '';
+			if ( 'recaptcha' === $provider ) {
+				$captcha_type = 'reCAPTCHA';
+			} elseif ( 'hcaptcha' === $provider ) {
+				$captcha_type = 'hCaptcha';
+			} elseif ( 'turnstile' === $provider ) {
+				$captcha_type = 'Cloudflare Turnstile';
+			}
+		}
+
+		return $captcha_type;
+	}
+
+	/**
+	 * Get email field properties.
+	 *
+	 * @param array $fields Fields.
+	 *
+	 * @return array
+	 */
+	private static function email_field_properties( $fields ) {
+		$confirm_email         = 'Disabled';
+		$filter_email_provider = 'None';
+		$email_fields          = self::fields_array( $fields, 'email' );
+		if ( ! empty( $email_fields ) ) {
+			foreach ( $email_fields as $field ) {
+				if ( 'Disabled' === $confirm_email && ! empty( $field['confirm-email'] ) && filter_var( $field['confirm-email'], FILTER_VALIDATE_BOOLEAN ) ) {
+					$confirm_email = 'Enabled';
+				}
+				if ( 'None' === $filter_email_provider && ! empty( $field['filter_type'] ) ) {
+					if ( 'deny' === $field['filter_type'] && ! empty( $field['denylist'] ) ) {
+						$filter_email_provider = 'Deny';
+					} elseif ( 'allow' === $field['filter_type'] && ! empty( $field['allowlist'] ) ) {
+						$filter_email_provider = 'Allow';
+					}
+				}
+			}
+		}
+
+		return array( $confirm_email, $filter_email_provider );
 	}
 
 	/**

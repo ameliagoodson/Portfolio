@@ -83,6 +83,13 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	protected $_position = 2;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'api_key' );
+
+	/**
 	 * Forminator_Mailchimp constructor.
 	 * - Set dynamic translatable text(s) that will be displayed to end-user
 	 * - Set dynamic icons and images
@@ -188,7 +195,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 */
 	public function get_api( $api_key = null ) {
 		if ( is_null( $api_key ) ) {
-			$api_key = $this->get_api_key();
+			$api_key = $this->get_api_key( true );
 		}
 		$api = Forminator_Mailchimp_Wp_Api::get_instance( $api_key );
 		return $api;
@@ -198,10 +205,12 @@ class Forminator_Mailchimp extends Forminator_Integration {
 	 * Get currently saved api key
 	 *
 	 * @since 1.0 Mailchimp Integration
+	 *
+	 * @param bool $decrypt Whether to decrypt the API key or not.
 	 * @return string|null
 	 */
-	private function get_api_key() {
-		$setting_values = $this->get_settings_values();
+	private function get_api_key( $decrypt = false ) {
+		$setting_values = $this->get_settings_values( $decrypt );
 		if ( isset( $setting_values['api_key'] ) ) {
 			return $setting_values['api_key'];
 		}
@@ -298,7 +307,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 				sanitize_email( $connected_account['email'] )
 			);
 
-			$myaccount = Forminator_Admin::get_red_notice( $notice );
+			$myaccount = Forminator_Admin::get_green_notice( $notice );
 
 		}
 
@@ -377,7 +386,8 @@ class Forminator_Mailchimp extends Forminator_Integration {
 		if ( isset( $submitted_data['api_key'] ) ) {
 			$api_key           = $submitted_data['api_key'];
 			$identifier        = isset( $submitted_data['identifier'] ) ? $submitted_data['identifier'] : '';
-			$api_key_validated = $this->validate_api_key( $api_key );
+			$real_api_key      = $this->get_real_value( $api_key, 'api_key' );
+			$api_key_validated = $this->validate_api_key( $real_api_key );
 
 			/**
 			 * Filter validating api key result
@@ -390,7 +400,7 @@ class Forminator_Mailchimp extends Forminator_Integration {
 			$api_key_validated = apply_filters( 'forminator_addon_mailchimp_validate_api_key', $api_key_validated, $api_key );
 
 			$save_values = array(
-				'api_key'    => $api_key,
+				'api_key'    => $real_api_key,
 				'identifier' => $identifier,
 			);
 			if ( ! $api_key_validated ) {

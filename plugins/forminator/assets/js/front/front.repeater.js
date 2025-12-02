@@ -5,6 +5,23 @@
 
 	"use strict";
 
+	// Trigger repeater functions after form load.
+	forminator_handle_all_group_field_copies();
+	forminator_add_listener_on_repeater_add_remove();
+
+	// Trigger repeater functions after form load using Ajax.
+	$( document ).on( 'after.load.forminator', () => {
+		forminator_handle_all_group_field_copies();
+		forminator_add_listener_on_repeater_add_remove();
+	} );
+
+	// Trigger repeater functions after elementor popup show.
+	$( document ).on( 'elementor/popup/show', () => {
+		forminator_handle_all_group_field_copies();
+		forminator_add_listener_on_repeater_add_remove();
+	} );
+
+	function forminator_handle_all_group_field_copies() {
 	setTimeout( function() {
 		// Init Group fields. Clone group fields if minimum more than 1.
 		$( 'div.forminator-all-group-copies' ).each( function() {
@@ -43,8 +60,10 @@
 
 		} );
 	}, 100 );
+	}
 
 	// Click on Add Item \ Remove Item.
+	function forminator_add_listener_on_repeater_add_remove() {
 	$( 'form.forminator-custom-form' ).on( 'click', '.forminator-repeater-remove, .forminator-repeater-add', function( e ) {
 		e.stopImmediatePropagation();
 		e.preventDefault();
@@ -67,6 +86,7 @@
 
 		forminatorHideIrrelevantActions( fieldOptions, groupField );
 	});
+	}
 
 	/**
 	 * Remove item
@@ -88,7 +108,7 @@
 		}
 
 		removingBlock.remove();
-
+		form.trigger( 'forminator-group-item-removed' );
 		form.trigger( 'forminator:recalculate' );
 	}
 
@@ -175,6 +195,11 @@
                 }
             });
         }
+
+		// Remove slider custom labels in the cloned block.
+		newBlock.find('.forminator-slider').each(function () {
+			$(this).find('.forminator-slider-labels').remove();
+		});
 
 		newBlock.find( '.select2-container, .forminator-error-message, .iti__country-container' ).remove();
 

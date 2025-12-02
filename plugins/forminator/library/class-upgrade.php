@@ -41,6 +41,9 @@ class Forminator_Upgrade {
 
 			Forminator_Database_Tables::insert_default_entries();
 
+			// Run status migration on version update.
+			add_action( 'forminator_update_version', array( 'Forminator_Database_Tables', 'maybe_migrate_entry_status' ), 10, 2 );
+
 			add_action( 'admin_init', array( __CLASS__, 'flush_rewrite' ) );
 
 			// Update version.

@@ -74,6 +74,9 @@ class Forminator_Website extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Website', 'forminator' );
+		$required   = __( 'This field is required. Please input a valid URL', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -238,10 +241,7 @@ class Forminator_Website extends Forminator_Field {
 		$id                 = $this->get_id( $field );
 		$validation_enabled = self::get_property( 'validation', $field, false, 'bool' );
 		$validation_message = self::get_property( 'validation_message', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
-		$required_message   = self::get_property( 'required_message', $field );
-		if ( empty( $required_message ) ) {
-			$required_message = esc_html__( 'This field is required. Please input a valid URL', 'forminator' );
-		}
+		$required_message   = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 		if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $validation_message ) {
 			$validation_message = self::get_property( 'validation_text', $field, '' );
 		}
@@ -298,7 +298,7 @@ class Forminator_Website extends Forminator_Field {
 		$id                 = self::get_property( 'element_id', $field );
 		$validation_enabled = self::get_property( 'validation', $field, false, 'bool' );
 		$validation_message = self::get_property( 'validation_message', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
-		$required_message   = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please input a valid URL.', 'forminator' ) );
+		$required_message   = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 		if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $validation_message ) {
 			$validation_message = self::get_property( 'validation_text', $field, '' );
 		}

@@ -28,8 +28,8 @@
 			</span>
 		<?php } ?>
 		</div>
-		<?php if ( ! FORMINATOR_PRO && $pro ) { ?>
-			<span class="sui-tag sui-tag-pro"><?php esc_html_e( 'Pro', 'forminator' ); ?></span>
+		<?php if ( ! FORMINATOR_PRO && $pro && ! Forminator_Hub_Connector::hub_connector_connected() ) { ?>
+			<span class="sui-tag sui-tag-free-plan"><?php esc_html_e( 'Free plan', 'forminator' ); ?></span>
 		<?php } ?>
 		<div class="forminator-card-details forminator-card-for-<?php echo esc_attr( $id ); ?>">
 			<h3><?php echo esc_html( $name ); ?></h3>
@@ -48,37 +48,10 @@
 				</div>
 				<?php } ?>
 				<div>
-					<?php if ( ! FORMINATOR_PRO && $pro ) { ?>
-						<a
-							class="sui-button sui-button-purple"
-							target="_blank"
-							href="<?php echo esc_url( 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_template-page_preset-template-modal&utm_content=' . str_replace( ' ', '-', strtolower( $name ) ) . '-upgrade' ); ?>"
-						>
-							<?php esc_html_e( 'Upgrade', 'forminator' ); ?>
-						</a>
-					<?php } elseif ( $pro && ! class_exists( 'WPMUDEV_Dashboard' ) ) { ?>
-						<a
-							class="sui-button sui-button-blue"
-							target="_blank"
-							href="https://wpmudev.com/project/wpmu-dev-dashboard/"
-						>
-							<?php esc_html_e( 'Install Plugin', 'forminator' ); ?>
-						</a>
-					<?php } elseif ( $pro && ! WPMUDEV_Dashboard::$api->get_key() ) { ?>
-						<a
-							class="sui-button sui-button-blue"
-							target="_blank"
-							href="<?php echo esc_url( network_admin_url( 'admin.php?page=wpmudev' ) ); ?>"
-						>
-							<?php esc_html_e( 'Log in to use template', 'forminator' ); ?>
-						</a>
-					<?php } elseif ( $pro && 'expired' === forminator_get_wpmudev_membership() ) { ?>
-						<a
-							class="sui-button sui-button-purple"
-							target="_blank"
-							href="https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_template-page_preset-template_renew"
-						>
-							<?php esc_html_e( 'Renew Membership', 'forminator' ); ?>
+					<?php if ( $pro && ! Forminator_Hub_Connector::hub_connector_connected() ) { ?>
+						<a class="sui-button sui-button-bright-blue"
+							href="<?php echo esc_url( Forminator_Hub_Connector::get_hub_connect_url( 'preset-template' ) ); ?>">
+							<?php echo esc_html( Forminator_Hub_Connector::get_hub_connect_cta_text() ); ?>
 						</a>
 					<?php } else { ?>
 						<button class="sui-button create-form sui-button-blue" data-id="<?php echo esc_html( $id ); ?>">

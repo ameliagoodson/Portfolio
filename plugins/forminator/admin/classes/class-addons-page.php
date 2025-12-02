@@ -31,6 +31,11 @@ class Forminator_Admin_Addons_Page {
 	const GEOLOCATION_PID = 4276231;
 
 	/**
+	 * Extension Pack Add-on Project ID
+	 */
+	const EXTENSION_PACK_PID = 4262971; // TODO: This should be replaced with actual PID when available.
+
+	/**
 	 * Return the plugin instance
 	 *
 	 * @return Forminator_Admin_Addons_Page|null
@@ -53,6 +58,7 @@ class Forminator_Admin_Addons_Page {
 		$is_network = 1 === intval( Forminator_Core::sanitize_text_field( 'is_network' ) ) && is_super_admin();
 
 		switch ( $action ) {
+			case 'addons-install-activate':
 			case 'addons-install':
 				if ( $pid ) {
 					if ( WPMUDEV_Dashboard::$upgrader->user_can_install( $pid ) ) {
@@ -61,10 +67,15 @@ class Forminator_Admin_Addons_Page {
 							$success = WPMUDEV_Dashboard::$upgrader->install( $pid );
 							if ( $success ) {
 								$html_addons = $this->addons_html( $pid );
+								$button_html = $this->addon_details_cta( $pid );
+								if ( 'addons-install-activate' === $action ) {
+									$this->activate_addon( $pid, $is_network );
+								}
 								wp_send_json_success(
 									array(
 										'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully installed', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 										'html'    => $html_addons,
+										'button'  => $button_html,
 									)
 								);
 							}
@@ -80,32 +91,7 @@ class Forminator_Admin_Addons_Page {
 				break;
 			case 'addons-activate':
 				if ( $pid ) {
-					$local = WPMUDEV_Dashboard::$site->get_cached_projects( $pid );
-					if ( empty( $local ) ) {
-						$errors['error'] = array(
-							'message' => esc_html__( 'Not installed', 'forminator' ),
-						);
-						wp_send_json_error( $errors );
-					}
-
-					$result = activate_plugin( $local['filename'], '', $is_network );
-					if ( is_wp_error( $result ) ) {
-						$errors['error'] = array(
-							'file'    => $pid,
-							'code'    => $result->get_error_code(),
-							'message' => $result->get_error_message(),
-						);
-						wp_send_json_error( $errors );
-					} else {
-						WPMUDEV_Dashboard::$site->schedule_shutdown_refresh();
-						$html_addons = $this->addons_html( $pid );
-						wp_send_json_success(
-							array(
-								'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully activated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
-								'html'    => $html_addons,
-							)
-						);
-					}
+					$this->activate_addon( $pid, $is_network );
 				}
 				break;
 			case 'addons-deactivate':
@@ -133,10 +119,12 @@ class Forminator_Admin_Addons_Page {
 					// there is no return so we always call it a success.
 					WPMUDEV_Dashboard::$site->schedule_shutdown_refresh();
 					$html_addons = $this->addons_html( $pid );
+					$button_html = $this->addon_details_cta( $pid );
 					wp_send_json_success(
 						array(
 							'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully deactivated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 							'html'    => $html_addons,
+							'button'  => $button_html,
 						)
 					);
 				}
@@ -145,10 +133,12 @@ class Forminator_Admin_Addons_Page {
 				if ( $pid ) {
 					if ( WPMUDEV_Dashboard::$upgrader->delete_plugin( $pid ) ) {
 						$html_addons = $this->addons_html( $pid );
+						$button_html = $this->addon_details_cta( $pid );
 						wp_send_json_success(
 							array(
 								'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully deleted', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 								'html'    => $html_addons,
+								'button'  => $button_html,
 							)
 						);
 					} else {
@@ -170,10 +160,12 @@ class Forminator_Admin_Addons_Page {
 					}
 
 					$html_addons = $this->addons_html( $pid );
+					$button_html = $this->addon_details_cta( $pid );
 					wp_send_json_success(
 						array(
 							'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully updated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
 							'html'    => $html_addons,
+							'button'  => $button_html,
 						)
 					);
 				}
@@ -189,6 +181,44 @@ class Forminator_Admin_Addons_Page {
 					)
 				);
 				break;
+		}
+	}
+
+	/**
+	 * Activate addon
+	 *
+	 * @param string $pid The Project ID.
+	 * @param bool   $is_network Whether the addon is network activated.
+	 */
+	private function activate_addon( $pid, $is_network ) {
+
+		$local = WPMUDEV_Dashboard::$site->get_cached_projects( $pid );
+		if ( empty( $local ) ) {
+			$errors['error'] = array(
+				'message' => esc_html__( 'Not installed', 'forminator' ),
+			);
+			wp_send_json_error( $errors );
+		}
+
+		$result = activate_plugin( $local['filename'], '', $is_network );
+		if ( is_wp_error( $result ) ) {
+			$errors['error'] = array(
+				'file'    => $pid,
+				'code'    => $result->get_error_code(),
+				'message' => $result->get_error_message(),
+			);
+			wp_send_json_error( $errors );
+		} else {
+			WPMUDEV_Dashboard::$site->schedule_shutdown_refresh();
+			$html_addons = $this->addons_html( $pid );
+			$button_html = $this->addon_details_cta( $pid );
+			wp_send_json_success(
+				array(
+					'message' => /* translators: %s: Add-on name */ sprintf( esc_html__( '%s was successfully activated', 'forminator' ), $this->get_addon_value( $pid, 'name' ) ),
+					'html'    => $html_addons,
+					'button'  => $button_html,
+				)
+			);
 		}
 	}
 
@@ -288,6 +318,9 @@ class Forminator_Admin_Addons_Page {
 	 */
 	public static function get_addon_slug( $pid ) {
 		switch ( $pid ) {
+			case self::EXTENSION_PACK_PID:
+				$addon_slug = 'extension-pack';
+				break;
 			case 3953609:
 				$addon_slug = 'stripe';
 				break;
@@ -316,6 +349,19 @@ class Forminator_Admin_Addons_Page {
 		ob_start();
 		$this->addons_render( 'addons-list', $pid );
 
+		return ob_get_clean();
+	}
+
+	/**
+	 * Get addon details cta
+	 *
+	 * @param string $pid The Project ID.
+	 *
+	 * @return string
+	 */
+	public function addon_details_cta( $pid ) {
+		ob_start();
+		$this->addons_render( 'addon-cta-button', $pid );
 		return ob_get_clean();
 	}
 
@@ -397,6 +443,10 @@ class Forminator_Admin_Addons_Page {
 					$project->name     = $addon->name;
 					$project->info     = $addon->info;
 					$project->features = $addon->features;
+					if ( ! empty( $addon->is_free ) ) {
+						$project->is_free = true;
+					}
+					$project->has_config = ! empty( $addon->has_config );
 				}
 			}
 		}
@@ -442,6 +492,7 @@ class Forminator_Admin_Addons_Page {
 		$stripe_addon->version_latest    = '1.0';
 		$stripe_addon->version_installed = '1.0';
 		$stripe_addon->is_network_admin  = is_network_admin();
+		$stripe_addon->has_config        = true;
 		$stripe_addon->is_hidden         = false;
 		$stripe_addon->is_installed      = false;
 		$stripe_addon->features          = array(
@@ -470,6 +521,7 @@ class Forminator_Admin_Addons_Page {
 		$pdf_addon->version_latest    = '1.0';
 		$pdf_addon->version_installed = '1.0';
 		$pdf_addon->is_network_admin  = is_network_admin();
+		$pdf_addon->has_config        = false;
 		$pdf_addon->is_hidden         = false;
 		$pdf_addon->is_installed      = false;
 		$pdf_addon->features          = array(
@@ -499,6 +551,7 @@ class Forminator_Admin_Addons_Page {
 		$geo_addon->version_latest    = '1.0';
 		$geo_addon->version_installed = '1.0';
 		$geo_addon->is_network_admin  = is_network_admin();
+		$geo_addon->has_config        = true;
 		$geo_addon->is_hidden         = false;
 		$geo_addon->is_installed      = false;
 		$geo_addon->features          = array(
@@ -519,10 +572,44 @@ class Forminator_Admin_Addons_Page {
 
 		$geo_addon->pro_url = 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_geolocation-addon';
 
-		return array(
+		// Extension Pack Addon.
+		$extension_pack_addon                    = new stdClass();
+		$extension_pack_addon->pid               = self::EXTENSION_PACK_PID;
+		$extension_pack_addon->name              = esc_html__( 'Extension Pack Add-on', 'forminator' );
+		$extension_pack_addon->info              = esc_html__( 'Add powerful enhancements to your forms with this growing set of advanced features — designed to boost engagement, reduce abandonment, and help you capture more data effortlessly.', 'forminator' );
+		$extension_pack_addon->version_latest    = '1.0';
+		$extension_pack_addon->version_installed = '1.0';
+		$extension_pack_addon->is_network_admin  = is_network_admin();
+		$extension_pack_addon->has_config        = false;
+		$extension_pack_addon->is_hidden         = false;
+		$extension_pack_addon->is_installed      = false;
+		$extension_pack_addon->is_free           = true;
+		$extension_pack_addon->features          = array(
+			esc_html__( 'Form Abandonment', 'forminator' ),
+			esc_html__( 'More features coming soon', 'forminator' ),
+		);
+		$extension_pack_addon->url               = (object) array(
+			'thumbnail' => esc_url( forminator_plugin_url() . 'assets/images/extension-pack-logo@2x.png' ),
+		);
+		$extension_pack_addon->changelog         = array(
+			array(
+				'time'    => '1756753985',
+				'version' => '1.0',
+				'log'     => '<p>- First public release</p>',
+			),
+		);
+		$extension_pack_addon->pro_url           = 'https://wpmudev.com/project/forminator-pro/?utm_source=forminator&utm_medium=plugin&utm_campaign=forminator_extension-pack-addon';
+
+		$addons = array(
 			$geo_addon,
 			$pdf_addon,
 			$stripe_addon,
 		);
+
+		if ( ! forminator_form_abandonment_disabled() ) {
+			$addons[] = $extension_pack_addon;
+		}
+
+		return $addons;
 	}
 }

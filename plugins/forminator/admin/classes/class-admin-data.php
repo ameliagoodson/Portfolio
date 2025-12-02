@@ -48,6 +48,8 @@ class Forminator_Admin_Data {
 		$data['fields']    = forminator_get_fields_sorted( 'position', SORT_ASC );
 		$data['fieldsPro'] = forminator_get_pro_fields();
 
+		$data['default_required_messages'] = Forminator_Field::$default_required_messages;
+
 		return $data;
 	}
 
@@ -101,7 +103,8 @@ class Forminator_Admin_Data {
 		$id   = filter_input( INPUT_GET, 'id', FILTER_VALIDATE_INT );
 		$user = wp_get_current_user();
 
-		$dashboard = class_exists( 'WPMUDEV_Dashboard' );
+		$dashboard      = class_exists( 'WPMUDEV_Dashboard' );
+		$extension_pack = class_exists( 'Forminator_Extension_Pack' );
 
 		return array(
 			'ajaxUrl'                        => forminator_ajax_url(),
@@ -133,6 +136,8 @@ class Forminator_Admin_Data {
 			'searchNonce'                    => wp_create_nonce( 'forminator_search_emails' ),
 			'gFontNonce'                     => wp_create_nonce( 'forminator_load_google_fonts' ),
 			'dismissNonce'                   => wp_create_nonce( 'forminator_dismiss_notification' ),
+			'dismissNoticeNonce'             => wp_create_nonce( 'forminator_dismiss_notice' ),
+			'savedChangesDismissed'          => is_int( $id ) && Forminator_Admin::was_notification_dismissed( 'forminator_saved_changes_' . $id ),
 			'formProcessNonce'               => wp_create_nonce( 'forminator_form_request' ),
 			'formExportNonce'                => wp_create_nonce( 'forminator_popup_export_form' ),
 			'pollProcessNonce'               => wp_create_nonce( 'forminator_poll_request' ),
@@ -180,6 +185,7 @@ class Forminator_Admin_Data {
 			'dashboardPlugin'                => $dashboard,
 			'isWPMUDEVloggedIn'              => $dashboard && WPMUDEV_Dashboard::$api->get_key(),
 			'expiredMembership'              => $dashboard && forminator_get_wpmudev_membership() === 'expired',
+			'extensionPack'                  => $extension_pack,
 			'userRoles'                      => forminator_get_accessible_user_roles(),
 			'pages'                          => self::get_pages(),
 			'hasPayPal'                      => forminator_has_paypal_settings(),
@@ -200,6 +206,19 @@ class Forminator_Admin_Data {
 			'manage_forminator_templates'    => forminator_is_user_allowed( 'forminator-templates' ),
 			'cloudDisabled'                  => forminator_cloud_templates_disabled(),
 			'globalTracking'                 => forminator_global_tracking(),
+			'hasSavedChanges'                => is_int( $id ) && Forminator_Base_Form_Model::get_temp_settings( $id ),
+			'saveDelay'                      => apply_filters( 'forminator_save_delay', 1500 ),
+			'autoSave'                       => get_option( 'forminator_auto_saving', true ),
+			'addonsDisabled'                 => forminator_addons_disabled(),
+			'abandonmentDisabled'            => forminator_form_abandonment_disabled(),
+			'formColorSettings'              => Forminator_Custom_Form_Admin::get_default_color_settings(),
+			'install_addon'                  => filter_input( INPUT_GET, 'forminator_install_addon', FILTER_VALIDATE_INT ),
+			'open_addon'                     => filter_input( INPUT_GET, 'forminator_open_addon', FILTER_VALIDATE_INT ),
+			'EXTENSION_PACK_PID'             => Forminator_Admin_Addons_Page::EXTENSION_PACK_PID,
+			'isUserRegistrationEnabled'      => forminator_is_user_registration_enabled(),
+			'isSiteRegistrationEnabled'      => forminator_is_site_registration_enabled(),
+			'networkAdminUrl'                => network_admin_url(),
+			'isMultisite'                    => is_multisite(),
 		);
 	}
 

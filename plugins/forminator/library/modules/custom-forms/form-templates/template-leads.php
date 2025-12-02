@@ -105,7 +105,6 @@ class Forminator_Template_Leads extends Forminator_Template {
 								'<a href="#" target="_blank">',
 								'</a>'
 							),
-						'required_message'    => esc_html__( 'This field is required. Please check it.', 'forminator' ),
 					),
 				),
 			),

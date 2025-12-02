@@ -156,7 +156,7 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 
 	<div class="sui-row">
 
-		<?php if ( 'form' === static::$module_slug ) { ?>
+		<?php if ( 'form' === $this::$module_slug ) { ?>
 			<div class="sui-col-md-6">
 
 				<div class="sui-form-field">
@@ -166,6 +166,9 @@ $is_show_fields     = ! method_exists( $this, 'has_leads' ) || (bool) $this->has
 						<option value="all" <?php selected( 'all', $entry_status ); ?> ><?php esc_html_e( 'All', 'forminator' ); ?></option>
 						<option value="completed" <?php selected( 'completed', $entry_status ); ?> ><?php esc_html_e( 'Completed', 'forminator' ); ?></option>
 						<option value="draft" <?php selected( 'draft', $entry_status ); ?> ><?php esc_html_e( 'Draft', 'forminator' ); ?></option>
+						<?php if ( ! forminator_form_abandonment_disabled() ) { ?>
+							<option value="abandoned" <?php selected( 'abandoned', $entry_status ); ?> ><?php esc_html_e( 'Abandoned', 'forminator' ); ?></option>
+						<?php } ?>
 					</select>
 
 				</div>

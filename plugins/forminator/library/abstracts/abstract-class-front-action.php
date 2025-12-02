@@ -96,6 +96,13 @@ abstract class Forminator_Front_Action {
 	protected static $is_spam = false;
 
 	/**
+	 * Is abandoned submission.
+	 *
+	 * @var bool
+	 */
+	protected static $is_abandoned = false;
+
+	/**
 	 * Fields info
 	 *
 	 * @var array
@@ -143,6 +150,13 @@ abstract class Forminator_Front_Action {
 		if ( ! $action || 'forminator_submit_form_' . static::$entry_type !== $action ) {
 			return;
 		}
+		$form_id = Forminator_Core::sanitize_text_field( 'form_id' );
+		if ( $form_id ) {
+			$model = Forminator_Base_Form_Model::get_model( $form_id );
+			if ( $model && method_exists( $model, 'is_ajax_submit' ) && $model->is_ajax_submit() ) {
+				return;
+			}
+		}
 
 		if ( $this->is_force_validate_submissions_nonce() ) {
 			$forminator_nonce = Forminator_Core::sanitize_text_field( 'forminator_nonce' );
@@ -187,6 +201,8 @@ abstract class Forminator_Front_Action {
 										filter_var( self::$module_settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN )
 										? true
 										: false;
+
+			self::$is_abandoned = ! forminator_form_abandonment_disabled() && ! empty( self::$prepared_data['abandoned_form'] ) && ! empty( self::$module_settings['abandonment'] );
 		} elseif ( wp_doing_ajax() ) {
 				wp_send_json_error(
 					array(
@@ -430,17 +446,38 @@ abstract class Forminator_Front_Action {
 	}
 
 	/**
+	 * Validate nonce
+	 */
+	public function validate_nonce() {
+		if ( self::$is_abandoned ) {
+			$form_uid = filter_input( INPUT_POST, 'form_uid' );
+			$valid    = $this->validate_ajax( 'forminator_abandonment_form' . $form_uid, 'POST', 'forminator_abandonment_nonce' );
+		} else {
+			$valid = $this->validate_ajax( 'forminator_submit_form' . self::$module_id, 'POST', 'forminator_nonce' );
+		}
+
+		if ( ! $valid ) {
+			wp_send_json_error( esc_html__( 'Invalid nonce. Please refresh your browser.', 'forminator' ) );
+		}
+	}
+
+	/**
 	 * Save Entry
 	 *
 	 * @since 1.0
 	 */
 	public function save_entry() {
 		$this->init_properties();
-		$draft = self::$is_draft ? '_draft' : '';
-
-		if ( ! $this->validate_ajax( 'forminator_submit_form' . self::$module_id, 'POST', 'forminator_nonce' ) ) {
-			wp_send_json_error( esc_html__( 'Invalid nonce. Please refresh your browser.', 'forminator' ) );
+		$status_suffix = '';
+		if ( self::$is_spam ) {
+			$status_suffix = '_spam';
+		} elseif ( self::$is_abandoned ) {
+			$status_suffix = '_abandoned';
+		} elseif ( self::$is_draft ) {
+			$status_suffix = '_draft';
 		}
+
+		$this->validate_nonce();
 
 		/**
 		 * Action called before module ajax
@@ -449,7 +486,7 @@ abstract class Forminator_Front_Action {
 		 *
 		 * @param int $form_id - the form id.
 		 */
-		do_action( 'forminator_' . static::$module_slug . $draft . '_before_save_entry', self::$module_id );
+		do_action( 'forminator_' . static::$module_slug . $status_suffix . '_before_save_entry', self::$module_id );
 
 		$response = $this->handle_form();
 
@@ -470,7 +507,7 @@ abstract class Forminator_Front_Action {
 		 * @param array $response - the post response.
 		 * @param int $form_id - the form id.
 		 */
-		$response = apply_filters( 'forminator_' . static::$module_slug . $draft . '_ajax_submit_response', $response, self::$module_id );
+		$response = apply_filters( 'forminator_' . static::$module_slug . $status_suffix . '_ajax_submit_response', $response, self::$module_id );
 
 		/**
 		 * Action called after form ajax
@@ -480,7 +517,7 @@ abstract class Forminator_Front_Action {
 		 * @param int $form_id - the form id.
 		 * @param array $response - the post response.
 		 */
-		do_action( 'forminator_' . static::$module_slug . $draft . '_after_save_entry', self::$module_id, $response );
+		do_action( 'forminator_' . static::$module_slug . $status_suffix . '_after_save_entry', self::$module_id, $response );
 
 		if ( $response && is_array( $response ) ) {
 			if ( ! $response['success'] ) {
@@ -539,7 +576,12 @@ abstract class Forminator_Front_Action {
 						<div class="forminator-row">
 							<div id="email-1" class="forminator-col forminator-col-12 ">
 								<div class="forminator-field">
-									<label for="forminator-field-email-1" class="forminator-label"><?php echo esc_html( $response['email_label'] ); ?></label>
+									<label for="forminator-field-email-1" class="forminator-label">
+										<?php
+										// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+										echo Forminator_Field::convert_markdown( esc_html( $response['email_label'] ) );
+										?>
+									</label>
 									<input
 										type="email"
 										name="email-1"
@@ -753,7 +795,7 @@ abstract class Forminator_Front_Action {
 	 * @param Forminator_Form_Entry_Model $entry_model Form entry model.
 	 */
 	protected static function attach_addons_after_entry_saved( Forminator_Form_Entry_Model $entry_model ) {
-		if ( self::$is_draft || self::$is_spam ) {
+		if ( self::$is_draft || self::$is_spam || self::$is_abandoned ) {
 			return;
 		}
 

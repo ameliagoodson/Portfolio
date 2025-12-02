@@ -96,8 +96,11 @@ class Forminator_Database_Tables {
 				`form_id` bigint(20) unsigned NOT NULL,
 				`is_spam` TINYINT(1) NOT NULL DEFAULT 0,
 				`date_created` datetime NOT NULL default '0000-00-00 00:00:00',
+				`status` ENUM('active','spam','draft','abandoned') NOT NULL DEFAULT 'active',
 				PRIMARY KEY (`entry_id`),
 				KEY `entry_is_spam` (`is_spam` ASC ),
+				KEY `entry_status` (`status`),
+				KEY `entry_form_status` (`form_id`, `status`),
 				KEY `entry_type` (`entry_type`($max_index_length)),
 				KEY `entry_form_id` (`form_id`))
 				$charset_collate;";
@@ -156,6 +159,54 @@ class Forminator_Database_Tables {
 				$charset_collate;";
 			dbDelta( $sql );
 		}
+	}
+
+	/**
+	 * Migrate existing entries to the new `status` column.
+	 *
+	 * - spam -> status = 'spam'
+	 * - drafts (draft_id not empty and not null) -> status = 'draft'
+	 * - others remain 'active' (default)
+	 *
+	 * @param string|null $new_version The new plugin version being upgraded to.
+	 * @param string|null $old_version The previously installed plugin version.
+	 *
+	 * @return void
+	 */
+	public static function maybe_migrate_entry_status( $new_version = null, $old_version = null ) {
+		global $wpdb;
+		$table_name = self::get_table_name( self::FORM_ENTRY );
+		if ( ! $table_name ) {
+			return;
+		}
+		// If called from versioned hook, ensure we only run for upgrades below the target version.
+		$target_version = '1.48.0';
+		if ( ! empty( $old_version ) && version_compare( $old_version, $target_version, '>' ) ) {
+			return;
+		}
+
+		// Check if status column exists.
+		$column = $wpdb->get_var( $wpdb->prepare( "SHOW COLUMNS FROM {$table_name} LIKE %s", 'status' ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
+		if ( empty( $column ) ) {
+			return;
+		}
+
+		// Only run once per installation/upgrade.
+		$option_key = 'forminator_status_migration_done';
+		if ( get_option( $option_key ) ) {
+			return;
+		}
+
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
+		// Set drafts first without checking spam; spam update below will override when needed.
+		$wpdb->query( "UPDATE {$table_name} SET `status` = 'draft' WHERE (`draft_id` IS NOT NULL AND `draft_id` <> '') AND `status` <> 'draft'" );
+		// Mark spam second so it always wins over any previous state.
+		$wpdb->query( "UPDATE {$table_name} SET `status` = 'spam' WHERE `is_spam` = 1 AND `status` <> 'spam'" );
+		// Normalize any null/empty values to 'active' as safety.
+		$wpdb->query( "UPDATE {$table_name} SET `status` = 'active' WHERE (`status` IS NULL OR `status` = '')" );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+		update_option( $option_key, time() );
 	}
 
 	/**

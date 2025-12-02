@@ -28,7 +28,9 @@
 		this.element = $(element);
 		this.$el = this.element;
 		this.totalSteps = 0;
+		this.totalActiveSteps = 0; // Exclude hidden steps
 		this.step = 0;
+		this.actualStep = 0; // Exclude hidden steps
 		this.finished = false;
 		this.hashStep = false;
 		this.next_button_txt = '';
@@ -61,12 +63,19 @@
 			}
 
 			this.totalSteps = this.settings.totalSteps;
+			this.totalActiveSteps = this.totalSteps
 			this.step = this.settings.step;
+			this.actualStep = this.step;
 			this.quiz = this.settings.quiz;
-			this.element = this.$el.find('[data-step=' + this.step + ']').data('name');
+			this.element = this.$el.find('div.forminator-pagination[data-step=' + this.step + ']').data('name');
 			if (this.form_id && typeof window.Forminator_Cform_Paginations === 'object' && typeof window.Forminator_Cform_Paginations[this.form_id] === 'object') {
 				this.custom_label = window.Forminator_Cform_Paginations[this.form_id];
 			}
+
+			this.$el.on('forminator:page-break:toggled', function(e) {
+				self.totalActiveSteps = self.$el.find('.forminator-pagination:not(.forminator-page-hidden)').length;
+				self.calculate_bar_percentage();
+			});
 
 			if ( draftPage > 0 ) {
 				this.go_to( draftPage, true );
@@ -88,6 +97,13 @@
 				e.preventDefault();
 				$(this).trigger('forminator.front.pagination.move');
 				self.resetRichTextEditorHeight();
+			});
+
+			// Update progress bar percentage on form submit.
+			this.$el.on('before:forminator:form:submit', function( e, formData ) {
+				if( formData.get( 'save_draft' ) !== 'true' ) {
+					self.update_progress_bar_percentage( 100 );
+				}
 			});
 
 			this.$el.on('click', '.forminator-result--view-answers', function(e){
@@ -232,16 +248,29 @@
 
 		calculate_bar_percentage: function () {
 
-			var total     = this.totalSteps,
-				current   = this.step + 1,
-				$progress = this.$el
+			var total     = this.totalActiveSteps,
+				current   = this.actualStep
 			;
-
-			if ( ! $progress.length ) return;
-
+			if ( this.custom_label['pagination-header'] === 'bar' && this.custom_label['progress-bar-type'] === 'page-number') {
+				current++;
+			}
 			var percentage = Math.round( (current / total) * 100 );
 
-			$progress.find( '.forminator-progress-label' ).html( percentage + '%' );
+			this.update_progress_bar_percentage( percentage );
+		},
+
+		update_progress_bar_percentage: function ( percentage ) {
+			const $progress = this.$el;
+			if ( ! $progress.length ) return;
+
+			if ( this.custom_label[ 'pagination-header' ] === 'bar' && this.custom_label[ 'progress-bar-type' ] === 'page-number' ) {
+				let text = this.custom_label[ 'page-number-text' ];
+				text = text.replace( '%1$s', this.actualStep + 1 ).replace( '%2$s', this.totalActiveSteps );
+				$progress.find( '.forminator-progress-label' ).html( text );
+			} else {
+				$progress.find( '.forminator-progress-label' ).html( percentage + '%' );
+			}
+
 			$progress.find( '.forminator-progress-bar span' ).css( 'width', percentage + '%' );
 
 		},
@@ -341,8 +370,7 @@
 		handle_click: function (type) {
 			var self = this;
 			if (type === "prev" && this.step !== 0) {
-				this.go_to(this.step - 1, true);
-				this.update_buttons();
+				this.go_to_previous_page();
 			} else if (type === "next") {
 				//do validation before next if inline validation enabled
 				if (this.settings.inline_validation) {
@@ -353,7 +381,7 @@
 
 				if(typeof this.$el.data().forminatorFrontPayment !== "undefined") {
 					var payment = this.$el.data().forminatorFrontPayment,
-						page = this.$el.find('[data-step=' + this.step + ']'),
+						page = this.$el.find('div.forminator-pagination[data-step=' + this.step + ']'),
 						hasStripe = page.find(".forminator-stripe-element").not(".forminator-hidden .forminator-stripe-element")
 					;
 
@@ -365,17 +393,14 @@
 								payment.showCardError(result.error.message, true);
 							} else {
 								payment.hideCardError();
-								self.go_to(self.step + 1, true);
-								self.update_buttons();
+								self.go_to_next_page();
 							}
 						});
 					} else {
-						this.go_to(this.step + 1, true);
-						this.update_buttons();
+						this.go_to_next_page();
 					}
 				} else {
-					this.go_to(this.step + 1, true);
-					this.update_buttons();
+					this.go_to_next_page();
 				}
 			}
 
@@ -400,7 +425,7 @@
 			var valid = true,
 				errors = 0,
 				validator = this.$el.data('validator'),
-				page = this.$el.find('[data-step=' + step + ']');
+				page = this.$el.find('div.forminator-pagination[data-step=' + step + ']');
 
 			//inline validation disabled
 			if (typeof validator === 'undefined') {
@@ -481,14 +506,15 @@
 				}
 			}
 
-			if (this.step === this.totalSteps && ! this.finished ) {
+			if (this.actualStep === this.totalActiveSteps && ! this.finished ) {
 				//keep pagination content on last step before submit
 				this.step--;
+				this.actualStep--;
 				this.$el.trigger( 'submit' );
 			}
 
 			var submitButtonClass = this.settings.submitButtonClass;
-			if ( this.step === ( this.totalSteps - 1 ) && ! this.finished ) {
+			if ( this.actualStep === ( this.totalActiveSteps - 1 ) && ! this.finished ) {
 
 				var submit_button_text = this.$el.find('.forminator-pagination-submit').html(),
 					loadingText = this.$el.find('.forminator-pagination-submit').data('loading'),
@@ -571,7 +597,7 @@
 					this.prev_button_txt = this.prev_button;
 					this.next_button_txt = this.next_button;
 				}
-				if ( this.step === ( this.totalSteps - 1 ) && this.finished ) {
+				if ( this.actualStep === ( this.totalActiveSteps - 1 ) && this.finished ) {
 					this.next_button_txt = window.ForminatorFront.quiz.view_results;
 				}
 				if ( this.$el.hasClass('forminator-design--material') ) {
@@ -590,17 +616,17 @@
 				} else {
 					this.$el.find( '#forminator-submit' )
 						.removeAttr( 'id' )
-						.removeClass( 'forminator-button-submit forminator-hidden' )
+						.removeClass( 'forminator-button-submit forminator-hidden ' + submitButtonClass )
 						.addClass( 'forminator-button-next' );
 					if( this.custom_label['has-paypal'] === true ) {
 						this.$el.find( '#forminator-paypal-submit' ).removeAttr( 'id' ).addClass('forminator-hidden');
-						this.$el.find('.forminator-button-next').removeClass( 'forminator-button-submit forminator-hidden' );
+						this.$el.find('.forminator-button-next').removeClass( 'forminator-button-submit forminator-hidden ' + submitButtonClass );
 					}
 					this.$el.find( '.forminator-button-back' ).html( this.prev_button_txt );
 					this.$el.find( '.forminator-button-next' ).html( this.next_button_txt );
 
 				}
-				if ( this.step === this.totalSteps && this.finished ) {
+				if ( this.actualStep === this.totalActiveSteps && this.finished ) {
 					this.$el.find('.forminator-button-next, .forminator-button-back').addClass( 'forminator-hidden' );
 				}
 				this.$el.trigger( 'forminator.front.pagination.buttons.updated' );
@@ -611,8 +637,18 @@
 
 		go_to: function (step, scrollToTop) {
 			this.step = step;
+			this.actualStep = this.get_current_visible_step_position();
 
-			if (step === this.totalSteps && ! this.finished ) return false;
+			if (this.actualStep === this.totalActiveSteps && ! this.finished ) return false;
+
+			// Check if the target step is hidden by page-break conditions
+			var $targetStep = this.$el.find('div.forminator-pagination[data-step=' + step + ']');
+			if ($targetStep.hasClass('forminator-page-hidden')) {
+				// Find the next visible step
+				var nextVisibleStep = this.find_next_visible_step(step);
+				this.go_to(nextVisibleStep, scrollToTop);
+				return;
+			}
 
 			// Hide all parts
 			this.$el.find('.forminator-pagination').css({
@@ -624,13 +660,13 @@
 			this.$el.find('.forminator-pagination .forminator-pagination--content').hide();
 
 			// Show desired page
-			this.$el.find('[data-step=' + step + ']').css({
+			$targetStep.css({
 				'height': 'auto',
 				'opacity': '1',
 				'visibility': 'visible'
 			}).removeAttr( 'aria-hidden' ).removeAttr( 'hidden' );
 
-			this.$el.find('[data-step=' + step + '] .forminator-pagination--content').show();
+			$targetStep.find('.forminator-pagination--content').show();
 
 			//exec responsive captcha
 			var forminatorFront = this.$el.data('forminatorFront');
@@ -643,6 +679,72 @@
 			if (scrollToTop) {
 				this.scroll_to_top_form();
 			}
+		},
+
+		/**
+		 * Get the current step's position among visible steps (0-based)
+		 *
+		 * @returns {number} - Current step position among visible steps
+		 */
+		get_current_visible_step_position: function() {
+			var position = this.step;
+			for (var i = this.step; i >= 0; i--) {
+				var $step = this.$el.find('div.forminator-pagination[data-step=' + i + ']');
+				if ($step.length && $step.hasClass('forminator-page-hidden')) {
+					position--;
+				}
+			}
+			return position;
+		},
+
+		/**
+		 * Find the next visible step after the given step
+		 *
+		 * @param {number} currentStep - The current step number
+		 * @returns {number} - The next visible step number
+		 */
+		find_next_visible_step: function(currentStep) {
+			for (var i = currentStep + 1; i < this.totalSteps; i++) {
+				var $step = this.$el.find('div.forminator-pagination[data-step=' + i + ']');
+				if ($step.length && !$step.hasClass('forminator-page-hidden')) {
+					return i;
+				}
+			}
+			return i;
+		},
+
+		/**
+		 * Find the previous visible step before the given step
+		 *
+		 * @param {number} currentStep - The current step number
+		 * @returns {number} - The previous visible step number, or 0 if none found
+		 */
+		find_previous_visible_step: function(currentStep) {
+			for (var i = currentStep - 1; i >= 0; i--) {
+				var $step = this.$el.find('div.forminator-pagination[data-step=' + i + ']');
+				if ($step.length && !$step.hasClass('forminator-page-hidden')) {
+					return i;
+				}
+			}
+			return 0;
+		},
+
+		/**
+		 * Navigate to the next visible page
+		 */
+		go_to_next_page: function() {
+			var nextVisibleStep = this.find_next_visible_step(this.step);
+			this.go_to(nextVisibleStep, true);
+			this.update_buttons();
+		},
+
+		/**
+		 * Navigate to the previous visible page
+		 */
+		go_to_previous_page: function() {
+			var prevVisibleStep = this.find_previous_visible_step(this.step);
+			this.go_to(prevVisibleStep, true);
+			this.update_buttons();
 		},
 
 		update_navigation: function () {
@@ -685,8 +787,6 @@
 					parent_selector = '.wph-modal';
 				}
 
-				$element.focus();
-
 				const minScrollHeight = $( window ).height() / 2;
 				let scrollTop =
 					$element.offset().top -
@@ -707,6 +807,7 @@
 					if (!$element.attr("tabindex")) {
 						$element.attr("tabindex", -1);
 					}
+					$element.focus();
 				});
 			}
 

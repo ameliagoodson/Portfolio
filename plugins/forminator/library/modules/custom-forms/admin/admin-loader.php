@@ -404,6 +404,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 				'store_submissions'      => '1',
 				'description-position'   => 'above',
 			),
+			self::get_default_color_settings(),
 			$settings
 		);
 
@@ -415,6 +416,41 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		$default_settings = apply_filters( 'forminator_form_default_settings', $default_settings );
 
 		return $default_settings;
+	}
+
+	/**
+	 * Get default color settings
+	 *
+	 * @return array
+	 */
+	public static function get_default_color_settings() {
+		return array(
+			'input-focus-outline-color'                  => '#254DEB',
+			'radio-border-hover'                         => '#097BAA',
+			'radio-background-hover'                     => '#E1F6FF',
+			'radio-outline-focus'                        => '#254DEB',
+			'select-focus-outline-color'                 => '#254DEB',
+			'button-submit-focus-outline-color'          => '#254DEB',
+			'prev-focus-outline-color'                   => '#254DEB',
+			'next-focus-outline-color'                   => '#254DEB',
+			'button-upload-focus-outline-color'          => '#254DEB',
+			'button-upload-delete-focus-outline-color'   => '#254DEB',
+			'multiupload-panel-focus-outline-color'      => '#254DEB',
+			'multiupload-panel-link-focus-outline-color' => '#254DEB',
+			'repeater-button-outline-focus'              => '#254DEB',
+			'repeater-icon-outline-focus'                => '#254DEB',
+			'repeater-link-outline-focus'                => '#254DEB',
+			'consent-cbox-border-hover'                  => '#254DEB',
+			'consent-cbox-background-hover'              => '#254DEB',
+			'consent-cbox-outline-focus'                 => '#254DEB',
+			'slider-handle-outline-color'                => '#254DEB',
+			'rating-focus-outline-color'                 => '#254DEB',
+			'dropdown-search-outline-focus'              => '#254DEB',
+			'dropdown-option-outline-focus'              => '#254DEB',
+			'multiselect-item-outline-focus'             => '#254DEB',
+			'steps-outline-focus'                        => '#254DEB',
+			'calendar-outline-focus'                     => '#254DEB',
+		);
 	}
 
 	/**
@@ -454,7 +490,7 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $module_id ) ) {
 			return;
 		}
-		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $module_id );
+		$wizard_url = admin_url( 'admin.php?page=forminator-cform-wizard&create-status=success&id=' . $module_id );
 
 		wp_safe_redirect( $wizard_url );
 	}
@@ -697,6 +733,9 @@ class Forminator_Custom_Form_Admin extends Forminator_Admin_Module {
 		if ( is_wp_error( $id ) ) {
 			return $id;
 		}
+
+		// Remove temporary settings.
+		Forminator_Base_Form_Model::remove_temp_settings( $id );
 
 		try {
 			/**

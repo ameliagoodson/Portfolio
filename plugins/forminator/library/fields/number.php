@@ -81,6 +81,9 @@ class Forminator_Number extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Number', 'forminator' );
+		$required   = __( 'This field is required. Please enter number.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -271,10 +274,7 @@ class Forminator_Number extends Forminator_Field {
 		$messages = '"' . $this->get_id( $field ) . '": {' . "\n";
 
 		if ( $this->is_required( $field ) ) {
-			$required_validation_message = self::get_property( 'required_message', $field );
-			if ( empty( $required_validation_message ) ) {
-				$required_validation_message = esc_html__( 'This field is required. Please enter number.', 'forminator' );
-			}
+			$required_validation_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			$required_validation_message = apply_filters(
 				'forminator_field_number_required_validation_message',
 				$required_validation_message,
@@ -348,8 +348,7 @@ class Forminator_Number extends Forminator_Field {
 		if ( $this->is_required( $field ) ) {
 
 			if ( empty( $data ) && '0' !== $data ) {
-				$require_message                 = self::get_property( 'required_message', $field, '' );
-				$required_validation_message     = ! empty( $require_message ) ? $require_message : esc_html__( 'This field is required. Please enter number.', 'forminator' );
+				$required_validation_message     = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_field_number_required_field_validation_message',
 					$required_validation_message,
@@ -359,7 +358,9 @@ class Forminator_Number extends Forminator_Field {
 					$this
 				);
 			}
-		} elseif ( ! empty( $data ) ) {
+		}
+
+		if ( ! empty( $data ) ) {
 				$separators = $this->forminator_separators( $separator, $field );
 				$point      = ! empty( $precision ) ? $separators['point'] : '';
 				$data       = str_replace( array( $separators['separator'], $point ), array( '', '.' ), $data );
@@ -369,7 +370,7 @@ class Forminator_Number extends Forminator_Field {
 				// Note : do not compare max or min if that settings field is blank string ( not zero ).
 			if ( 0 !== $min_len && $data < $min ) {
 				$min_validation_message          = self::get_property( 'limit_min_message', $field );
-				$min_validation_message          = $custom_message && $min_validation_message ? $min_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
+				$min_validation_message          = $custom_message && $min_validation_message ? $min_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be greater than %1$d and less than %2$d.', 'forminator' ), $min, $max );
 				$this->validation_message[ $id ] = sprintf(
 					apply_filters(
 						'forminator_field_number_max_min_validation_message',
@@ -384,7 +385,7 @@ class Forminator_Number extends Forminator_Field {
 				);
 			} elseif ( 0 !== $max_len && $data > $max ) {
 				$max_validation_message          = self::get_property( 'limit_max_message', $field );
-				$max_validation_message          = $custom_message && $max_validation_message ? $max_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
+				$max_validation_message          = $custom_message && $max_validation_message ? $max_validation_message : /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The number should be greater than %1$d and less than %2$d.', 'forminator' ), $min, $max );
 				$this->validation_message[ $id ] = sprintf(
 					apply_filters(
 						'forminator_field_number_max_min_validation_message',

@@ -46,7 +46,7 @@ if ( $count > 0 ) {
 					<?php } ?>
 				</select>
 
-				<?php static::render_form_switcher( $form_type, $form_id ); ?>
+				<?php Forminator_Entries_Page::render_form_switcher( $form_type, $form_id ); ?>
 
 			</div>
 

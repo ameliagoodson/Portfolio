@@ -75,6 +75,9 @@ class Forminator_Radio extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Radio', 'forminator' );
+		$required   = __( 'This field is required. Please select a value.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -184,6 +187,7 @@ class Forminator_Radio extends Forminator_Field {
 		);
 
 		if ( $label ) {
+			$label = self::convert_markdown( $label );
 			if ( $required ) {
 				$html .= sprintf(
 					'<span id="%s" class="forminator-label">%s %s</span>',
@@ -366,6 +370,15 @@ class Forminator_Radio extends Forminator_Field {
 
 		}
 
+		$custom_input_id         = $id . '-' . ( $i - 1 ) . '-' . $uniq_id;
+		$input_labelledby        = $id . '-label-' . ( $i - 1 );
+		$custom_input_attributes = array(
+			'id'              => 'custom-' . $custom_input_id,
+			'name'            => 'custom-' . $name,
+			'aria-labelledby' => $input_labelledby,
+		);
+		$html                   .= self::maybe_add_custom_option( $field, $options, $custom_input_attributes, $draft_value );
+
 		if ( 'above' !== $descr_position ) {
 			$html .= self::get_description( $description, $descr_id, $descr_position );
 		}
@@ -389,6 +402,13 @@ class Forminator_Radio extends Forminator_Field {
 
 		if ( $is_required ) {
 			$rules .= '"' . $this->get_id( $field ) . '": "required",';
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( $enable_custom_option ) {
+				$rules .= '"custom-' . $this->get_id( $field ) . '": {' . "\n";
+				$rules .= '"customInputForOtherOption": "radio",';
+				$rules .= '},' . "\n";
+			}
 		}
 
 		return apply_filters( 'forminator_field_single_validation_rules', $rules, $id, $field );
@@ -407,14 +427,26 @@ class Forminator_Radio extends Forminator_Field {
 		$is_required = $this->is_required( $field );
 
 		if ( $is_required ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, $this->get_required_error_message() );
 			$required_message = apply_filters(
 				'forminator_single_field_required_validation_message',
-				( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please select a value.', 'forminator' ) ),
+				$required_message,
 				$id,
 				$field
 			);
 			$messages        .= '"' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( $enable_custom_option ) {
+				$custom_value_required_message = self::get_property( 'custom_value_error_message', $field, '' );
+				$custom_value_required_message = apply_filters(
+					'forminator_custom_value_field_required_validation_message',
+					( ! empty( $custom_value_required_message ) ? $custom_value_required_message : esc_html__( 'Please, enter a custom value', 'forminator' ) ),
+					'custom-' . $id,
+					$field
+				);
+				$messages                     .= '"custom-' . $this->get_id( $field ) . '": "' . forminator_addcslashes( $custom_value_required_message ) . '",' . "\n";
+			}
 		}
 
 		return $messages;
@@ -439,14 +471,30 @@ class Forminator_Radio extends Forminator_Field {
 			);
 		}
 		if ( $this->is_required( $field ) ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, esc_html( $this->get_required_error_message() ) );
 			if ( empty( $data ) && '0' !== $data ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_single_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please select a value.', 'forminator' ) ),
+					$required_message,
 					$id,
 					$field
 				);
+			}
+
+			$enable_custom_option = self::get_property( 'enable_custom_option', $field, false );
+			if ( ! empty( $data ) && 'custom_option' === $data && $enable_custom_option ) {
+				$custom_value_required_message = self::get_property( 'custom_value_error_message', $field, '' );
+				$custom_value                  = Forminator_CForm_Front_Action::$prepared_data[ 'custom-' . $id ] ?? '';
+				if ( trim( $custom_value ) === '' ) {
+					// For cloned fields, use the original ID.
+					$custom_input_name                              = empty( $field['original_id'] ) ? 'custom-' . $id : 'custom-' . $field['original_id'];
+					$this->validation_message[ $custom_input_name ] = apply_filters(
+						'forminator_custom_value_field_required_validation_message',
+						( ! empty( $custom_value_required_message ) ? esc_html( $custom_value_required_message ) : esc_html__( 'Please, enter a custom value', 'forminator' ) ),
+						$custom_input_name,
+						$field
+					);
+				}
 			}
 		}
 	}

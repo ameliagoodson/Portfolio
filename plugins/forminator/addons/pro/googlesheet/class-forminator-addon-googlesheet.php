@@ -66,6 +66,13 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	protected $_position = 3;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'client_secret' );
+
+	/**
 	 * Forminator_Googlesheet constructor.
 	 *
 	 * @since 1.0 Google Sheets Integration
@@ -241,12 +248,13 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 			if ( ! $has_errors ) {
 				// validate api.
 				try {
-					if ( $this->get_client_id() !== $client_id || $this->get_client_secret() !== $client_secret ) {
+					$real_client_secret = $this->get_real_value( $client_secret, 'client_secret' );
+					if ( $this->get_client_id() !== $client_id || $this->get_client_secret() !== $real_client_secret ) {
 						// reset connection.
 						$settings_values = array();
 					}
 					$settings_values['client_id']     = $client_id;
-					$settings_values['client_secret'] = $client_secret;
+					$settings_values['client_secret'] = $real_client_secret;
 					$settings_values['identifier']    = $identifier;
 
 					$this->save_settings_values( $settings_values );
@@ -412,7 +420,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 * @return string
 	 */
 	public function get_client_secret() {
-		$settings_values = $this->get_settings_values();
+		$settings_values = $this->get_settings_values( true );
 		$client_secret   = '';
 		if ( isset( $settings_values ['client_secret'] ) ) {
 			$client_secret = $settings_values ['client_secret'];
@@ -463,7 +471,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 	 * @param string $access_token Access token.
 	 */
 	public function update_client_access_token( $access_token ) {
-		$settings_values           = $this->get_settings_values();
+		$settings_values           = $this->get_settings_values( true );
 		$settings_values ['token'] = $access_token;
 		$this->save_settings_values( $settings_values );
 	}
@@ -496,7 +504,7 @@ final class Forminator_Googlesheet extends Forminator_Integration {
 		if ( isset( $query_args['global_id'] ) ) {
 			$this->multi_global_id = $query_args['global_id'];
 		}
-		$settings        = $this->get_settings_values();
+		$settings        = $this->get_settings_values( true );
 		$template        = forminator_addon_googlesheet_dir() . 'views/sections/authorize.php';
 		$template_params = array(
 			'error_message' => '',

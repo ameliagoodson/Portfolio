@@ -22,6 +22,13 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'input-focus-outline-color' ) && !empty( $properties['input-focus-outline-color'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:focus {
+			outline: 2px solid <?php echo $properties['input-focus-outline-color'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:focus,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:active {
 		<?php if ( forminator_array_value_exists( $properties, 'input-active-color' ) && !empty( $properties['input-active-color'] ) ) { ?>
@@ -75,7 +82,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-hover' ) && !empty( $properties['input-border-hover'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-hover'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			border-color: #17A8E3;
+			border-color: #097BAA;
 		<?php } ?>
 	}
 
@@ -83,7 +90,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-active' ) && !empty( $properties['input-border-active'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-active'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			border-color: #17A8E3;
+			border-color: #097BAA;
 		<?php } ?>
 	}
 
@@ -91,7 +98,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-error' ) && !empty( $properties['input-border-error'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-error'] ?>;
 		<?php } elseif ( forminator_can_apply_default_color( $properties ) ) { ?>
-			border-color: #E04562;
+			border-color: #E51919;
 		<?php } ?>
 	}
 
@@ -105,6 +112,13 @@
 		background-color: transparent;
 		color: #000000;
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'input-focus-outline-color' ) && !empty( $properties['input-focus-outline-color'] ) ) { ?>
+		#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea:focus {
+			outline: 2px solid #254DEB;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea::placeholder {
 		color: #888888;
@@ -127,15 +141,15 @@
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-textarea--wrap:after {
-		border-color: #17A8E3;
+		border-color: #097BAA;
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-is_active .forminator-textarea--wrap:after {
-		border-color: #17A8E3;
+		border-color: #097BAA;
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-has_error .forminator-textarea--wrap:after {
-		border-color: #E04562;
+		border-color: #E51919;
 	}
 
 <?php } ?>

@@ -13,7 +13,7 @@ $quiz_total_submissions  = Forminator_Form_Entry_Model::count_all_entries_by_typ
 $last_submission         = forminator_get_latest_entry_time( 'all' );
 ?>
 
-<div class="sui-box sui-summary <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
+<div id="forminator-dashboard-box-summary" class="sui-box sui-summary <?php echo esc_attr( $this->get_box_summary_classes() ); ?>">
 
 	<div class="sui-summary-image-space" aria-hidden="true" style="<?php echo esc_attr( $this->get_box_summary_image_style() ); ?>"></div>
 

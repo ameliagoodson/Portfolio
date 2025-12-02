@@ -1119,7 +1119,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		$html = sprintf(
-			'<div tabindex="0" role="tabpanel" id="forminator-custom-form-%3$s--page-0" class="forminator-pagination forminator-pagination-start" aria-labelledby="forminator-custom-form-%3$s--page-0-label" data-step="0" data-label="%1$s" data-name="%2$s">',
+			'<div tabindex="-1" role="tabpanel" id="forminator-custom-form-%3$s--page-0" class="forminator-pagination forminator-pagination-start" aria-labelledby="forminator-custom-form-%3$s--page-0-label" data-step="0" data-label="%1$s" data-name="%2$s">',
 			esc_attr( $label ),
 			esc_attr( $element_id ),
 			esc_attr( $form_settings['form_id'] )
@@ -1148,6 +1148,9 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			'last-previous'            => esc_html__( 'Previous', 'forminator' ),
 			'pagination-labels'        => 'default',
 			'has-paypal'               => $this->has_paypal(),
+			'progress-bar-type'        => 'progress',
+			/* Translators: 1. Current page number, 2. Total number of pages. */
+			'page-number-text'         => esc_html__( 'Page %1$s of %2$s', 'forminator' ),
 		);
 
 		foreach ( $properties as $property => $value ) {
@@ -1351,7 +1354,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		$html = sprintf(
-			'</div><div tabindex="0" role="tabpanel" id="forminator-custom-form-%4$s--page-%1$s" class="forminator-pagination" aria-labelledby="forminator-custom-form-%4$s--page-%1$s-label" aria-hidden="true" data-step="%1$s" data-label="%2$s" data-name="%3$s" hidden>',
+			'</div><div tabindex="-1" role="tabpanel" id="forminator-custom-form-%4$s--page-%1$s" class="forminator-pagination" aria-labelledby="forminator-custom-form-%4$s--page-%1$s-label" aria-hidden="true" data-step="%1$s" data-label="%2$s" data-name="%3$s" hidden>',
 			esc_attr( $step ),
 			esc_attr( $label ),
 			esc_attr( $element_id ),
@@ -1426,6 +1429,13 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$field['element_id'] .= $field['group_suffix'];
 		}
 		$draft_value = isset( $this->draft_data[ $field['element_id'] ] ) ? $this->draft_data[ $field['element_id'] ] : null;
+
+		// Add custom value for radio, select, or checkbox if applicable.
+		if ( null !== $draft_value && in_array( $type, array( 'radio', 'select', 'checkbox' ), true ) ) {
+			if ( isset( $this->draft_data[ 'custom-' . $field['element_id'] ] ) ) {
+				$draft_value['custom_value'] = $this->draft_data[ 'custom-' . $field['element_id'] ];
+			}
+		}
 
 		// Get field object.
 		/**
@@ -2179,7 +2189,8 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		$nonce      = $this->nonce_field( 'forminator_submit_form' . $form_id, 'forminator_nonce' );
 		$post_id    = $this->get_post_id();
 		$has_paypal = $this->has_paypal();
-		$form_type  = isset( $this->model->settings['form-type'] ) ? $this->model->settings['form-type'] : '';
+		$settings   = $this->get_form_settings();
+		$form_type  = $settings['form-type'] ?? '';
 
 		if ( $has_paypal ) {
 			if ( ! ( self::$paypal instanceof Forminator_Paypal_Express ) ) {
@@ -2194,7 +2205,10 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 				$html .= '<input type="hidden" name="payment_gateway_total" value="" />';
 				$html .= $this->get_paypal_button_markup( $form_id );
 			}
-			$html .= $this->get_button_markup();
+			$fields = $this->model->get_fields();
+			if ( count( $fields ) ) {
+				$html .= $this->get_button_markup();
+			}
 		}
 
 		$html .= $nonce;
@@ -2209,7 +2223,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 		}
 
 		if ( $this->is_login_form() ) {
-			$redirect_url = ! empty( $this->model->settings['redirect-url'] ) ? $this->model->settings['redirect-url'] : admin_url();
+			$redirect_url = ! empty( $settings['redirect-url'] ) ? $settings['redirect-url'] : admin_url();
 			$redirect_url = forminator_replace_variables( $redirect_url, $form_id );
 			$html        .= sprintf( '<input type="hidden" name="redirect_to" value="%s">', esc_url( $redirect_url ) );
 		}
@@ -2224,7 +2238,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 			$html .= sprintf( '<input type="hidden" name="action" value="%s">', 'forminator_submit_form_custom-forms' );
 		}
 
-		if ( isset( $this->model->settings['use_save_and_continue'] ) && filter_var( $this->model->settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN ) ) {
+		if ( isset( $settings['use_save_and_continue'] ) && filter_var( $settings['use_save_and_continue'], FILTER_VALIDATE_BOOLEAN ) ) {
 			$html .= '<input type="hidden" name="save_draft" value="false">';
 
 			if ( ! empty( $this->draft_id ) ) {
@@ -2234,12 +2248,12 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 
 		$html .= $this->do_after_render_form_for_addons();
 
+		$html = apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce, $settings );
 		if ( $render ) {
-			$html = apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
 			echo wp_kses_post( $html );
 		} else {
 			/* @noinspection PhpInconsistentReturnPointsInspection */
-			return apply_filters( 'forminator_render_form_submit_markup', $html, $form_id, $post_id, $nonce );
+			return $html;
 		}
 	}
 
@@ -3301,7 +3315,7 @@ class Forminator_CForm_Front extends Forminator_Render_Form {
 	 * @return bool
 	 */
 	public function get_skip_text( $form_settings ) {
-		$skip_text = isset( $form_settings['skip-text'] ) ? esc_html( $form_settings['skip-text'] ) : esc_html__( 'Skip and continue', 'forminator' );
+		$skip_text = ! empty( $form_settings['skip-text'] ) ? esc_html( $form_settings['skip-text'] ) : esc_html__( 'Skip and continue', 'forminator' );
 
 		return $skip_text;
 	}

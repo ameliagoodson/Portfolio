@@ -643,7 +643,9 @@
 				multiselect = form.find( '.forminator-multiselect' ),
 				stripe		= form.find( '.forminator-stripe-element' ),
 				slider		= form.find( '.forminator-slider' ),
-				rating      = form.find( '.forminator-rating' )
+				rating      = form.find( '.forminator-rating' ),
+				checkbox	= form.find( '.forminator-checkbox' ),
+				radio		= form.find( '.forminator-radio' )
 				;
 
 			var isDefault  = ( form.attr( 'data-design' ) === 'default' ),
@@ -655,6 +657,18 @@
 			if ( input.length ) {
 				input.each( function() {
 					FUI.inputStates( this );
+				});
+			}
+
+			if ( checkbox.length ) {
+				checkbox.each( function() {
+					FUI.checkboxStates( this );
+				});
+			}
+
+			if ( radio.length ) {
+				radio.each( function() {
+					FUI.radioStates( this );
 				});
 			}
 

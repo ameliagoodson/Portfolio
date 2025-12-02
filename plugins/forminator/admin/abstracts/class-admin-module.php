@@ -73,6 +73,10 @@ abstract class Forminator_Admin_Module {
 		add_filter( 'forminator_data', array( $this, 'add_js_defaults' ) );
 		add_filter( 'forminator_l10n', array( $this, 'add_l10n_strings' ) );
 		add_filter( 'submenu_file', array( $this, 'admin_submenu_file' ), 10, 2 );
+
+		add_filter( 'forminator_form_admin_data', array( 'Forminator_Base_Form_Model', 'add_saved_changes' ), 10, 2 );
+		add_filter( 'forminator_poll_admin_data', array( 'Forminator_Base_Form_Model', 'add_saved_changes' ), 10, 2 );
+		add_filter( 'forminator_quiz_admin_data', array( 'Forminator_Base_Form_Model', 'add_saved_changes' ), 10, 2 );
 	}
 
 	/**

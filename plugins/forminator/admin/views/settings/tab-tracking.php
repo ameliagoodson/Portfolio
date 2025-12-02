@@ -7,7 +7,7 @@
 
 $forminator_usage_tracking = get_option( 'forminator_usage_tracking', false );
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-usage-tracking" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'Usage Tracking', 'forminator' ); ?></span>

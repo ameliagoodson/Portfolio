@@ -101,7 +101,7 @@
 			var self = this;
 
 			this.$el.find(
-				'.forminator-textarea, input.forminator-input, .forminator-input input, .forminator-checkbox, .forminator-radio, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
+				'.forminator-textarea, input.forminator-input, .forminator-input input, .forminator-checkbox input, .forminator-radio input, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
 				+ ', input.forminator-slider-hidden, input.forminator-slider-hidden-min, input.forminator-slider-hidden-max, select.forminator-rating'
 			).each(function () {
 				$(this).on('change', function () {
@@ -111,6 +111,11 @@
                }, 300 );
 				});
 			});
+
+			// When remove a group item, we need to replace all merge tags.
+			this.$el.on( 'forminator-group-item-removed', function () {
+				self.replaceAll();
+			} );
 		},
 
 		replaceAll: function () {
@@ -134,7 +139,7 @@
 		maybeReplaceValue: function (value) {
 			var joinedFieldTypes      = this.settings.forminatorFields.join('|');
 			var incrementFieldPattern = "(" + joinedFieldTypes + ")-\\d+";
-			var pattern               = new RegExp('\\{(' + incrementFieldPattern + ')(\\-[0-9A-Za-z-_]+)?\\}', 'g');
+			var pattern               = new RegExp('\\{(' + incrementFieldPattern + ')(\\-[0-9A-Za-z-_]+)?(\\-\\*)?\\}', 'g');
 			var parsedValue           = value;
 
 			var matches;
@@ -149,7 +154,13 @@
 					continue;
 				}
 
-				replace = this.get_field_value(inputName);
+				// Check if the field is a grouped field.
+				if( inputName.endsWith( '-*' ) ){
+					inputName = inputName.replace( '-*', '' );
+					replace = this.get_group_field_values( inputName );
+				} else {
+					replace = this.get_field_value(inputName);
+				}
 
 				parsedValue = parsedValue.replace(fullMatch, replace);
 			}
@@ -158,10 +169,14 @@
 		},
 
 		// taken from forminatorFrontCondition
-		get_form_field: function (element_id) {
+		get_form_field: function (element_id, repeater = false) {
 			let $form = this.$el;
 			if ( $form.hasClass( 'forminator-grouped-fields' ) ) {
 				$form = $form.closest( 'form.forminator-ui' );
+			}
+			if( repeater === true ) {
+				// Find element by name start with element_id- (for repeater fields)
+				return $form.find('[name^=' + element_id + '-]');
 			}
 			//find element by suffix -field on id input (default behavior)
 			var $element = $form.find('#' + element_id + '-field');
@@ -187,14 +202,37 @@
 			return $element;
 		},
 
-		is_calculation: function (element_id) {
-			var $element    = this.get_form_field(element_id);
+		get_group_field_values: function ( element_id ) {
+			var $first_elements    	= this.get_form_field( element_id ),
+				$repeated_elements 	= this.get_form_field( element_id, true),
+				value       		= '',
+				self        		= this;
 
-			if ( $element.hasClass("forminator-calculation") ) {
-				return true;
+			if ( $first_elements.length === 0 ) {
+				return '';
 			}
 
-			return false;
+			let $elements = [$first_elements[0]];
+			let seenElementIds = new Set();
+
+			$.each($repeated_elements, function ( index, element ) {
+				let elementId = $( element ).attr( 'name' ).replace( '[]', '' );
+				if ( ! seenElementIds.has( elementId ) ) {
+					seenElementIds.add( elementId );
+					$elements.push( element );
+				}
+			});
+
+			$.each( $elements, function( index, element ) {
+				if ( $( element ).attr( 'name' ) !== undefined ) {
+					let elementId = $( element ).attr( 'name' ).replace( '[]', '' );
+					let result = self.get_field_value( elementId );
+					if( result.trim() !== '' ) {
+						value += '<p>' + result + '</p>';
+					}
+				}
+			} );
+			return value;
 		},
 
 		get_field_value: function (element_id) {
@@ -203,23 +241,12 @@
 				value       = '',
 				checked     = null;
 
-			if ( this.is_hidden( element_id ) && ! this.is_calculation( element_id ) ) {
-         	return '';
-			}
-
 			if ( $element.length === 0 ) {
 				return '';
 			}
 
-			if ( this.is_calculation( element_id ) ) {
-				var $element_id = this.get_form_field(element_id),
-					$column_field = $element_id.closest('.forminator-col'),
-					$row_field = $column_field.closest('.forminator-row')
-				;
-
-				if ( ! $row_field.hasClass("forminator-hidden-option") && this.is_hidden( element_id ) ) {
-					return '';
-				}
+			if ( forminatorUtils().is_hidden( $element ) ) {
+				return '';
 			}
 
 			if (this.field_is_radio($element)) {
@@ -233,6 +260,7 @@
 								? checked.siblings( '.forminator-screen-reader-only' ).text()
 								: checked.siblings( '.forminator-radio-label' ).text();
 					}
+					value += self.append_custom_input_value_if_present( checked, 'radio' );
 				}
 			} else if (this.field_is_checkbox($element)) {
 				$element.each(function () {
@@ -256,6 +284,7 @@
 									 ? $(this).siblings( '.forminator-screen-reader-only' ).text()
 									 : $(this).siblings( '.forminator-checkbox-label' ).text();
 						}
+						value += self.append_custom_input_value_if_present( $(this), 'checkbox' );
 					}
 				});
 
@@ -271,6 +300,7 @@
 						} else {
 							value += $( this ).text();
 						}
+						value += self.append_custom_input_value_if_present( $(this), 'select' );
 					} );
 				}
 			} else if (this.field_is_upload($element)) {
@@ -284,6 +314,17 @@
 			}
 
 			return this.sanitize_text_field( value );
+		},
+
+		append_custom_input_value_if_present: function ( $element, type ) {
+			let value = '';
+			if( $element.val() === 'custom_option' ) {
+				const customInput = $element.closest( '.forminator-field-' + type ).find( '.forminator-custom-input .forminator-input' );
+				if( customInput.length && customInput.val() !== '' ) {
+					value += ": " + customInput.val();
+				}
+			}
+			return value;
 		},
 
 		field_has_inputMask: function ( $element ) {
@@ -336,24 +377,6 @@
 
 		field_is_select: function ($element) {
 			return $element.is('select');
-		},
-
-		// modified from front.condition
-		is_hidden: function (element_id) {
-			var $element_id = this.get_form_field(element_id),
-				$column_field = $element_id.closest('.forminator-col'),
-				$row_field = $column_field.closest('.forminator-row')
-			;
-
-			if ( $row_field.hasClass("forminator-hidden-option") || $row_field.hasClass("forminator-hidden") ) {
-				return true;
-			}
-
-			if( $column_field.hasClass("forminator-hidden") ) {
-				return true;
-			}
-
-			return false;
 		},
 
 		/**

@@ -81,6 +81,9 @@ class Forminator_Text extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Input', 'forminator' );
+		$required   = __( 'This field is required. Please enter text.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -159,7 +162,7 @@ class Forminator_Text extends Forminator_Field {
 		if ( ! empty( $description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
 			$description_block .= sprintf( '<span id="%s" class="forminator-description">', esc_attr( $id . '-description' ) );
 			if ( ! empty( $description ) ) {
-				$description_block .= self::esc_description( $description, $name );
+				$description_block .= self::convert_markdown( self::esc_description( $description, $name ) );
 			}
 			// Counter.
 			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
@@ -333,7 +336,7 @@ class Forminator_Text extends Forminator_Field {
 		$is_required      = $this->is_required( $field );
 		$has_limit        = $this->has_limit( $field );
 		$messages         = '';
-		$required_message = self::get_property( 'required_message', $field, '' );
+		$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 
 		if ( $is_required || $has_limit ) {
 			$messages .= '"' . $this->get_id( $field ) . '": {';
@@ -341,7 +344,7 @@ class Forminator_Text extends Forminator_Field {
 			if ( $is_required ) {
 				$required_error = apply_filters(
 					'forminator_text_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please enter text.', 'forminator' ) ),
+					$required_message,
 					$id,
 					$field
 				);
@@ -390,11 +393,11 @@ class Forminator_Text extends Forminator_Field {
 		}
 
 		if ( $this->is_required( $field ) && '' === $data ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 
 			$this->validation_message[ $id ] = apply_filters(
 				'forminator_text_field_required_validation_message',
-				( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please enter text.', 'forminator' ) ),
+				$required_message,
 				$id,
 				$field
 			);

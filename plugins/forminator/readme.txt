@@ -3,7 +3,7 @@ Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
 Tested up to: 6.8
-Stable tag: 1.44.1
+Stable tag: 1.48.3
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -230,6 +230,144 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.48.2 ( 2025-10-15 ) =
+
+- Fix: Issue with some submission data not properly rendering when object cache is enabled
+- Fix: Error message for required Select fields is not cleared after submission
+
+
+= 1.48.1 ( 2025-10-10 ) =
+
+- Fix: Google Sheets token refresh issue
+
+
+= 1.48.0 ( 2025-10-06 ) =
+
+- Enhancement: Respect WordPress network settings that disable site creation and display a notice on the Form Editor screen for registration forms on the main site of multisite networks
+- Enhancement: Respect WordPress settings that disable user registration and display a notice on the Form Editor screen for registration forms
+- Enhancement: Add a new "Map ID" field to Geolocation settings
+- Enhancement: Improve browser autofill
+- Enhancement: Add option to enable or disable browser autofill for input fields (Name, Address, and Phone)
+- Enhancement: Display Signature, Radio, Checkbox, and Upload fields in the email body as images instead of text or URLs
+- Enhancement: Add "status" column to "frmt_form_entry" table in the database for submissions
+- Enhancement: Improve WP caching for submissions based on their status
+- Enhancement: Improve compatibility with Photonic Gallery plugin
+- Enhancement: Hide integration API keys
+- Enhancement: Add add-on page notices when there is no connection to the Hub
+- Enhancement: Hide HTML field from Payment custom metadata
+- Enhancement: Enable the Slider step values toggle by default
+- Fix: Registration is still allowed even when the network option is deactivated
+- Fix: Can't set conditions that include the Date Picker field if the site language differs from English
+- Fix: Stripe payment method does not change on the front end if the user visited the form before and did not submit it
+- Fix: Select placeholder is duplicated when using an Elementor popup triggered by an On Click event
+- Fix: Single Upload field not working in the media library with the Stripe field
+- Fix: Sudden layout changes move the Submit button after filling out a required field
+- Fix: Calculation field removes the modulo operator without brackets
+- Fix: The min/max validation message is reversed for Number and Currency fields
+- Fix: Fields with conditional visibility inside repeater groups do not record all data
+- Fix: PayPal field breaks the selected values when the variable amount is not properly configured
+- Fix: Word "array" for the Upload field appears in the PDF if no files are uploaded
+- Fix: Show correct navigation links when some features are disabled
+- Fix: Categories and Tags (Multiple) in the Post Data field remain selected when the form is submitted
+- Fix: Incorrect classes on Submit button for paginated forms
+- Fix: Number field value does not display in HTML fields if it is on the same row as a hidden Calculation field
+- Fix: Default Radio/Checkbox image background color isn't working
+- Fix: Issue with Group field, HTML widget, and visibility conditionals
+
+
+= 1.47.0 ( 2025-09-09 ) =
+
+- Enhancement: Add page visibility conditions for paginated forms
+- Enhancement: Improve Page Break field design
+- Fix: Prevent placing the Page Break field in the same row with other fields
+
+
+= 1.46.2 ( 2025-08-19 ) =
+
+- Fix: Redirect URLs breaking due to double-encoding
+
+
+= 1.46.1 ( 2025-08-13 ) =
+
+- Fix: Resolved a fatal error that occurred when using certain dynamic Stripe payment methods.
+
+
+= 1.46.0 ( 2025-08-12 ) =
+
+- Enhancement: Adjust color shades for better contrast to meet WCAG 2.1 AA standards in forms with Forminator styles. You may notice minor visual changes.
+- Enhancement: Add focus outline colors to fields to meet WCAG 2.1 AA standards in forms with Forminator styles. You may notice minor visual changes.
+- Enhancement: Allow keyboard-only form completion
+- Enhancement: Update Stripe library
+- Enhancement: Improve progress bar calculation for paginated forms
+- Enhancement: Compatibility with Elementor template editor
+- Enhancement: Properly encode placeholder values used in URLs
+- Enhancement: Prevent downgrading PRO to free version on servers that ignore the 'Update URI' plugin tag
+- Enhancement: Update Onboarding Dashboard
+- Enhancement: Compatibility with PHP 8.2
+- Enhancement: Small UI improvements
+- Enhancement: Improve Group field appearance on Submissions page
+- Enhancement: Improve Group field single macro in Email Notifications and HTML fields
+- Enhancement: Add filter to disable Add-ons
+- Fix: Security improvements
+- Fix: Prevent user creation in Network and Main Site when site registration is disabled
+- Fix: Macro not working in Email Notification body for Group field
+- Fix: Visibility rules based on AM/PM and Minutes in Time field not working correctly
+- Fix: 'Is' visibility condition not working for Upload field
+- Fix: 'Is Not' visibility condition not working with Number fields when value is 0
+- Fix: Date field validation issue with visibility rules
+- Fix: Hidden Address field shifts columns in CSV exports
+- Fix: Incorrect calculation of Repeated fields with visibility conditions
+- Fix: Incorrect calculation when a hidden field is used in a formula
+- Fix: Visibility conditions not working correctly inside Group fields
+- Fix: 'Hide' visibility conditions not working when based on Hidden fields
+- Fix: Issue filling Stripe Billing Details
+- Fix: Min/Max validation issue in Number field
+- Fix: Textarea field styling broken on Material Design Style
+- Fix: Slider field colors not saved in Appearance Presets
+- Fix: Password field validation message broken when using quotes
+- Fix: RTL mode issues with Select field
+- Fix: Submission ID in Hidden field not working in Email Notification subject
+- Fix: HTML field displays only the first item of Repeated field
+- Fix: Repeater field not working in Elementor popup
+- Fix: Issue with success message after submitting Polls
+- Fix: Quiz result and Lead form data missing in Email Notifications when 'Store Submissions in Database' is disabled
+- Fix: Scrolling issue on Add-ons page
+- Fix: Fatal error when using Multiple Upload field
+- Fix: Expiry Date field not allowing manual input
+- Fix: Default hint missing for Skip Form button
+- Fix: Visibility tab not showing reactivated Multiple Name fields
+- Fix: Confirm Email field validation message not editable
+- Fix: Close button not translatable in some modals
+- Fix: Error message not shown on Timepicker when a description is present
+- Fix: 'Approve' button missing for Registration form in some cases
+- Fix: JavaScript error when adding Conditional Visibility to Submit button
+- Fix: Textarea field overlaps with error message
+- Fix: Number field limits not working when inline validation is disabled in paginated forms
+- Fix: Screen reader does not read label for Slider field
+
+
+= 1.45.1 ( 2025-07-15 ) =
+
+- Fix: Security improvements
+
+
+= 1.45.0 ( 2025-07-08 ) =
+
+- Enhancement: Add Autosave option to prevent data loss during editing
+- Enhancement: Allow custom Markdown in field labels and descriptions
+- Enhancement: Include custom input option for Select, Checkbox, and Radio fields
+- Enhancement: Add Min and Max labels to Slider field
+- Enhancement: Make Preset Templates available via Hub Connector
+- Enhancement: Show default field error messages as placeholders
+- Enhancement: Show notification after creating a new form
+- Enhancement: Improve UI in various areas
+- Fix: Number and Currency field formatting is lost when using specific merge tags in PDFs
+
+
+= 1.44.3 ( 2025-06-30 ) =
+
+- Fix: Security improvements
 
 
 = 1.44.2 ( 2025-06-04 ) =

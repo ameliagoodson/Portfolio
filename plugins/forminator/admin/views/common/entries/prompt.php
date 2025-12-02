@@ -10,8 +10,8 @@ if ( ! FORMINATOR_PRO ) {
 	$form_id                  = $this->form_id;
 	$notice_success           = get_option( 'forminator_rating_success', false );
 	$notice_dismissed         = get_option( 'forminator_rating_dismissed', false );
-	$submission_later         = get_post_meta( $form_id, 'forminator_submission_rating_later' );
-	$submission_later_dismiss = get_post_meta( $form_id, 'forminator_submission_rating_later_dismiss' );
+	$submission_later         = get_post_meta( $form_id, 'forminator_submission_rating_later', false );
+	$submission_later_dismiss = get_post_meta( $form_id, 'forminator_submission_rating_later_dismiss', false );
 	$min_submissions          = isset( $args['min_submissions'] ) ? $args['min_submissions'] : 10;
 	if ( ! $notice_dismissed && ! $notice_success ) {
 		if ( ( $min_submissions < $submission && 100 >= $submission && ! $submission_later )
@@ -35,7 +35,7 @@ if ( ! FORMINATOR_PRO ) {
 							if ( empty( $args['notice'] ) ) {
 								$milestone = ( 100 >= $submission ) ? $min_submissions : 100;
 								/* Translators: 1. Opening <strong> tag with milestone value, 2. closing <strong> tag, 3. Module slug */
-								printf( esc_html__( 'Hey, we noticed you just crossed %1$s submissions%2$s on this %3$s - that\'s awesome! We have spent countless hours developing this free plugin for you, and we would really appreciate it if you could drop us a rating on wp.org to help us spread the word and boost our motivation.', 'forminator' ), '<strong> ' . (int) $milestone, '</strong>', esc_html( static::$module_slug ) );
+								printf( esc_html__( 'Hey, we noticed you just crossed %1$s submissions%2$s on this %3$s - that\'s awesome! We have spent countless hours developing this free plugin for you, and we would really appreciate it if you could drop us a rating on wp.org to help us spread the word and boost our motivation.', 'forminator' ), '<strong> ' . (int) $milestone, '</strong>', esc_html( $this::$module_slug ) );
 							} else {
 								echo wp_kses_post( $args['notice'] );
 							}

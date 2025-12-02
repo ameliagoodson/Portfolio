@@ -632,7 +632,12 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 			foreach ( $fields_headers as $header ) {
 				?>
 
-				<th><?php echo esc_html( $header['label'] ); ?></th>
+				<th>
+				<?php
+					// PHPCS:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- esc_html is used inside convert_markdown.
+					echo Forminator_Field::convert_markdown( esc_html( $header['label'] ) );
+				?>
+				</th>
 
 				<?php
 			}
@@ -740,6 +745,7 @@ class Forminator_CForm_View_Page extends Forminator_Admin_View_Page {
 				'entry_id'   => $entry->entry_id,
 				'draft_id'   => $entry->draft_id,
 				'entry_date' => $entry->time_created,
+				'status'     => $entry->status,
 				'summary'    => array(),
 				'detail'     => array(),
 			);

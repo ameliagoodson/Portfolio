@@ -236,6 +236,11 @@ class Forminator_Reports {
 			foreach ( $module_ids as $m => $module_id ) {
 				$views      = Forminator_Form_Views_Model::get_instance()->count_views( $module_id );
 				$submission = Forminator_Form_Entry_Model::count_report_entries( $module_id );
+				$abandoned  = Forminator_Form_Entry_Model::count_report_entries( $module_id, '', '', 'abandoned' );
+				$based_on   = $submission + $abandoned;
+				$dropoff    = 0 < $based_on
+					? number_format( ( $abandoned * 100 ) / $based_on, 1 )
+					: 0;
 				$conversion = 0 < $views
 					? number_format( ( $submission * 100 ) / $views, 1 )
 					: 0;
@@ -244,7 +249,9 @@ class Forminator_Reports {
 					'title'      => forminator_get_form_name( $module_id ),
 					'views'      => $views,
 					'submission' => $submission,
+					'abandoned'  => $abandoned,
 					'conversion' => ! empty( $conversion ) ? $conversion . '%' : '',
+					'dropoff'    => ! empty( $dropoff ) ? $dropoff . '%' : '',
 					'payments'   => null,
 				);
 				if ( Forminator_Form_Entry_Model::has_live_payment( $module_id ) ) {

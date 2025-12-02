@@ -15,7 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property  string $status
  */
 abstract class Forminator_Base_Form_Model {
-	const META_KEY = 'forminator_form_meta';
+	const META_KEY      = 'forminator_form_meta';
+	const TEMP_META_KEY = 'forminator_temp_form_meta';
 	/**
 	 * Form ID
 	 *
@@ -156,6 +157,83 @@ abstract class Forminator_Base_Form_Model {
 	}
 
 	/**
+	 * Save temporary settings
+	 *
+	 * @param int   $id Module ID.
+	 * @param array $module_data Module data.
+	 *
+	 * @return bool
+	 */
+	public static function save_temp_settings( int $id, array $module_data ): bool {
+		unset( $module_data['pdfs'] ); // Remove PDFs from temp settings.
+		$response = update_post_meta( $id, self::TEMP_META_KEY, $module_data );
+		// It can be false, if new data is the same as old data.
+		if ( ! $response && self::get_temp_settings( $id ) === $module_data ) {
+			return true;
+		}
+
+		return (bool) $response;
+	}
+
+	/**
+	 * Get temporary settings
+	 *
+	 * @param int $id Module ID.
+	 *
+	 * @return array|bool
+	 */
+	public static function get_temp_settings( int $id ) {
+		$temp_meta = get_post_meta( $id, self::TEMP_META_KEY, true );
+
+		if ( ! empty( $temp_meta ) && is_array( $temp_meta ) ) {
+			return $temp_meta;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Remove temporary settings
+	 *
+	 * @param int $id Module ID.
+	 * @return bool
+	 */
+	public static function remove_temp_settings( int $id ): bool {
+		$response = delete_post_meta( $id, self::TEMP_META_KEY );
+
+		return (bool) $response;
+	}
+
+	/**
+	 * Add temp saved changes to the data
+	 *
+	 * @param array                           $data Data.
+	 * @param Forminator_Base_Form_Model|null $model Model.
+	 *
+	 * @return array
+	 */
+	public static function add_saved_changes( $data, $model ) {
+		if ( $model ) {
+			$data['originalSettings'] = $data['currentForm'];
+
+			$saved_changes = self::get_temp_settings( $model->id );
+			// Add saved changes to the data.
+			if ( ! empty( $saved_changes ) ) {
+				$data['currentForm'] = $saved_changes;
+				if ( isset( $data['originalSettings']['pdfs'] ) ) {
+					// If PDFs are set in original settings, we need to keep them in the current form.
+					$data['currentForm']['pdfs'] = $data['originalSettings']['pdfs'];
+				} else {
+					// If PDFs are not set in original settings, we need to remove them from the current form.
+					unset( $data['currentForm']['pdfs'] );
+				}
+			}
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Get fields
 	 *
 	 * @return Forminator_Form_Field_Model[]
@@ -224,6 +302,40 @@ abstract class Forminator_Base_Form_Model {
 		);
 
 		return $grouped_fields;
+	}
+
+
+	/**
+	 * Get filtered fields by page break.
+	 *
+	 * @param string $page_break_id Page break ID.
+	 * @return array
+	 */
+	public function get_page_fields( $page_break_id ) {
+		$fields             = $this->get_fields();
+		$last_page_break_id = null;
+		$page_fields        = array();
+		$collecting         = false;
+		foreach ( $fields as $field ) {
+			if ( 0 === strpos( $field->slug, 'page-break-' ) ) {
+				if ( $field->element_id === $page_break_id ) {
+					$collecting = true;
+				} else {
+					$collecting = false;
+				}
+				$last_page_break_id = $field->element_id;
+			} elseif ( $collecting ) {
+				$page_fields[] = $field;
+			}
+		}
+
+		// If it's the last page break id, then the page fields are empty.
+		// Because we ignore visibility conditions on the last page.
+		if ( $page_break_id === $last_page_break_id ) {
+			$page_fields = array();
+		}
+
+		return $page_fields;
 	}
 
 	/**

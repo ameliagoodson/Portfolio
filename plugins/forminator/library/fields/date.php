@@ -67,6 +67,9 @@ class Forminator_Date extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Datepicker', 'forminator' );
+		$required   = __( 'This field is required.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -414,7 +417,7 @@ class Forminator_Date extends Forminator_Field {
 								$html .= sprintf(
 									'<label for="%s" class="forminator-label">%s %s</label>',
 									$day_data['id'],
-									$this->sanitize_value( $label ),
+									self::convert_markdown( esc_html( $label ) ),
 									'<span class="forminator-required">*</span>'
 								);
 							}
@@ -468,7 +471,7 @@ class Forminator_Date extends Forminator_Field {
 								$html .= sprintf(
 									'<label for="%s" class="forminator-label">%s %s</label>',
 									$month_data['id'],
-									$this->sanitize_value( $label ),
+									self::convert_markdown( esc_html( $label ) ),
 									'<span class="forminator-required">*</span>'
 								);
 							}
@@ -523,7 +526,7 @@ class Forminator_Date extends Forminator_Field {
 								$html .= sprintf(
 									'<label for="%s" class="forminator-label">%s %s</label>',
 									$year_data['id'],
-									$this->sanitize_value( $label ),
+									self::convert_markdown( esc_html( $label ) ),
 									'<span class="forminator-required">*</span>'
 								);
 							}
@@ -627,7 +630,7 @@ class Forminator_Date extends Forminator_Field {
 								$html .= sprintf(
 									'<label for="%s" class="forminator-label">%s %s</label>',
 									$day_data['id'],
-									$this->sanitize_value( $label ),
+									self::convert_markdown( esc_html( $label ) ),
 									'<span class="forminator-required">*</span>'
 								);
 							}
@@ -688,7 +691,7 @@ class Forminator_Date extends Forminator_Field {
 								$html .= sprintf(
 									'<label for="%s" class="forminator-label">%s %s</label>',
 									$month_data['id'],
-									$this->sanitize_value( $label ),
+									self::convert_markdown( esc_html( $label ) ),
 									'<span class="forminator-required">*</span>'
 								);
 							}
@@ -745,7 +748,7 @@ class Forminator_Date extends Forminator_Field {
 								$html .= sprintf(
 									'<label for="%s" class="forminator-label">%s %s</label>',
 									$year_data['id'],
-									$this->sanitize_value( $label ),
+									self::convert_markdown( esc_html( $label ) ),
 									'<span class="forminator-required">*</span>'
 								);
 							}
@@ -1039,7 +1042,7 @@ class Forminator_Date extends Forminator_Field {
 
 		if ( empty( $required_validation_message ) ) {
 			if ( 'picker' === $type ) {
-				$required_validation_message = esc_html__( 'This field is required.', 'forminator' );
+				$required_validation_message = esc_html( self::$default_required_messages[ $this->type ] );
 			} else {
 				$required_validation_message = ' ' . esc_html__( 'field is required.', 'forminator' );
 			}
@@ -1080,7 +1083,7 @@ class Forminator_Date extends Forminator_Field {
 					$date_format,
 					$this
 				);
-				$messages               = '"' . $this->get_id( $field ) . '-day": "<strong>' . $day_label . '</strong> ' . forminator_addcslashes( $day_validation_message ) . '",' . "\n";
+				$messages               = '"' . $this->get_id( $field ) . '-day": "<strong>' . forminator_addcslashes( $day_label ) . '</strong> ' . forminator_addcslashes( $day_validation_message ) . '",' . "\n";
 
 				$month_validation_message = apply_filters(
 					'forminator_field_date_month_validation_message',
@@ -1090,7 +1093,7 @@ class Forminator_Date extends Forminator_Field {
 					$date_format,
 					$this
 				);
-				$messages                .= '"' . $this->get_id( $field ) . '-month": "<strong>' . $month_label . '</strong> ' . forminator_addcslashes( $month_validation_message ) . '",' . "\n";
+				$messages                .= '"' . $this->get_id( $field ) . '-month": "<strong>' . forminator_addcslashes( $month_label ) . '</strong> ' . forminator_addcslashes( $month_validation_message ) . '",' . "\n";
 
 				$year_validation_message = apply_filters(
 					'forminator_field_date_year_validation_message',
@@ -1100,7 +1103,7 @@ class Forminator_Date extends Forminator_Field {
 					$date_format,
 					$this
 				);
-				$messages               .= '"' . $this->get_id( $field ) . '-year": "<strong>' . $year_label . '</strong> ' . forminator_addcslashes( $year_validation_message ) . '",' . "\n";
+				$messages               .= '"' . $this->get_id( $field ) . '-year": "<strong>' . forminator_addcslashes( $year_label ) . '</strong> ' . forminator_addcslashes( $year_validation_message ) . '",' . "\n";
 		}
 
 		return apply_filters( 'forminator_field_date_validation_message', $messages, $field, $type, $date_format, $this );
@@ -1124,7 +1127,7 @@ class Forminator_Date extends Forminator_Field {
 		$restrict_type   = self::get_property( 'howto-restrict', $field );
 
 		if ( $this->is_required( $field ) ) {
-			$required_validation_message = self::get_property( 'required_message', $field, esc_html__( 'This field is required. Please enter a valid date.', 'forminator' ) );
+			$required_validation_message = self::get_property( 'required_message', $field, esc_html( self::$default_required_messages[ $this->type ] ) );
 			if ( empty( $data ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_field_date_required_field_validation_message',

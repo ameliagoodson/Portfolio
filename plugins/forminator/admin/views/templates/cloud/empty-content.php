@@ -21,7 +21,7 @@
 			<?php
 			printf(
 				/* translators: %1$s - opening anchor tag, %2$s - closing anchor tag */
-				esc_html__( '%1$sLearn how to save forms as cloud template%2$s.', 'forminator' ),
+				esc_html__( '%1$sLearn how to save forms as cloud templates%2$s.', 'forminator' ),
 				'<a href="https://wpmudev.com/docs/wpmu-dev-plugins/forminator/#templates" target="_blank">',
 				'</a>'
 			);

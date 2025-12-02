@@ -9,7 +9,7 @@ $sender_email_address = get_global_sender_email_address();
 $sender_name          = get_global_sender_name();
 ?>
 
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-from-headers" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'From Headers', 'forminator' ); ?></span>

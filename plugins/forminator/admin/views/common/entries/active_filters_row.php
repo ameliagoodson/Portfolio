@@ -96,15 +96,21 @@
 
 				switch ( $this->filters['entry_status'] ) {
 					case 'completed':
-						$entry_status = 'Completed';
+						$entry_status = __( 'Completed', 'forminator' );
 						break;
 
 					case 'draft':
-						$entry_status = 'Draft';
+						$entry_status = __( 'Draft', 'forminator' );
+						break;
+
+					case 'abandoned':
+						if ( ! forminator_form_abandonment_disabled() ) {
+							$entry_status = __( 'Abandoned', 'forminator' );
+						}
 						break;
 
 					default:
-						$entry_status = 'All';
+						$entry_status = __( 'All', 'forminator' );
 						break;
 				}
 

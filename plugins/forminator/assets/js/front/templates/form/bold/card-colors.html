@@ -27,7 +27,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-hover' ) && !empty( $properties['input-border-hover'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-hover'] ?>;
 		<?php } else { ?>
-			border-color: #17A8E3;
+			border-color: #097BAA;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'input-hover-bg' ) && !empty( $properties['input-hover-bg'] ) ) { ?>
 			background-color: <?php echo $properties['input-hover-bg'] ?>;
@@ -41,7 +41,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-active' ) && !empty( $properties['input-border-active'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-active'] ?>;
 		<?php } else { ?>
-			border-color: #17A8E3;
+			border-color: #097BAA;
 		<?php } ?>
 		<?php if ( forminator_array_value_exists( $properties, 'input-active-bg' ) && !empty( $properties['input-active-bg'] ) ) { ?>
 			background-color: <?php echo $properties['input-active-bg'] ?>;
@@ -56,7 +56,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'input-border-error' ) && !empty( $properties['input-border-error'] ) ) { ?>
 			border-color: <?php echo $properties['input-border-error'] ?>;
 		<?php } else { ?>
-			border-color: #E04562;
+			border-color: #E51919;
 		<?php } ?>
 	}
 
@@ -72,22 +72,22 @@
 		color: #000000;
 		transition: 0.2s ease;
 	}
-	
+
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .StripeElement:not(.forminator-stripe-payment-element):hover {
-		border-color: #17A8E3;
+		border-color: #097BAA;
 		background-color: #E6E6E6;
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .StripeElement--focus,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .StripeElement--focus:hover {
-		border-color: #17A8E3;
+		border-color: #097BAA;
 		background-color: #E6E6E6;
 	}
 
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .StripeElement--invalid,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .StripeElement--invalid:hover,
 	#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .StripeElement--focus.StripeElement--invalid {
-		border-color: #E04562;
+		border-color: #E51919;
 	}
 
 <?php } ?>

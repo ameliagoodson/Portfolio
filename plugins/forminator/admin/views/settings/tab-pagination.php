@@ -8,7 +8,7 @@
 $entries_per_page = get_option( 'forminator_pagination_entries', 10 );
 $module_per_page  = get_option( 'forminator_pagination_listings', 10 );
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-pagination" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'Pagination', 'forminator' ); ?></span>

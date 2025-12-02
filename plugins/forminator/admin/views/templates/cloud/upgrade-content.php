@@ -18,7 +18,7 @@ $logo_name = Forminator_Hub_Connector::get_hub_connect_logo();
 			<?php echo esc_html( Forminator_Hub_Connector::get_hub_connect_description() ); ?>
 		</p>
 		<p>
-			<a href="<?php echo esc_url( Forminator_Hub_Connector::get_hub_connect_url() ); ?>" class="sui-button sui-button-icon-right sui-button-blue">
+			<a href="<?php echo esc_url( Forminator_Hub_Connector::get_hub_connect_url() ); ?>" class="sui-button sui-button-icon-right sui-button-bright-blue">
 				<?php echo esc_html( Forminator_Hub_Connector::get_hub_connect_cta_text() ); ?>
 			</a>
 		</p>

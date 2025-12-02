@@ -137,11 +137,15 @@
 							<thead style="background:#F2F2F2;font-size: 12px;line-height: 14px;">
 							<tr>
 								<th style="padding: 8px 15px 8px 20px;"><?php echo esc_html( ucfirst( $args['module'] ) ); ?></th>
-								<th style="padding: 8px 5px;"><?php esc_html_e( 'Views', 'forminator' ); ?></th>
-								<th style="padding: 8px 5px;"><?php esc_html_e( 'Submissions', 'forminator' ); ?></th>
-								<th style="padding: 8px 5px;"><?php esc_html_e( 'Conversions', 'forminator' ); ?></th>
-								<?php if ( 'forms' === $args['module'] && ! forminator_payments_disabled() ) { ?>
-									<th style="padding: 8px 20px 8px 5px;"><?php esc_html_e( 'Payments', 'forminator' ); ?></th>
+								<th style="padding: 8px 5px; width: 15%;"><?php esc_html_e( 'Views', 'forminator' ); ?></th>
+								<th style="padding: 8px 5px;"><?php esc_html_e( 'Submissions / Conversion rate', 'forminator' ); ?></th>
+								<?php if ( 'forms' === $args['module'] ) { ?>
+									<?php if ( ! forminator_form_abandonment_disabled() ) { ?>
+										<th style="padding: 8px 5px;"><?php esc_html_e( 'Abandonments / Drop off rate', 'forminator' ); ?></th>
+									<?php } ?>
+									<?php if ( ! forminator_payments_disabled() ) { ?>
+										<th style="padding: 8px 20px 8px 5px; width: 15%;"><?php esc_html_e( 'Payments', 'forminator' ); ?></th>
+									<?php } ?>
 								<?php } ?>
 							</tr>
 							</thead>
@@ -153,10 +157,14 @@
 									<tr style="border-bottom: 1px solid #f2f2f2;">
 										<td style="padding: 20px 15px 20px 20px;color: #1a1a1a;"><strong><?php echo esc_html( $report['title'] ); ?></strong></td>
 										<td style="padding: 20px 5px;"><?php echo esc_html( $report['views'] ); ?></td>
-										<td style="padding: 20px 5px;"><?php echo esc_html( $report['submission'] ); ?></td>
-										<td style="padding: 20px 5px;"><?php echo esc_html( $report['conversion'] ); ?></td>
-										<?php if ( 'forms' === $args['module'] && ! forminator_payments_disabled() ) { ?>
-											<td style="padding: 20px 20px 20px 5px;"><?php echo esc_html( $report['payments'] ); ?></td>
+										<td style="padding: 20px 5px;"><?php echo esc_html( $report['submission'] . ' / ' . $report['conversion'] ); ?></td>
+										<?php if ( 'forms' === $args['module'] ) { ?>
+											<?php if ( ! forminator_form_abandonment_disabled() ) { ?>
+												<td style="padding: 20px 5px;"><?php echo esc_html( $report['abandoned'] . ' / ' . $report['dropoff'] ); ?></td>
+											<?php } ?>
+											<?php if ( ! forminator_payments_disabled() ) { ?>
+												<td style="padding: 20px 20px 20px 5px;"><?php echo esc_html( $report['payments'] ); ?></td>
+											<?php } ?>
 										<?php } ?>
 									</tr>
 									<?php

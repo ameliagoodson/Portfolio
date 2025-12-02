@@ -154,11 +154,9 @@ class Forminator_Form_Reports_Model {
 	/**
 	 * Load all report data
 	 *
-	 * @param int $id Id.
-	 *
 	 * @since 1.20.0
 	 */
-	public function fetch_all_report( $id = 0 ) {
+	public function fetch_all_report() {
 		global $wpdb;
 		$table_name = $this->get_table_name();
 		$results    = $wpdb->get_results( 'SELECT * FROM ' . esc_sql( $table_name ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery

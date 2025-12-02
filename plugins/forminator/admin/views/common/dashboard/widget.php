@@ -32,7 +32,7 @@ $method  = 'get_' . forminator_get_prefix( $module_slug, '', false, true );
 $modules = Forminator_API::$method( null, 1, $num_recent, $statuses );
 ?>
 
-<div class="sui-box">
+<div id="forminator-dashboard-box-recent-<?php echo esc_attr( $module_slug ); ?>" class="sui-box">
 
 	<div class="sui-box-header">
 

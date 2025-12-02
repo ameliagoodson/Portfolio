@@ -504,9 +504,8 @@ class Forminator_CForm_User_Signups {
 			return $signup;
 		}
 
-		$roles = forminator_get_accessible_user_roles();
 		// Do not allow if it is a backend request and the user lacks access to the specified user role.
-		if ( $is_user_signon && ! empty( $signup->user_data['role'] ) && ! isset( $roles[ $signup->user_data['role'] ] ) ) {
+		if ( $is_user_signon && ! forminator_can_approve_user_and_create_site( $signup ) ) {
 			return new WP_Error( 'invalid_access', esc_html__( 'Unfortunately, you do not have the required permissions or user role to perform this action.', 'forminator' ), $signup );
 		}
 
@@ -549,9 +548,14 @@ class Forminator_CForm_User_Signups {
 
 		do_action( 'forminator_activate_user', $user_id, $signup->meta );
 
+		if ( ! empty( $signup->form->id ) ) {
+			// Delete the cache for the form entries query.
+			Forminator_Form_Entry_Model::delete_form_entries_query_cache( $signup->form->id );
+		}
+
 		if ( isset( $signup->settings['activation-method'] )
 			&& 'manual' === $signup->settings['activation-method']
-			&& ! current_user_can( 'manage_options' )
+			&& ! current_user_can( forminator_get_permission( 'forminator-entries' ) )
 		) {
 			return new WP_Error( 'user_activated', esc_html__( 'User account has been activated.', 'forminator' ), $signup );
 		}
@@ -576,11 +580,6 @@ class Forminator_CForm_User_Signups {
 			&& ! empty( $signup->settings['confirmation-page'] )
 		) {
 			$result['redirect_page'] = $signup->settings['confirmation-page'];
-		}
-
-		if ( ! empty( $signup->form->id ) ) {
-			// Delete the cache for the form entries query.
-			Forminator_Form_Entry_Model::delete_form_entries_query_cache( $signup->form->id );
 		}
 
 		return $result;

@@ -88,6 +88,9 @@ class Forminator_Postdata extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Post Data', 'forminator' );
+		$required   = __( 'This field is required. Please enter the post title.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -671,7 +674,7 @@ class Forminator_Postdata extends Forminator_Field {
 
 					$postdata_post_title_validation_message          = apply_filters(
 						'forminator_postdata_field_post_title_validation_message',
-						( ! empty( $setting_required_message ) ? $setting_required_message : esc_html__( 'This field is required. Please enter the post title.', 'forminator' ) ),
+						( ! empty( $setting_required_message ) ? $setting_required_message : esc_html( self::$default_required_messages[ $this->type ] ) ),
 						$id
 					);
 					$this->validation_message[ $id . '-post-title' ] = $postdata_post_title_validation_message;
@@ -1101,7 +1104,7 @@ class Forminator_Postdata extends Forminator_Field {
 
 				$required_message = apply_filters(
 					'forminator_postdata_field_post_title_validation_message',
-					( ! empty( $setting_required_message ) ? $setting_required_message : esc_html__( 'This field is required. Please enter the post title.', 'forminator' ) ),
+					( ! empty( $setting_required_message ) ? $setting_required_message : self::$default_required_messages[ $this->type ] ),
 					$id,
 					$field
 				);

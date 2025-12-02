@@ -166,8 +166,12 @@ abstract class Forminator_Admin_Page {
 		$vars[] = 'forminator_notice';
 		$vars[] = 'forminator_text_notice';
 		$vars[] = 'forminator_error_notice';
+		$vars[] = 'forminator_open_addon';
+		$vars[] = 'forminator_install_addon';
+		$vars[] = 'page_referral';
 		if ( Forminator_Hub_Connector::hub_connector_connected() ) {
 			$vars[] = 'page_action';
+			$vars[] = 'feature';
 		}
 
 		return $vars;
@@ -311,7 +315,7 @@ abstract class Forminator_Admin_Page {
 		$accessibility_enabled = get_option( 'forminator_enable_accessibility', false );
 		?>
 
-		<main class="sui-wrap <?php echo $accessibility_enabled ? 'sui-color-accessible' : ''; ?> <?php echo esc_attr( 'wpmudev-forminator-' . $this->page_slug ); ?>">
+		<main id="<?php echo esc_attr( 'wpmudev-page-' . $this->page_slug ); ?>" class="sui-wrap <?php echo $accessibility_enabled ? 'sui-color-accessible' : ''; ?> <?php echo esc_attr( 'wpmudev-forminator-' . $this->page_slug ); ?>">
 
 			<?php
 
@@ -341,12 +345,13 @@ abstract class Forminator_Admin_Page {
 	 * Show modal when hub connected successfully
 	 */
 	public static function hub_connected_successfully_modal() {
+		$feature = filter_input( INPUT_GET, 'feature' );
 		?>
-		<div class="sui-modal sui-modal-sm">
+		<div class="sui-modal sui-modal-md">
 			<div
 				role="dialog"
 				id="forminator-hub-connected-successfully-modal"
-				class="sui-modal-content"
+				class="sui-modal-content forminator-hub-modal"
 				aria-modal="true"
 				aria-labelledby="forminator-hub-connected-successfully-modal-title"
 				aria-describedby="forminator-hub-connected-successfully-modal-description"
@@ -360,11 +365,60 @@ abstract class Forminator_Admin_Page {
 						</h3>
 						<p id="forminator-hub-connected-successfully-modal-description" class="sui-description">
 							<b><?php esc_html_e( 'Congratulations!', 'forminator' ); ?></b>
-							<?php esc_html_e( 'Your site is connected to the Hub. You can now save your forms to the Hub cloud.', 'forminator' ); ?>
+							<?php
+							if ( 'preset-template' === $feature ) {
+								esc_html_e( 'Your site is now connected to the Hub, and preset templates are unlocked. Start building forms faster with any of our ready-made templates.', 'forminator' );
+							} elseif ( 'extension-pack' === $feature ) {
+								esc_html_e( 'Your site is now connected to the Hub, and the following features are now unlocked.', 'forminator' );
+							} else {
+								esc_html_e( 'Your site is connected to the Hub. You can now save your forms to the Hub cloud.', 'forminator' );
+							}
+							?>
 						</p>
 					</div>
+					<?php if ( 'extension-pack' === $feature ) { ?>
+						<div class="sui-box-body">
+							<div class="sui-box-body-item forminator-hub-modal-item">
+								<div class="forminator-hub-modal-box">
+									<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+									<strong>
+										<?php esc_html_e( 'Preset and Cloud Templates', 'forminator' ); ?>
+									</strong>
+									<span class="sui-tag sui-tag-blue sui-tag-sm"><?php echo esc_html__( 'Unlocked', 'forminator' ); ?></span>
+								</div>
+							</div>
+							<div class="sui-box-body-item forminator-hub-modal-item">
+								<div class="forminator-hub-modal-box">
+									<span class="sui-icon-check-tick sui-sm sui-success" aria-hidden="true"></span>
+									<strong>
+										<?php esc_html_e( 'Extension Pack Add-on', 'forminator' ); ?>
+									</strong>
+									<button
+										class="addons-actions sui-button sui-button-blue sui-button-sm"
+										data-action="addons-install-activate"
+										data-addon="<?php echo esc_attr( Forminator_Admin_Addons_Page::EXTENSION_PACK_PID ); ?>"
+										data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_popup_addons_actions' ) ); ?>"
+									>
+										<span class="sui-icon-download" aria-hidden="true"></span>
+										<?php esc_html_e( 'Install & Activate', 'forminator' ); ?>
+									</button>
+								</div>
+
+								<ul class="forminator-hub-modal-list">
+									<li>
+										<span class="sui-icon-check sui-sm sui-success" aria-hidden="true"></span>
+										<strong><?php esc_html_e( 'Form Abandonment', 'forminator' ); ?></strong>
+									</li>
+									<li>
+										<span class="sui-icon-clock sui-sm sui-success" aria-hidden="true"></span>
+										<strong><?php esc_html_e( 'More features coming soon', 'forminator' ); ?></strong>
+									</li>
+								</ul>
+							</div>
+						</div>
+					<?php } ?>
 					<div class="sui-box-footer sui-flatten sui-content-center">
-						<button class="sui-button sui-button-blue" data-modal-close>
+						<button class="sui-button forminator-close-hub-connected-modal" data-feature="<?php echo esc_attr( $feature ); ?>" data-modal-close>
 							<?php esc_html_e( 'Close', 'forminator' ); ?>
 						</button>
 					</div>

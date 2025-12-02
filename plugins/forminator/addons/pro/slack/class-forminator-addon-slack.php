@@ -91,6 +91,13 @@ final class Forminator_Slack extends Forminator_Integration {
 	protected $_position = 4;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'client_secret' );
+
+	/**
 	 * Forminator_Slack constructor.
 	 *
 	 * @since 1.0 Slack Integration
@@ -249,12 +256,13 @@ final class Forminator_Slack extends Forminator_Integration {
 			if ( ! $has_errors ) {
 				// validate api.
 				try {
-					if ( $this->get_client_id() !== $client_id || $this->get_client_secret() !== $client_secret ) {
+					$real_client_secret = $this->get_real_value( $client_secret, 'client_secret' );
+					if ( $this->get_client_id() !== $client_id || $this->get_client_secret() !== $real_client_secret ) {
 						// reset connection!
 						$settings_values = array();
 					}
 					$settings_values['client_id']     = $client_id;
-					$settings_values['client_secret'] = $client_secret;
+					$settings_values['client_secret'] = $real_client_secret;
 
 					$this->save_settings_values( $settings_values );
 
@@ -428,13 +436,14 @@ final class Forminator_Slack extends Forminator_Integration {
 	 * @return string
 	 */
 	public function get_client_secret() {
-		$settings_values = $this->get_settings_values();
+		$settings_values = $this->get_settings_values( true );
 		$client_secret   = '';
 		if ( isset( $settings_values ['client_secret'] ) ) {
 			$client_secret = $settings_values ['client_secret'];
 		} else {
 			$settings = $this->get_slack_settings();
-
+			// Decrypt client_secret if it has been encrypted.
+			$settings = $this->decrypt_sensitive_data( $settings );
 			if ( isset( $settings['client_secret'] ) ) {
 				$client_secret = $settings['client_secret'];
 			}
@@ -569,7 +578,7 @@ final class Forminator_Slack extends Forminator_Integration {
 	 * @throws Forminator_Integration_Exception Throws Integration Exception.
 	 */
 	public function authorize_page_callback( $query_args ) {
-		$settings        = $this->get_settings_values();
+		$settings        = $this->get_settings_values( true );
 		$template        = forminator_addon_slack_dir() . 'views/sections/authorize.php';
 		$template_params = array(
 			'error_message' => '',

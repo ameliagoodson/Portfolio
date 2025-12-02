@@ -8,11 +8,18 @@
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'steps-outline-focus' ) && !empty( $properties['steps-outline-focus'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-pagination-steps .forminator-step:focus {
+			outline: 2px solid <?php echo $properties['steps-outline-focus'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-pagination-steps .forminator-step .forminator-step-label {
 		<?php if ( forminator_array_value_exists( $properties, 'timeline-text-current' ) && !empty( $properties['timeline-text-current'] ) ) { ?>
 			color: <?php echo $properties['timeline-text-current'] ?>;
 		<?php } else { ?>
-			color: #17A8E3;
+			color: #097BAA;
 		<?php } ?>
 	}
 
@@ -25,7 +32,7 @@
 		<?php if ( forminator_array_value_exists( $properties, 'timeline-dot-background-current' ) && !empty( $properties['timeline-dot-background-current'] ) ) { ?>
 			background-color: <?php echo $properties['timeline-dot-background-current'] ?>;
 		<?php } else { ?>
-			background-color: #17A8E3;
+			background-color: #097BAA;
 		<?php } ?>
 	}
 
@@ -56,13 +63,20 @@
 		background-color: #777771;
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'steps-outline-focus' ) && !empty( $properties['steps-outline-focus'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-pagination-steps .forminator-step:focus {
+			outline: 2px solid #254DEB;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-pagination-steps .forminator-step .forminator-step-label {
-		color: #17A8E3;
+		color: #097BAA;
 	}
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-pagination-steps .forminator-step .forminator-step-dot {
 		border-color: #777771;
-		background-color: #17A8E3;
+		background-color: #097BAA;
 	}
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-pagination-steps .forminator-step.forminator-current ~ .forminator-step .forminator-step-label {

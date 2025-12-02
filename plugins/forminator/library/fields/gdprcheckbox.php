@@ -67,6 +67,9 @@ class Forminator_GdprCheckbox extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'GDPR Approval', 'forminator' );
+		$required   = __( 'This field is required. Please check it.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -92,7 +95,6 @@ class Forminator_GdprCheckbox extends Forminator_Field {
 					'<a href="#" target="_blank">',
 					'</a>'
 				),
-			'required_message' => esc_html__( 'This field is required. Please check it.', 'forminator' ),
 		);
 	}
 
@@ -182,10 +184,10 @@ class Forminator_GdprCheckbox extends Forminator_Field {
 		$messages         = '';
 		$field            = $this->field;
 		$id               = $this->get_id( $field );
-		$required_message = self::get_property( 'required_message', $field, '' );
+		$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 		$required_message = apply_filters(
 			'forminator_gdprcheckbox_field_required_validation_message',
-			( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please check it.', 'forminator' ) ),
+			$required_message,
 			$id,
 			$field
 		);
@@ -208,7 +210,7 @@ class Forminator_GdprCheckbox extends Forminator_Field {
 		if ( empty( $data ) || 'true' !== $data ) {
 			$this->validation_message[ $id ] = apply_filters(
 				'forminator_gdprcheckbox_field_required_validation_message',
-				esc_html__( 'This field is required. Please check it.', 'forminator' ),
+				esc_html( self::$default_required_messages[ $this->type ] ),
 				$id,
 				$field
 			);

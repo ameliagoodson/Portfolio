@@ -131,7 +131,10 @@ class Forminator_Core {
 				$this->admin->add_reports_page();
 			}
 			$this->admin->add_settings_page();
-			$this->admin->add_addons_page();
+
+			if ( ! forminator_addons_disabled() ) {
+				$this->admin->add_addons_page();
+			}
 
 			if ( ! FORMINATOR_PRO ) {
 				$this->admin->add_upgrade_page();
@@ -153,6 +156,7 @@ class Forminator_Core {
 
 		if ( ! FORMINATOR_PRO ) {
 			add_action( 'init', array( __CLASS__, 'load_cross_sell_module' ) );
+			add_action( 'init', array( __CLASS__, 'load_black_friday_module' ) );
 		}
 
 		// Clean up Action Scheduler.
@@ -224,7 +228,7 @@ class Forminator_Core {
 	 * @return void
 	 */
 	public static function init_mixpanel( bool $force = false ) {
-		if ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) {
+		if ( ! forminator_usage_tracking_disabled() && ( ( ! self::is_tracking_active() && ! $force ) || ! is_admin() ) ) {
 			return;
 		}
 
@@ -276,6 +280,8 @@ class Forminator_Core {
 		include_once forminator_plugin_dir() . 'library/abstracts/abstract-class-user.php';
 
 		// Classes.
+		/* @noinspection PhpIncludeInspection */
+		include_once forminator_plugin_dir() . 'library/class-abandonment.php';
 		/* @noinspection PhpIncludeInspection */
 		include_once forminator_plugin_dir() . 'library/class-loader.php';
 		/* @noinspection PhpIncludeInspection */
@@ -408,6 +414,23 @@ class Forminator_Core {
 	}
 
 	/**
+	 * Load Black Friday module
+	 *
+	 * @return void
+	 */
+	public static function load_black_friday_module() {
+		$black_friday_module_path = forminator_plugin_dir() . 'library/lib/wpmudev-blackfriday/campaign.php';
+		if ( ! file_exists( $black_friday_module_path ) ) {
+			return;
+		}
+
+		if ( ! class_exists( '\WPMUDEV\Modules\BlackFriday\Campaign' ) ) {
+			require_once $black_friday_module_path;
+			new \WPMUDEV\Modules\BlackFriday\Campaign();
+		}
+	}
+
+	/**
 	 * Sets the Plugins Cross Sell submodule.
 	 */
 	public static function load_cross_sell_module() {
@@ -451,7 +474,7 @@ class Forminator_Core {
 	public function setup_post_meta_box() {
 		global $post;
 		if ( is_object( $post ) ) {
-			$is_forminator_meta = get_post_meta( $post->ID, '_has_forminator_meta' );
+			$is_forminator_meta = get_post_meta( $post->ID, '_has_forminator_meta', false );
 			if ( $is_forminator_meta ) {
 				add_meta_box(
 					'forminator-post-meta-box',
@@ -616,7 +639,8 @@ class Forminator_Core {
 		}
 
 		// Cannot use esc_url_raw coz it strips curly braces.
-		if ( 'redirect-url' === $current_key ) {
+		if ( 'redirect-url' === $current_key
+			|| 'formula' === $current_key ) { // Cannot use sanitize_text_field as it removes percentage strings.
 			return trim( wp_strip_all_tags( $data ) );
 		}
 

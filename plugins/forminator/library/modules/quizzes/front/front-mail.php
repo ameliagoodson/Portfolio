@@ -54,135 +54,151 @@ class Forminator_Quiz_Front_Mail extends Forminator_Mail {
 	 * @param array                       $final_res Final response.
 	 */
 	public function process_mail( $quiz, Forminator_Form_Entry_Model $entry, $final_res = array() ) {
-		forminator_maybe_log( __METHOD__ );
+		self::$is_email_context = true;
 
-		$setting       = $quiz->settings;
-		$notifications = $quiz->notifications;
-		$lead_model    = null;
-		$result_slug   = isset( $final_res['slug'] ) ? $final_res['slug'] : '';
-		$has_lead      = isset( $setting['hasLeads'] ) ? $setting['hasLeads'] : false;
-		if ( $has_lead ) {
-			$lead_id     = isset( $setting['leadsId'] ) ? $setting['leadsId'] : 0;
-			$lead_model  = Forminator_Base_Form_Model::get_model( $lead_id );
-			$form_fields = forminator_addon_format_form_fields( $lead_model );
-			$lead_data   = forminator_addons_lead_submitted_data( $form_fields, $entry );
-			$files       = $this->get_lead_file_attachment( $lead_model, $entry );
-			$print_value = ! empty( $lead_model->settings['print_value'] ) ? filter_var( $lead_model->settings['print_value'], FILTER_VALIDATE_BOOLEAN ) : false;
+		try {
+			forminator_maybe_log( __METHOD__ );
 
-			Forminator_Front_Action::$prepared_data = array_merge( Forminator_Front_Action::$prepared_data, $lead_data );
-			foreach ( Forminator_Front_Action::$prepared_data as $element => $element_value ) {
-				if ( ! empty( $element_value ) && is_array( $element_value ) &&
+			$setting       = $quiz->settings;
+			$notifications = $quiz->notifications;
+			$lead_model    = null;
+			$result_slug   = isset( $final_res['slug'] ) ? $final_res['slug'] : '';
+			$has_lead      = isset( $setting['hasLeads'] ) ? $setting['hasLeads'] : false;
+			if ( $has_lead ) {
+				$lead_id     = isset( $setting['leadsId'] ) ? $setting['leadsId'] : 0;
+				$lead_model  = Forminator_Base_Form_Model::get_model( $lead_id );
+				$form_fields = forminator_addon_format_form_fields( $lead_model );
+				$lead_data   = forminator_addons_lead_submitted_data( $form_fields, $entry );
+				// If lead data was missing and we have a lead entry id, try to reconstruct the lead data from the transient.
+				if ( empty( $lead_data ) && isset( Forminator_Front_Action::$prepared_data['lead_entry_id'] ) ) {
+					$lead_entry_id = Forminator_Front_Action::$prepared_data['lead_entry_id'];
+					// Reconstruct the exact transient key we used when saving.
+					$transient_key = 'forminator_lead_object_temporary_storage_' . $lead_entry_id;
+					$lead_entry    = get_transient( $transient_key );
+					if ( $lead_entry instanceof Forminator_Form_Entry_Model && $lead_entry->entry_id === $lead_entry_id ) {
+						$lead_entry->entry_id = 0;
+						$entry                = $lead_entry;
+						$lead_data            = forminator_addons_lead_submitted_data( $form_fields, $entry );
+						delete_transient( $transient_key );
+					}
+				}
+				$files       = $this->get_lead_file_attachment( $lead_model, $entry );
+				$print_value = ! empty( $lead_model->settings['print_value'] ) ? filter_var( $lead_model->settings['print_value'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+				Forminator_Front_Action::$prepared_data = array_merge( Forminator_Front_Action::$prepared_data, $lead_data );
+				foreach ( Forminator_Front_Action::$prepared_data as $element => $element_value ) {
+					if ( ! empty( $element_value ) && is_array( $element_value ) &&
 					( stripos( $element, 'time-' ) !== false || stripos( $element, 'date-' ) !== false ) ) {
-					foreach ( $element_value as $key => $value ) {
-						$key_value = $element . '-' . $key;
-						Forminator_Front_Action::$prepared_data[ $key_value ] = $value;
+						foreach ( $element_value as $key => $value ) {
+							$key_value = $element . '-' . $key;
+							Forminator_Front_Action::$prepared_data[ $key_value ] = $value;
+						}
 					}
 				}
-
-				if ( ! $print_value && ! empty( $element_value ) && ( false !== strpos( $element, 'select' ) || false !== strpos( $element, 'radio' ) || false !== strpos( $element, 'checkbox' ) ) ) {
-					Forminator_Front_Action::$prepared_data[ $element ] = forminator_replace_field_data( $lead_model, $element, Forminator_Front_Action::$prepared_data, true );
-				}
 			}
-		}
 
-		/**
-		 * Message data filter
-		 *
-		 * @since 1.6.2
-		 *
-		 * @param array                       $data - the post data.
-		 * @param Forminator_Quiz_Model  $quiz - the quiz model.
-		 * @param Forminator_Form_Entry_Model $entry
-		 *
-		 * @return array $data
-		 */
-		$data = apply_filters( 'forminator_quiz_mail_data', Forminator_Front_Action::$prepared_data, $quiz, $entry );
+			/**
+			 * Message data filter
+			 *
+			 * @since 1.6.2
+			 *
+			 * @param array                       $data - the post data.
+			 * @param Forminator_Quiz_Model  $quiz - the quiz model.
+			 * @param Forminator_Form_Entry_Model $entry
+			 *
+			 * @return array $data
+			 */
+			$data = apply_filters( 'forminator_quiz_mail_data', Forminator_Front_Action::$prepared_data, $quiz, $entry );
 
-		/**
-		 * Action called before mail is sent
-		 *
-		 * @param Forminator_Quiz_Front_Mail  $this - the current mail class.
-		 * @param Forminator_Quiz_Model  $quiz - the current quiz.
-		 * @param array                       $data - current data.
-		 * @param Forminator_Form_Entry_Model $entry
-		 */
-		do_action( 'forminator_quiz_mail_before_send_mail', $this, $quiz, $data, $entry );
+			/**
+			 * Action called before mail is sent
+			 *
+			 * @param Forminator_Quiz_Front_Mail  $this - the current mail class.
+			 * @param Forminator_Quiz_Model  $quiz - the current quiz.
+			 * @param array                       $data - current data.
+			 * @param Forminator_Form_Entry_Model $entry
+			 */
+			do_action( 'forminator_quiz_mail_before_send_mail', $this, $quiz, $data, $entry );
 
-		if ( ! empty( $notifications ) ) {
-			$this->init();
-			// Process admin mail.
-			foreach ( $notifications as $notification ) {
+			if ( ! empty( $notifications ) ) {
+				$this->init();
+				// Process admin mail.
+				foreach ( $notifications as $notification ) {
 
-				if ( $this->is_condition( $notification, $data, $quiz, $result_slug ) ) {
-					continue;
-				}
-
-				$recipients = $this->get_admin_email_recipients( $notification, $quiz, $entry, $lead_model );
-
-				if ( ! empty( $recipients ) ) {
-					$subject = $this->replace_placeholders( $notification, 'email-subject', $quiz, $entry, $lead_model );
-					/**
-					 * Quiz admin mail subject filter
-					 *
-					 * @since 1.6.2
-					 *
-					 * @param string                     $subject
-					 * @param Forminator_Quiz_Model $quiz the current quiz modal.
-					 *
-					 * @return string $subject
-					 */
-					$subject = apply_filters( 'forminator_quiz_mail_admin_subject', $subject, $quiz, $data, $entry, $this );
-
-					$message = $this->replace_placeholders( $notification, 'email-editor', $quiz, $entry, $lead_model );
-					/**
-					 * Quiz admin mail message filter
-					 *
-					 * @since 1.6.2
-					 *
-					 * @param string                     $message
-					 * @param Forminator_Quiz_Model $quiz the current quiz.
-					 * @param array                      $data
-					 * @param Forminator_Quiz_Front_Mail $this
-					 *
-					 * @return string $message
-					 */
-					$message = apply_filters( 'forminator_quiz_mail_admin_message', $message, $quiz, $data, $entry, $this );
-
-					$headers = $this->prepare_headers( $notification, $quiz, $data, $entry, $lead_model );
-					$this->set_headers( $headers );
-
-					$this->set_subject( $subject );
-					$this->set_recipients( $recipients );
-					$this->set_message_with_vars( $this->message_vars, $message );
-					if ( ! empty( $files ) && isset( $notification['email-attachment'] ) && 'true' === $notification['email-attachment'] ) {
-						$this->set_attachment( $files );
-					} else {
-						$this->set_attachment( array() );
+					if ( $this->is_condition( $notification, $data, $quiz, $result_slug ) ) {
+						continue;
 					}
-					$this->send_multiple();
 
-					/**
-					 * Action called after admin mail sent
-					 *
-					 * @param Forminator_Quiz_Front_Mail  $this       the mail class.
-					 * @param Forminator_Quiz_Model  $quiz       the current quiz.
-					 * @param array                       $data       - current data.
-					 * @param Forminator_Form_Entry_Model $entry      - saved entry.
-					 * @param array                       $recipients - array or recipients.
-					 */
-					do_action( 'forminator_quiz_mail_admin_sent', $this, $quiz, $data, $entry, $recipients );
+					$recipients = $this->get_admin_email_recipients( $notification, $quiz, $entry, $lead_model );
+
+					if ( ! empty( $recipients ) ) {
+						$subject = $this->replace_placeholders( $notification, 'email-subject', $quiz, $entry, $lead_model );
+						/**
+						 * Quiz admin mail subject filter
+						 *
+						 * @since 1.6.2
+						 *
+						 * @param string                     $subject
+						 * @param Forminator_Quiz_Model $quiz the current quiz modal.
+						 *
+						 * @return string $subject
+						 */
+						$subject = apply_filters( 'forminator_quiz_mail_admin_subject', $subject, $quiz, $data, $entry, $this );
+
+						$message = $this->replace_placeholders( $notification, 'email-editor', $quiz, $entry, $lead_model );
+						/**
+						 * Quiz admin mail message filter
+						 *
+						 * @since 1.6.2
+						 *
+						 * @param string                     $message
+						 * @param Forminator_Quiz_Model $quiz the current quiz.
+						 * @param array                      $data
+						 * @param Forminator_Quiz_Front_Mail $this
+						 *
+						 * @return string $message
+						 */
+						$message = apply_filters( 'forminator_quiz_mail_admin_message', $message, $quiz, $data, $entry, $this );
+
+						$headers = $this->prepare_headers( $notification, $quiz, $data, $entry, $lead_model );
+						$this->set_headers( $headers );
+
+						$this->set_subject( $subject );
+						$this->set_recipients( $recipients );
+						$this->set_message_with_vars( $this->message_vars, $message );
+						if ( ! empty( $files ) && isset( $notification['email-attachment'] ) && 'true' === $notification['email-attachment'] ) {
+							$this->set_attachment( $files );
+						} else {
+							$this->set_attachment( array() );
+						}
+						$this->send_multiple();
+
+						/**
+						 * Action called after admin mail sent
+						 *
+						 * @param Forminator_Quiz_Front_Mail  $this       the mail class.
+						 * @param Forminator_Quiz_Model  $quiz       the current quiz.
+						 * @param array                       $data       - current data.
+						 * @param Forminator_Form_Entry_Model $entry      - saved entry.
+						 * @param array                       $recipients - array or recipients.
+						 */
+						do_action( 'forminator_quiz_mail_admin_sent', $this, $quiz, $data, $entry, $recipients );
+					}
 				}
 			}
-		}
 
-		/**
-		 * Action called after mail is sent
-		 *
-		 * @param Forminator_Quiz_Front_Mail $this mail class.
-		 * @param Forminator_Quiz_Model $quiz current quiz.
-		 * @param array                      $data current data.
-		 */
-		do_action( 'forminator_quiz_mail_after_send_mail', $this, $quiz, $data );
+			/**
+			 * Action called after mail is sent
+			 *
+			 * @param Forminator_Quiz_Front_Mail $this mail class.
+			 * @param Forminator_Quiz_Model $quiz current quiz.
+			 * @param array                      $data current data.
+			 */
+			do_action( 'forminator_quiz_mail_after_send_mail', $this, $quiz, $data );
+		} finally {
+			// Always reset email context, even if there's an error.
+			self::$is_email_context = false;
+		}
 	}
 
 	/**

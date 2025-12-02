@@ -37,11 +37,10 @@ class Forminator_Admin_AJAX {
 
 		// Handle save settings.
 		add_action( 'wp_ajax_forminator_save_builder', array( $this, 'save_builder' ) );
+		add_action( 'wp_ajax_forminator_revert_builder', array( __CLASS__, 'revert_builder' ) );
 		add_action( 'wp_ajax_forminator_save_poll', array( $this, 'save_poll_form' ) );
 		add_action( 'wp_ajax_forminator_save_quiz_nowrong', array( $this, 'save_quiz' ) );
 		add_action( 'wp_ajax_forminator_save_quiz_knowledge', array( $this, 'save_quiz' ) );
-		add_action( 'wp_ajax_forminator_save_login', array( $this, 'save_login' ) );
-		add_action( 'wp_ajax_forminator_save_register', array( $this, 'save_register' ) );
 
 		// Handle settings popups.
 		add_action( 'wp_ajax_forminator_load_captcha_popup', array( $this, 'load_captcha' ) );
@@ -145,6 +144,7 @@ class Forminator_Admin_AJAX {
 		// Process ajax actions.
 		$ajax_actions = array(
 			'forminator_addons-install',
+			'forminator_addons-install-activate',
 			'forminator_addons-activate',
 			'forminator_addons-deactivate',
 			'forminator_addons-delete',
@@ -193,6 +193,14 @@ class Forminator_Admin_AJAX {
 		$status   = isset( $submitted_data['status'] ) ? $submitted_data['status'] : '';
 		$version  = isset( $submitted_data['version'] ) ? $submitted_data['version'] : '1.0';
 		$template = new stdClass();
+		if ( 'temp' === $status ) {
+			$res = Forminator_Base_Form_Model::save_temp_settings( $id, $quiz_data );
+			if ( $res ) {
+				wp_send_json_success( $id );
+			} else {
+				wp_send_json_error( $id );
+			}
+		}
 
 		$template->type = isset( $submitted_data['action'] ) ? $submitted_data['action'] : '';
 		// Check if results exist.
@@ -251,6 +259,15 @@ class Forminator_Admin_AJAX {
 		$version  = isset( $submitted_data['version'] ) ? $submitted_data['version'] : '1.0';
 		$template = new stdClass();
 
+		if ( 'temp' === $status ) {
+			$res = Forminator_Base_Form_Model::save_temp_settings( $id, $poll_data );
+			if ( $res ) {
+				wp_send_json_success( $id );
+			} else {
+				wp_send_json_error( $id );
+			}
+		}
+
 		if ( isset( $poll_data['answers'] ) ) {
 			$template->answers = $poll_data['answers'];
 		}
@@ -264,6 +281,39 @@ class Forminator_Admin_AJAX {
 		} else {
 			wp_send_json_success( $id );
 		}
+	}
+
+	/**
+	 * Revert builder settings
+	 */
+	public static function revert_builder() {
+		$module_type = filter_input( INPUT_POST, 'module_type' );
+
+		$slug        = 'forminator-cform';
+		$ajax_action = 'forminator_save_builder_fields';
+		if ( 'poll' === $module_type ) {
+			$slug        = 'forminator-poll';
+			$ajax_action = 'forminator_save_poll';
+		} elseif ( 'quiz' === $module_type ) {
+			$slug        = 'forminator-quiz';
+			$ajax_action = 'forminator_save_quiz';
+		}
+
+		if ( ! forminator_is_user_allowed( $slug ) ) {
+			wp_send_json_error( esc_html__( 'Invalid request, you are not allowed to do that action.', 'forminator' ) );
+		}
+		forminator_validate_ajax( $ajax_action, false, $slug );
+
+		$id = filter_input( INPUT_POST, 'module_id', FILTER_VALIDATE_INT );
+		if ( empty( $id ) ) {
+			wp_send_json_error( esc_html__( 'Module ID is missing.', 'forminator' ) );
+		}
+
+		if ( ! Forminator_Base_Form_Model::remove_temp_settings( $id ) ) {
+			wp_send_json_error( esc_html__( 'Failed to revert module.', 'forminator' ) );
+		}
+
+		wp_send_json_success();
 	}
 
 	/**
@@ -286,7 +336,6 @@ class Forminator_Admin_AJAX {
 		$status         = isset( $submitted_data['status'] ) ? $submitted_data['status'] : '';
 		$version        = isset( $submitted_data['version'] ) ? $submitted_data['version'] : '1.0';
 		$template       = new stdClass();
-		$action         = '';
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Verified in forminator_validate_ajax.
 		if ( ! empty( $_POST['data'] ) ) {
@@ -294,28 +343,27 @@ class Forminator_Admin_AJAX {
 			$form_data = Forminator_Core::sanitize_array( json_decode( wp_unslash( $_POST['data'] ), true ) );
 		}
 
-		if ( is_null( $id ) || $id <= 0 ) {
-			$form_model = new Forminator_Form_Model();
-			$action     = 'create';
+		$form_model = Forminator_Base_Form_Model::get_model( $id );
 
-			if ( empty( $status ) ) {
-				$status = Forminator_Form_Model::STATUS_PUBLISH;
-			}
-		} else {
-			$form_model = Forminator_Base_Form_Model::get_model( $id );
-			$action     = 'update';
-
-			if ( ! is_object( $form_model ) ) {
-				wp_send_json_error( esc_html__( 'Form model doesn\'t exist', 'forminator' ) );
-			}
-
-			if ( empty( $status ) ) {
-				$status = $form_model->status;
-			}
-
-			// we need to empty fields cause we will send new data.
-			$form_model->clear_fields();
+		if ( ! is_object( $form_model ) ) {
+			wp_send_json_error( esc_html__( 'Form model doesn\'t exist', 'forminator' ) );
 		}
+
+		if ( 'temp' === $status ) {
+			$res = Forminator_Base_Form_Model::save_temp_settings( $id, $form_data );
+			if ( $res ) {
+				wp_send_json_success( $id );
+			} else {
+				wp_send_json_error( $id );
+			}
+		}
+
+		if ( empty( $status ) ) {
+			$status = $form_model->status;
+		}
+
+		// we need to empty fields cause we will send new data.
+		$form_model->clear_fields();
 
 		// Build the fields.
 		if ( isset( $form_data ) ) {
@@ -1593,7 +1641,7 @@ class Forminator_Admin_AJAX {
 			wp_send_json_error( $e->getMessage() );
 		}
 
-		$return_url = admin_url( 'admin.php?page=forminator-cform-wizard&id=' . $id );
+		$return_url = admin_url( 'admin.php?page=forminator-cform-wizard&create-status=success&id=' . $id );
 
 		wp_send_json_success(
 			array(
@@ -2004,6 +2052,13 @@ class Forminator_Admin_AJAX {
 
 		update_option( 'forminator_pagination_entries', $pagination );
 		update_option( 'forminator_pagination_listings', $pagination_listing );
+
+		$old_auto_saving = get_option( 'forminator_auto_saving', true );
+		$auto_saving     = filter_input( INPUT_POST, 'auto_saving', FILTER_VALIDATE_BOOLEAN );
+		update_option( 'forminator_auto_saving', $auto_saving );
+		if ( (bool) $old_auto_saving !== (bool) $auto_saving ) {
+			do_action( 'forminator_auto_save_setting', (bool) $auto_saving );
+		}
 
 		$editor_settings = Forminator_Core::sanitize_text_field( 'editor_settings', false );
 		update_option( 'forminator_editor_settings', $editor_settings );

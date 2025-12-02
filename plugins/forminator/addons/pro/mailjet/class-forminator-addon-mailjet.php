@@ -73,6 +73,13 @@ class Forminator_Mailjet extends Forminator_Integration {
 	protected $_position = 3;
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'secret_key' );
+
+	/**
 	 * Forminator_Mailjet constructor.
 	 * - Set dynamic translatable text(s) that will be displayed to end-user
 	 * - Set dynamic icons and images
@@ -181,7 +188,7 @@ class Forminator_Mailjet extends Forminator_Integration {
 	 * @return string|null
 	 */
 	private function get_secret_key() {
-		$setting_values = $this->get_settings_values();
+		$setting_values = $this->get_settings_values( true );
 		if ( isset( $setting_values['secret_key'] ) ) {
 			return $setting_values['secret_key'];
 		}
@@ -294,7 +301,7 @@ class Forminator_Mailjet extends Forminator_Integration {
 		$setting_values        = $this->get_settings_values();
 		$identifier            = $setting_values['identifier'] ?? '';
 		$api_key               = $this->get_api_key();
-		$secret_key            = $this->get_secret_key();
+		$secret_key            = $setting_values['secret_key'] ?? '';
 		$show_success          = false;
 
 		// ON Submit.
@@ -308,7 +315,8 @@ class Forminator_Mailjet extends Forminator_Integration {
 			} elseif ( empty( $secret_key ) ) {
 				$secret_key_error = esc_html__( 'Please add valid Mailjet Secret Key.', 'forminator' );
 			} else {
-				$api_key_validated = $this->validate_api_keys( $api_key, $secret_key );
+				$real_secret_key   = $this->get_real_value( $secret_key, 'secret_key' );
+				$api_key_validated = $this->validate_api_keys( $api_key, $real_secret_key );
 
 				/**
 				 * Filter validating api key result
@@ -323,7 +331,7 @@ class Forminator_Mailjet extends Forminator_Integration {
 				} else {
 					$save_values = array(
 						'api_key'    => $api_key,
-						'secret_key' => $secret_key,
+						'secret_key' => $real_secret_key,
 						'identifier' => $identifier,
 					);
 

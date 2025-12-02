@@ -23,6 +23,9 @@
 				/>
 			</div>
 		</div>
+		<?php
+		echo forminator_template( 'templates/more-actions' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
 	</div>
 	<!-- loading templates -->
 	<div class="sui-progress-block" id="cloud-templates-loading">
@@ -92,17 +95,6 @@
 		</div>
 	</div>
 </div>
-
-<?php if ( ! FORMINATOR_PRO && Forminator_Hub_Connector::hub_connector_logged_in() ) : ?>
-<div class="sui-box-footer">
-	<div class="sui-actions-right">
-		<button class="sui-button sui-button-ghost" data-modal-open="forminator-disconnect-hub-modal">
-			<?php esc_html_e( 'Disconnect site', 'forminator' ); ?>
-		</button>
-	</div>
-</div>
-<?php endif; ?>
-
 
 <div class="sui-box sui-message sui-message-lg" id="forminator-no-cloud-result" style="display: none;">
 	<img src="<?php echo esc_url( forminator_plugin_url() . 'assets/images/forminator-no-result.png' ); ?>"

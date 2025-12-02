@@ -439,6 +439,20 @@ class Forminator_Custom_Forms extends Forminator_Module {
 	}
 
 	/**
+	 * Get main templates
+	 *
+	 * @return array
+	 */
+	public function get_main_templates(): array {
+		$templates = $this->get_free_templates();
+
+		// get only first 4.
+		$templates = array_slice( $templates, 0, 4 );
+
+		return self::prepare_templates_data( $templates );
+	}
+
+	/**
 	 * Get Template Category
 	 *
 	 * @return array

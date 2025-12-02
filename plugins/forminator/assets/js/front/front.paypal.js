@@ -360,7 +360,7 @@
 					}
 				}
 			} else {
-				if ( $element.inputmask ) {
+				if ( forminatorUtils().field_has_inputMask( $element ) ) {
 					var unmaskVal =	$element.inputmask('unmaskedvalue');
 					value = unmaskVal.replace(/,/g, '.');
 				} else {

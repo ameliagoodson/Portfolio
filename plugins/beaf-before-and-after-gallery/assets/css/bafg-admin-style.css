@@ -513,9 +513,170 @@ pre {
     margin-right: 10px;
 }
 
+
+/**
+ * Promo Banner CSS
+ */
+
+ .beaf-sidebar-promo {
+	display: flex;
+	padding: 16px;
+	align-items: center;
+	align-content: center;
+	gap: 16px;
+	flex-direction: row;
+	border-radius: 8px;
+	border: 1px solid #7820F3;
+	background: radial-gradient(46.48% 49.91% at 50.09% 87%, rgba(255, 125, 125, 0.16) 0%, rgba(120, 32, 243, 0.00) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 0, 0, 0.16) 100%), linear-gradient(0deg, #7820F3 0%, #7820F3 100%), #382673;
+    margin-bottom: 16px;
+}
+
+.beaf-sidebar-promo .promo-discount {
+	display: flex;
+	padding: 16px;
+	justify-content: center;
+	align-items: flex-start;
+	border-radius: 8px;
+	background: radial-gradient(81.34% 87.34% at 50% 87.34%, rgba(255, 125, 125, 0.16) 0%, rgba(120, 32, 243, 0.00) 100%), linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 0, 0, 0.16) 100%), linear-gradient(0deg, #7820F3 0%, #7820F3 100%), linear-gradient(0deg, #382673 0%, #382673 100%), #473080;
+	box-shadow: 0px 3px 3px 0px rgba(44, 39, 63, 0.03), 0px 1px 6px 0px rgba(44, 39, 63, 0.03), 0px 0px 0px 1px rgba(44, 39, 63, 0.12), -8px 9.5px 24px 0px rgba(24, 14, 56, 0.32);
+	color: #fff;
+    flex-direction: column;
+}
+
+.beaf-sidebar-promo .promo-discount span {
+	color: #FFF;
+	text-align: left;
+	font-family: Inter;
+	font-size: 25px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 120%;
+	letter-spacing: -0.25px;
+}
+
+.beaf-sidebar-promo .promo-discount span.promo-discount-percent{
+    color: #FFF;
+    text-align: center;
+    font-family: inherit;
+    font-size: 52px;
+    font-style: normal;
+    font-weight: 700;
+}
+.beaf-sidebar-promo .promo-discount span.promo-discount-text{
+   color:  #FFF;
+    text-align: center;
+    font-family: Inter;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: -0.25px;
+    text-transform: uppercase;
+}
+
+.beaf-sidebar-promo .promo-description {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 16px;
+}
+
+.beaf-sidebar-promo .promo-description p {
+	color: #FFF;
+	font-family: Inter;
+	font-size: 17px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 150%;
+    margin: 0;
+}
+
+.beaf-sidebar-promo .promo-description .dicount-timer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	width: 100%;
+}
+
+.beaf-sidebar-promo .promo-description .countdown {
+	color: #FFF;
+    font-family: Inter;
+    font-size: 19px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 32px; /* 133.333% */
+    letter-spacing: -0.75px;
+}
+.beaf-sidebar-promo .promo-description .countdown span {
+    font-weight: 400;
+}
+
+.beaf-sidebar-promo .promo-description .discount-btn {
+	display: flex;
+	padding: 8px 12px;
+	justify-content: space-between;
+	align-items: center;
+	border-radius: 8px;
+	gap: 8px;
+	background: #F61A39;
+	color: #FFF;
+	font-family: Inter;
+	font-size: 16px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: 150%;
+	text-decoration: none;
+}
+
+.beaf-sidebar-promo .promo-description .discount-btn:hover {
+    background: #F61A39;
+}
+
+
+/* sidebar promo banner  */
+
+.beaf_promo_side_preview a:focus {
+    box-shadow: none;
+} 
+.beaf_promo_side_preview a {
+    display: inline-block;
+}
+#beaf_black_friday_docs .inside {
+    padding: 0;
+    margin-top: 0;
+}
+#beaf_black_friday_docs .postbox-header {
+    display: none;
+    visibility: hidden;
+}
+.beaf_promo_side_preview {
+    position: relative;
+}
+.beaf_promo_side_notice_dismiss {
+    z-index: 1;
+}
+
+
+
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+@media screen and (max-width: 1860px) {
+    .beaf-sidebar-promo .promo-description {
+        gap: 8px;
+    }
+    .beaf-sidebar-promo .promo-description .dicount-timer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .beaf-sidebar-promo .promo-description .countdown {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 1700px) {
@@ -528,6 +689,12 @@ pre {
 
     .beaf-settings-page {
         grid-template-columns: 3fr 2fr;
+    }
+}
+
+@media screen and (max-width: 1450px) { 
+    .beaf-sidebar-promo {
+        align-items: flex-start;
     }
 }
 
@@ -567,8 +734,8 @@ pre {
 
 @media screen and (max-width: 882px) {
 
-    .beaf-settings-page .uacf7-sidebar-title ,
-    .beaf-settings-page .uacf7-setting-title {
+    .beaf-settings-page .beaf-sidebar-title ,
+    .beaf-settings-page .beaf-setting-title {
         margin-bottom: 30px;
         font-size: 1.5em !important;
         font-weight: 700;
@@ -580,6 +747,20 @@ pre {
 
     .quick-access {
         padding: 14px;
+    }
+
+    .beaf-sidebar-promo .promo-discount span.promo-discount-percent {
+        font-size: 48px;
+    }
+    .beaf-sidebar-promo .promo-discount span {
+        font-size: 22px;
+    }
+    .beaf-sidebar-promo .promo-discount span.promo-discount-text,
+    .beaf-sidebar-promo .promo-description p {
+        font-size: 16px;
+    }
+    .beaf-sidebar-promo .promo-description .discount-btn {
+        font-size: 14px;
     }
 
 }
@@ -597,6 +778,30 @@ pre {
 @media screen and (max-width: 645px) { 
     .beaf-settings-page {
         grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width:961px) and (max-width:1024px){ 
+    .beaf-sidebar-promo .promo-description .discount-btn {
+        padding: 8px 8px;
+        gap: 4px;
+    }
+    .beaf-sidebar-promo {
+        padding: 13px;
+    }
+}
+
+@media screen and (min-width:768px) and (max-width:960px){ 
+    .beaf-sidebar-promo .promo-description .discount-btn {
+        padding: 8px 8px;
+        gap: 4px;
+    }
+    .beaf-sidebar-promo {
+        padding: 13px;
+    }
+    .beaf-sidebar-promo .promo-description .discount-btn {
+        padding: 8px 8px;
+        gap: 4px;
     }
 }
 

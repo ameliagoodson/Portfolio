@@ -581,6 +581,12 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		);
 		$setting = $custom_form->settings;
 
+		$activation_method = forminator_get_property( $setting, 'activation-method' );
+		// Site validation is not required if site registration is disabled and activation is not set to manual.
+		if ( 'manual' !== $activation_method && ! forminator_is_site_registration_enabled() ) {
+			return $data;
+		}
+
 		// Make sure option 'Site registration' is set.
 		$option_create_site = forminator_get_property( $setting, 'site-registration' );
 		if ( $is_approve || ! $option_create_site || ( isset( $option_create_site ) && 'enable' !== $option_create_site ) ) {
@@ -638,8 +644,14 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 
 		// Is option 'Site registration' enabled?
 		$option_create_site = forminator_get_property( $setting, 'site-registration' );
-		if ( ! $option_create_site || ( isset( $option_create_site ) && 'enable' !== $option_create_site ) ) {
 
+		$activation_method = forminator_get_property( $setting, 'activation-method' );
+		// If activation method is not 'manual' and site registration is disabled, do not create a site.
+		if ( 'manual' !== $activation_method && ! forminator_is_site_registration_enabled() ) {
+			$option_create_site = false;
+		}
+		if ( ! $option_create_site || ( isset( $option_create_site ) && 'enable' !== $option_create_site ) ) {
+			$this->maybe_remove_user_from_main_site( $setting, $user_id );
 			return false;
 		}
 
@@ -675,16 +687,10 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 			$user->set_role( $site_role );
 		}
 
-		$registration_user_role = forminator_get_property( $setting, 'registration-user-role' );
-		if ( 'conditionally' === $registration_user_role ) {
-			$root_role = $this->conditional_user_role( $setting );
-		} else {
-			$root_role = forminator_get_property( $setting, 'registration-role-field' );
-		}
-		// If no root role, remove user from current site.
-		if ( ! $root_role || ( isset( $root_role ) && 'notCreate' === $root_role ) ) {
-			remove_user_from_blog( $user_id );
-		} else {
+		$user_removed = $this->maybe_remove_user_from_main_site( $setting, $user_id );
+
+		if ( ! $user_removed ) {
+			$root_role = $this->get_root_role( $setting );
 			// update their role on current site.
 			$user = new WP_User( $user_id );
 			$user->set_role( $root_role );
@@ -710,6 +716,38 @@ class Forminator_CForm_Front_User_Registration extends Forminator_User {
 		do_action( 'forminator_cform_site_created', $blog_id, $user_id, $entry, $custom_form, $password );
 
 		return $blog_id;
+	}
+
+	/**
+	 * May be remove user from network main site.
+	 *
+	 * @param array $setting Setting.
+	 * @param int   $user_id User Id.
+	 * @return bool
+	 */
+	private function maybe_remove_user_from_main_site( $setting, $user_id ) {
+		$root_role = $this->get_root_role( $setting );
+
+		if ( ! $root_role || 'notCreate' === $root_role ) {
+			remove_user_from_blog( $user_id );
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * Get root role from settings.
+	 *
+	 * @param mixed $setting Settings.
+	 * @return string|null
+	 */
+	private function get_root_role( $setting ) {
+		$registration_user_role = forminator_get_property( $setting, 'registration-user-role' );
+		if ( 'conditionally' === $registration_user_role ) {
+			return $this->conditional_user_role( $setting );
+		}
+
+		return forminator_get_property( $setting, 'registration-role-field' );
 	}
 
 	/**

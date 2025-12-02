@@ -31,7 +31,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 	 *
 	 * @var array
 	 */
-	public static $default_chart_colors = array( '#F4B414', '#1ABC9C', '#17A8E3', '#18485D', '#D30606' );
+	public static $default_chart_colors = array( '#F4B414', '#1ABC9C', '#097BAA', '#18485D', '#D30606' );
 
 	/**
 	 * Display form method
@@ -188,11 +188,10 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 			$html .= '</div>';
 		}
 
-		$is_ajax_submit = $this->is_ajax_submit();
-		$is_preview     = $this->is_preview;
+		$is_preview = $this->is_preview;
 		if ( 'open' === $status_info['status'] ) {
 			$hidden_wrap = '<div role="alert" aria-live="polite" class="forminator-response-message" aria-hidden="true">';
-			if ( ! $is_preview && ! $is_ajax_submit ) {
+			if ( ! $is_preview ) {
 				$label_class  = filter_input( INPUT_GET, 'saved', FILTER_VALIDATE_BOOLEAN ) ? 'forminator-success' : 'forminator-error';
 				$message_wrap = '<div role="alert" aria-live="polite" class="forminator-response-message forminator-show ' . esc_attr( $label_class ) . '" >';
 			} else {
@@ -888,6 +887,7 @@ class Forminator_Poll_Front extends Forminator_Render_Form {
 				action="<?php echo esc_url( $return_url ); ?>"
 				data-forminator-render="<?php echo esc_attr( self::$render_ids[ $this->model->id ] ); ?>"
 				data-design="<?php echo esc_attr( $design ); ?>"
+				data-color-option="default"
 				data-alignment="<?php echo esc_attr( $alignment ); ?>"
 			>
 

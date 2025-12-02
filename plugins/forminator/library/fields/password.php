@@ -89,6 +89,9 @@ class Forminator_Password extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'Password', 'forminator' );
+		$required   = __( 'Your password is required.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -204,7 +207,7 @@ class Forminator_Password extends Forminator_Field {
 			$description = str_replace( '{lostpassword_url}', wp_lostpassword_url( get_permalink() ), $description );
 
 			if ( ! empty( $description ) ) {
-				$html .= wp_kses_post( $description );
+				$html .= self::convert_markdown( wp_kses_post( $description ) );
 			}
 
 			if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
@@ -269,7 +272,7 @@ class Forminator_Password extends Forminator_Field {
 			if ( ! empty( $confirm_password_description ) || ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
 				$html .= sprintf( '<span class="forminator-description" id="%s">', $id . '-description' );
 				if ( ! empty( $confirm_password_description ) ) {
-					$html .= wp_kses_post( $confirm_password_description );
+					$html .= self::convert_markdown( wp_kses_post( $confirm_password_description ) );
 				}
 
 				if ( ( ! empty( $limit ) && ! empty( $limit_type ) ) ) {
@@ -397,7 +400,7 @@ class Forminator_Password extends Forminator_Field {
 		$is_required      = $this->is_required( $field );
 		$has_limit        = $this->has_limit( $field );
 		$messages         = '';
-		$required_message = self::get_property( 'required_message', $field, '' );
+		$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 		$is_confirm       = self::get_property( 'confirm-password', $field, '', 'bool' );
 
 		$min_password_strength = self::get_property( 'strength', $field );
@@ -406,12 +409,12 @@ class Forminator_Password extends Forminator_Field {
 		if ( $is_required || $has_limit ) {
 			if ( $is_required ) {
 				$required_error = apply_filters(
-					'forminator_text_field_required_validation_message',
-					! empty( $required_message ) ? $required_message : esc_html__( 'Your password is required.', 'forminator' ),
+					'forminator_password_field_required_validation_message',
+					$required_message,
 					$id,
 					$field
 				);
-				$messages      .= '"required": "' . $required_error . '",' . "\n";
+				$messages      .= '"required": "' . forminator_addcslashes( $required_error ) . '",' . "\n";
 			}
 
 			if ( $has_limit ) {
@@ -422,7 +425,7 @@ class Forminator_Password extends Forminator_Field {
 						$id,
 						$field
 					);
-					$messages        .= '"maxlength": "' . $max_length_error . '",' . "\n";
+					$messages        .= '"maxlength": "' . forminator_addcslashes( $max_length_error ) . '",' . "\n";
 				} else {
 					$max_words_error = apply_filters(
 						'forminator_text_field_words_validation_message',
@@ -430,7 +433,7 @@ class Forminator_Password extends Forminator_Field {
 						$id,
 						$field
 					);
-					$messages       .= '"maxwords": "' . $max_words_error . '",' . "\n";
+					$messages       .= '"maxwords": "' . forminator_addcslashes( $max_words_error ) . '",' . "\n";
 				}
 			}
 		}
@@ -443,7 +446,7 @@ class Forminator_Password extends Forminator_Field {
 				$id,
 				$field
 			);
-			$messages                   .= '"forminatorPasswordStrength": "' . esc_html( $min_strength_error ) . '",' . "\n";
+			$messages                   .= '"forminatorPasswordStrength": "' . forminator_addcslashes( $min_strength_error ) . '",' . "\n";
 		}
 		$messages .= '},';
 
@@ -459,7 +462,7 @@ class Forminator_Password extends Forminator_Field {
 					$field
 				);
 
-				$messages .= '"required": "' . $required_error . '",' . "\n";
+				$messages .= '"required": "' . forminator_addcslashes( $required_error ) . '",' . "\n";
 			}
 
 			$validation_message_not_match = self::get_property( 'validation_message', $field, '' );
@@ -469,7 +472,7 @@ class Forminator_Password extends Forminator_Field {
 				$id,
 				$field
 			);
-			$messages                    .= '"equalTo": "' . $not_match_error . '",' . "\n";
+			$messages                    .= '"equalTo": "' . forminator_addcslashes( $not_match_error ) . '",' . "\n";
 			$messages                    .= '},';
 		}
 
@@ -496,11 +499,11 @@ class Forminator_Password extends Forminator_Field {
 		}
 
 		if ( $this->is_required( $field ) ) {
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			if ( empty( $data ) ) {
 				$this->validation_message[ $id ] = apply_filters(
-					'forminator_text_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please enter text.', 'forminator' ) ),
+					'forminator_password_field_required_validation_message',
+					$required_message,
 					$id,
 					$field
 				);

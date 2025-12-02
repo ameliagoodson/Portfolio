@@ -23,6 +23,7 @@ class Forminator_Mixpanel_Settings extends Events {
 		add_action( 'deactivated_plugin', array( __CLASS__, 'tracking_deactivate' ) );
 		add_action( 'forminator_before_stripe_connected', array( __CLASS__, 'tracking_stripe_rak_use' ), 10, 5 );
 		add_action( 'forminator_after_stripe_migrated', array( __CLASS__, 'tracking_stripe_migrated' ) );
+		add_action( 'forminator_auto_save_setting', array( __CLASS__, 'tracking_auto_save' ) );
 	}
 
 	/**
@@ -171,5 +172,17 @@ class Forminator_Mixpanel_Settings extends Events {
 
 			self::track_event( 'for_stripe_rak_use', $properties );
 		}
+	}
+
+	/**
+	 * Track Auto Save setting.
+	 *
+	 * @param bool $auto_save Auto Save status.
+	 *
+	 * @return void
+	 */
+	public static function tracking_auto_save( bool $auto_save ) {
+		$settings = array( 'Auto Save' => $auto_save ? 'Enabled' : 'Disabled' );
+		self::track_event( 'for_general_settings_update', $settings );
 	}
 }

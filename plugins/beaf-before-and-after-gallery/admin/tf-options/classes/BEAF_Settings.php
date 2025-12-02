@@ -234,6 +234,8 @@ if ( ! class_exists( 'BEAF_Settings' ) ) {
 			?>
 			<div class="beaf-sidebar">
 				<div class="beaf-sidebar-wrap">
+					<!-- promo banner  -->
+					 <?php echo apply_filters('beaf_dashboard_helper_banner', ''); ?>
 
 					<div class="beaf-sidebar-content">
 

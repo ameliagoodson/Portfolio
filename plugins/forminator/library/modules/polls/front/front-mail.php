@@ -47,96 +47,103 @@ class Forminator_Poll_Front_Mail extends Forminator_Mail {
 	 * @param Forminator_Form_Entry_Model $entry Form entry model.
 	 */
 	public function process_mail( $poll, Forminator_Form_Entry_Model $entry ) {
-		$setting = $poll->settings;
+		self::$is_email_context = true;
 
-		/**
-		 * Message data filter
-		 *
-		 * @since 1.6.1
-		 *
-		 * @param array                       $data - the post data.
-		 * @param Forminator_Poll_Model  $poll - the poll model.
-		 * @param Forminator_Form_Entry_Model $entry
-		 *
-		 * @return array $data
-		 */
-		$data = apply_filters( 'forminator_poll_mail_data', Forminator_Front_Action::$prepared_data, $poll, $entry );
+		try {
+			$setting = $poll->settings;
 
-		/**
-		 * Action called before mail is sent
-		 *
-		 * @param Forminator_Poll_Model  $this - the current poll.
-		 * @param Forminator_Poll_Model  $poll - the current poll.
-		 * @param array                       $data - current data.
-		 * @param Forminator_Form_Entry_Model $entry
-		 */
-		do_action( 'forminator_poll_mail_before_send_mail', $this, $poll, $data, $entry );
+			/**
+			 * Message data filter
+			 *
+			 * @since 1.6.1
+			 *
+			 * @param array                       $data - the post data.
+			 * @param Forminator_Poll_Model  $poll - the poll model.
+			 * @param Forminator_Form_Entry_Model $entry
+			 *
+			 * @return array $data
+			 */
+			$data = apply_filters( 'forminator_poll_mail_data', Forminator_Front_Action::$prepared_data, $poll, $entry );
 
-		// Process admin mail.
-		if ( $this->is_send_admin_mail( $setting ) ) {
-			$this->init();
-			$recipients = $this->get_admin_email_recipients( $setting, $poll, $entry );
+			/**
+			 * Action called before mail is sent
+			 *
+			 * @param Forminator_Poll_Model  $this - the current poll.
+			 * @param Forminator_Poll_Model  $poll - the current poll.
+			 * @param array                       $data - current data.
+			 * @param Forminator_Form_Entry_Model $entry
+			 */
+			do_action( 'forminator_poll_mail_before_send_mail', $this, $poll, $data, $entry );
 
-			if ( ! empty( $recipients ) ) {
-				$subject = $this->replace_placeholders( $setting, 'admin-email-title', $poll, $entry );
+			// Process admin mail.
+			if ( $this->is_send_admin_mail( $setting ) ) {
+				$this->init();
+				$recipients = $this->get_admin_email_recipients( $setting, $poll, $entry );
 
-				/**
-				 * Poll subject filter
-				 *
-				 * @since 1.6.1
-				 *
-				 * @param string                     $subject
-				 * @param Forminator_Poll_Model $poll the current poll.
-				 *
-				 * @return string $subject
-				 */
-				$subject = apply_filters( 'forminator_poll_mail_admin_subject', $subject, $poll, $data, $entry, $this );
+				if ( ! empty( $recipients ) ) {
+					$subject = $this->replace_placeholders( $setting, 'admin-email-title', $poll, $entry );
 
-				$message = $this->replace_placeholders( $setting, 'admin-email-editor', $poll, $entry );
+					/**
+					 * Poll subject filter
+					 *
+					 * @since 1.6.1
+					 *
+					 * @param string                     $subject
+					 * @param Forminator_Poll_Model $poll the current poll.
+					 *
+					 * @return string $subject
+					 */
+					$subject = apply_filters( 'forminator_poll_mail_admin_subject', $subject, $poll, $data, $entry, $this );
 
-				/**
-				 * Poll mail message filter
-				 *
-				 * @since 1.6.1
-				 *
-				 * @param string                     $message
-				 * @param Forminator_Poll_Model $poll the current poll.
-				 * @param array                      $data
-				 * @param Forminator_Poll_Front_Mail $this
-				 *
-				 * @return string $message
-				 */
-				$message = apply_filters( 'forminator_poll_mail_admin_message', $message, $poll, $data, $entry, $this );
+					$message = $this->replace_placeholders( $setting, 'admin-email-editor', $poll, $entry );
 
-				$headers = $this->prepare_headers( $setting, $poll, $data, $entry );
-				$this->set_headers( $headers );
+					/**
+					 * Poll mail message filter
+					 *
+					 * @since 1.6.1
+					 *
+					 * @param string                     $message
+					 * @param Forminator_Poll_Model $poll the current poll.
+					 * @param array                      $data
+					 * @param Forminator_Poll_Front_Mail $this
+					 *
+					 * @return string $message
+					 */
+					$message = apply_filters( 'forminator_poll_mail_admin_message', $message, $poll, $data, $entry, $this );
 
-				$this->set_subject( $subject );
-				$this->set_recipients( $recipients );
-				$this->set_message_with_vars( $this->message_vars, $message );
-				$this->send_multiple();
+					$headers = $this->prepare_headers( $setting, $poll, $data, $entry );
+					$this->set_headers( $headers );
 
-				/**
-				 * Action called after admin mail sent
-				 *
-				 * @param Forminator_Poll_Front_Mail - the current poll
-				 * @param Forminator_Poll_Model - the current poll
-				 * @param array                       $data       - current data.
-				 * @param Forminator_Form_Entry_Model $entry      - saved entry.
-				 * @param array                       $recipients - array or recipients.
-				 */
-				do_action( 'forminator_poll_mail_admin_sent', $this, $poll, $data, $entry, $recipients );
+					$this->set_subject( $subject );
+					$this->set_recipients( $recipients );
+					$this->set_message_with_vars( $this->message_vars, $message );
+					$this->send_multiple();
+
+					/**
+					 * Action called after admin mail sent
+					 *
+					 * @param Forminator_Poll_Front_Mail - the current poll
+					 * @param Forminator_Poll_Model - the current poll
+					 * @param array                       $data       - current data.
+					 * @param Forminator_Form_Entry_Model $entry      - saved entry.
+					 * @param array                       $recipients - array or recipients.
+					 */
+					do_action( 'forminator_poll_mail_admin_sent', $this, $poll, $data, $entry, $recipients );
+				}
 			}
-		}
 
-		/**
-		 * Action called after mail is sent
-		 *
-		 * @param Forminator_Poll_Front_Mail - the current poll
-		 * @param Forminator_Poll_Model - the current poll
-		 * @param array $data - current data.
-		 */
-		do_action( 'forminator_poll_mail_after_send_mail', $this, $poll, $data );
+			/**
+			 * Action called after mail is sent
+			 *
+			 * @param Forminator_Poll_Front_Mail - the current poll
+			 * @param Forminator_Poll_Model - the current poll
+			 * @param array $data - current data.
+			 */
+			do_action( 'forminator_poll_mail_after_send_mail', $this, $poll, $data );
+		} finally {
+			// Always reset email context, even if there's an error.
+			self::$is_email_context = false;
+		}
 	}
 
 	/**

@@ -86,23 +86,23 @@ class BAFG_Shortcode {
 
 		$meta = ! empty( get_post_meta( $id, 'beaf_meta', true ) ) ? get_post_meta( $id, 'beaf_meta', true ) : '';
 
-		$b_image = ! empty( $meta['bafg_before_image'] ) ? $meta['bafg_before_image'] : '';
-		$a_image = ! empty( $meta['bafg_after_image'] ) ? $meta['bafg_after_image'] : '';
-		$orientation = ! empty( $meta['bafg_image_styles'] ) ? $meta['bafg_image_styles'] : 'horizontal';
-		$offset = ! empty( $meta['bafg_default_offset'] ) ? $meta['bafg_default_offset'] : '0.5';
-		$before_label = ! empty( $meta['bafg_before_label'] ) ? $meta['bafg_before_label'] : esc_html( __( 'Before', 'bafg' ) );
-		$after_label = ! empty( $meta['bafg_after_label'] ) ? $meta['bafg_after_label'] : esc_html( __( 'After', 'bafg' ) );
-		$overlay = ! empty( $meta['bafg_no_overlay'] ) ? $meta['bafg_no_overlay'] : '';
+		$b_image              = ! empty( $meta['bafg_before_image'] ) ? $meta['bafg_before_image'] : '';
+		$a_image              = ! empty( $meta['bafg_after_image'] ) ? $meta['bafg_after_image'] : '';
+		$orientation          = ! empty( $meta['bafg_image_styles'] ) ? $meta['bafg_image_styles'] : 'horizontal';
+		$offset               = ! empty( $meta['bafg_default_offset'] ) ? $meta['bafg_default_offset'] : '0.5';
+		$before_label         = ! empty( $meta['bafg_before_label'] ) ? $meta['bafg_before_label'] : esc_html( __( 'Before', 'bafg' ) );
+		$after_label          = ! empty( $meta['bafg_after_label'] ) ? $meta['bafg_after_label'] : esc_html( __( 'After', 'bafg' ) );
+		$overlay              = ! empty( $meta['bafg_no_overlay'] ) ? $meta['bafg_no_overlay'] : '';
 		$move_slider_on_hover = ! empty( $meta['bafg_move_slider_on_hover'] ) ? $meta['bafg_move_slider_on_hover'] : '';
-		$click_to_move = ! empty( $meta['bafg_click_to_move'] ) ? $meta['bafg_click_to_move'] : '';
-		$skip_lazy_load = ! empty( $meta['skip_lazy_load'] ) ? $meta['skip_lazy_load'] : '';
-		$before_img_alt = ! empty( $meta['before_img_alt'] ) ? $meta['before_img_alt'] : '';
-		$after_img_alt = ! empty( $meta['after_img_alt'] ) ? $meta['after_img_alt'] : '';
+		$click_to_move        = ! empty( $meta['bafg_click_to_move'] ) ? $meta['bafg_click_to_move'] : '';
+		$skip_lazy_load       = ! empty( $meta['skip_lazy_load'] ) ? $meta['skip_lazy_load'] : '';
+		$before_img_alt       = ! empty( $meta['before_img_alt'] ) ? $meta['before_img_alt'] : '';
+		$after_img_alt        = ! empty( $meta['after_img_alt'] ) ? $meta['after_img_alt'] : '';
 		if ( $skip_lazy_load == '1' ) {
-			$skip_lazy = 'skip-lazy';
+			$skip_lazy      = 'skip-lazy';
 			$data_skip_lazy = 'data-skip-lazy';
 		} else {
-			$skip_lazy = '';
+			$skip_lazy      = '';
 			$data_skip_lazy = '';
 		}
 		$beaf_opt = ! empty( get_option( 'beaf_settings' ) ) ? get_option( 'beaf_settings' ) : '';
@@ -150,9 +150,9 @@ class BAFG_Shortcode {
 			<style type="text/css">
 				<?php
 				$bafg_before_label_background = ! empty( $meta['bafg_before_label_background'] ) ? $meta['bafg_before_label_background'] : '';
-				$bafg_before_label_color = ! empty( $meta['bafg_before_label_color'] ) ? $meta['bafg_before_label_color'] : '';
-				$bafg_after_label_background = ! empty( $meta['bafg_after_label_background'] ) ? $meta['bafg_after_label_background'] : '';
-				$bafg_after_label_color = ! empty( $meta['bafg_after_label_color'] ) ? $meta['bafg_after_label_color'] : '';
+				$bafg_before_label_color      = ! empty( $meta['bafg_before_label_color'] ) ? $meta['bafg_before_label_color'] : '';
+				$bafg_after_label_background  = ! empty( $meta['bafg_after_label_background'] ) ? $meta['bafg_after_label_background'] : '';
+				$bafg_after_label_color       = ! empty( $meta['bafg_after_label_color'] ) ? $meta['bafg_after_label_color'] : '';
 
 				if ( ! empty( $bafg_before_label_background ) || ! empty( $bafg_before_label_color ) ) {
 					?>
@@ -214,9 +214,9 @@ class BAFG_Shortcode {
 
 		extract( shortcode_atts( array(
 			'category' => '',
-			'column' => '',
-			'items' => -1,
-			'info' => ''
+			'column'   => '',
+			'items'    => -1,
+			'info'     => ''
 		), $atts ) );
 
 
@@ -224,14 +224,14 @@ class BAFG_Shortcode {
 
 			if ( $category == 'all' ) {
 				$gallery_query = new WP_Query( array(
-					'post_type' => 'bafg',
+					'post_type'      => 'bafg',
 					'posts_per_page' => $items,
 				) );
 			} else {
 				$gallery_query = new WP_Query( array(
-					'post_type' => 'bafg',
+					'post_type'      => 'bafg',
 					'posts_per_page' => $items,
-					'tax_query' => array(
+					'tax_query'      => array(
 						array(
 							'taxonomy' => 'bafg_gallery',
 							'field' => 'id',

@@ -3,16 +3,16 @@
  * Plugin Name: BEAF - Ultimate Before After Image Slider & Gallery
  * Plugin URI: https://themefic.com/plugins/beaf/
  * Description: Would you like to show a comparison of two images? With BEAF, you can easily create before and after image sliders or galleries. Elementor Supported.
- * Version: 4.7.2
+ * Version: 4.7.11
  * Tested up to: 6.8
  * Author: Themefic
  * Author URI: https://themefic.com/
- * License: GPL-2.0+
- * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+ * License: GPLv2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain: bafg
  * Domain Path: /languages
  */
-
+ 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit();
@@ -33,7 +33,7 @@ class BAFG_Before_After_Gallery {
 	 */
 	public function define_constants() {
 		define( 'BEAF_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
-		define( 'BEAF_VERSION', '4.7.2' );
+		define( 'BEAF_VERSION', '4.7.11' );
 		define( 'BEAF_ADMIN_PATH', BEAF_PLUGIN_PATH . 'admin/' );
 		define( 'BEAF_INC_PATH', BEAF_PLUGIN_PATH . 'inc/' );
 		define( 'BEAF_OPTIONS_PATH', BEAF_ADMIN_PATH . 'tf-options/' );

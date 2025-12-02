@@ -5,10 +5,10 @@
  * @package Forminator
  */
 
-$preview_dialog       = 'preview_' . forminator_get_prefix( static::$module_slug, 'c', false, true );
-$export_dialog        = 'export_' . static::$module_slug;
-$forminator_post_type = 'forminator_' . forminator_get_prefix( static::$module_slug, '', false, true );
-$soon                 = 'quiz' === static::$module_slug;
+$preview_dialog       = 'preview_' . forminator_get_prefix( $this::$module_slug, 'c', false, true );
+$export_dialog        = 'export_' . $this::$module_slug;
+$forminator_post_type = 'forminator_' . forminator_get_prefix( $this::$module_slug, '', false, true );
+$soon                 = 'quiz' === $this::$module_slug;
 
 if ( $count > 0 || $is_search ) {
 	$count_active = $this->countModules( 'publish' );
@@ -27,14 +27,14 @@ if ( $count > 0 || $is_search ) {
 
 			<div class="sui-summary-details">
 
-				<span class="sui-summary-large"><?php echo esc_html( $count_active ); ?></span>
+				<span id="forminator-summary-active-<?php echo esc_attr( static::$module_slug ); ?>-count" class="sui-summary-large"><?php echo esc_html( $count_active ); ?></span>
 
 				<span class="sui-summary-sub">
 				<?php
 				/* translators: %s is status. */
 				$active_text     = esc_html__( 'Active %s', 'forminator' );
-				$active_singular = esc_html__( forminator_get_prefix( static::$module_slug, '', true ), 'forminator' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
-				$active_plural   = esc_html__( forminator_get_prefix( static::$module_slug, '', true, true ), 'forminator' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+				$active_singular = esc_html__( forminator_get_prefix( $this::$module_slug, '', true ), 'forminator' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
+				$active_plural   = esc_html__( forminator_get_prefix( $this::$module_slug, '', true, true ), 'forminator' ); // phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText
 				if ( 1 < $count_active ) {
 					printf( esc_html( $active_text ), esc_html( $active_plural ) );
 				} else {
@@ -54,9 +54,9 @@ if ( $count > 0 || $is_search ) {
 								<div class="sui-control-with-icon">
 									<button class="forminator-search-submit" aria-label="<?php esc_attr_e( 'Search', 'forminator' ); ?>"><i class="sui-icon-magnifying-glass-search"></i></button>
 									<?php
-									if ( 'form' === static::$module_slug ) {
+									if ( 'form' === $this::$module_slug ) {
 										$module_name = esc_html__( 'form', 'forminator' );
-									} elseif ( 'poll' === static::$module_slug ) {
+									} elseif ( 'poll' === $this::$module_slug ) {
 										$module_name = esc_html__( 'poll', 'forminator' );
 									} else {
 										$module_name = esc_html__( 'quiz', 'forminator' );
@@ -77,7 +77,7 @@ if ( $count > 0 || $is_search ) {
 
 					</div>
 
-					<input type="hidden" name="module_slug" value="<?php echo esc_attr( static::$module_slug ); ?>" />
+					<input type="hidden" name="module_slug" value="<?php echo esc_attr( $this::$module_slug ); ?>" />
 					<input type="hidden" name="preview_title" value="<?php echo esc_attr( $preview_title ); ?>" />
 					<input type="hidden" name="sql_month_start_date" value="<?php echo esc_attr( $sql_month_start_date ); ?>" />
 					<input type="hidden" name="wizard_page" value="<?php echo esc_attr( $wizard_page ); ?>" />
@@ -101,17 +101,17 @@ if ( $count > 0 || $is_search ) {
 
 			<ul class="sui-list">
 
-				<li>
+				<li id="forminator-summary-last-submission">
 					<span class="sui-list-label"><?php esc_html_e( 'Last Submission', 'forminator' ); ?></span>
-					<span class="sui-list-detail"><?php echo esc_html( forminator_get_latest_entry_time( static::$module_slug ) ); ?></span>
+					<span class="sui-list-detail"><?php echo esc_html( forminator_get_latest_entry_time( $this::$module_slug ) ); ?></span>
 				</li>
 
-				<li>
+				<li id="forminator-summary-submissions-in-30-days">
 					<span class="sui-list-label"><?php esc_html_e( 'Submissions in the last 30 days', 'forminator' ); ?></span>
 					<span class="sui-list-detail"><?php echo esc_html( $total_entries_from_last_month ); ?></span>
 				</li>
 				<?php if ( ! empty( $most_entry ) && get_post_status( $most_entry->form_id ) && 0 !== (int) $most_entry->entry_count ) { ?>
-					<li>
+					<li id="forminator-summary-most-submissions">
 						<span class="sui-list-label"><?php esc_html_e( 'Most submissions', 'forminator' ); ?></span>
 						<span class="sui-list-detail">
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=' . $wizard_page . '&id=' . $most_entry->form_id ) ); ?>">

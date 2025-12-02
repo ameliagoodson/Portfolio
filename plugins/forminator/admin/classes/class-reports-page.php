@@ -150,6 +150,13 @@ class Forminator_Admin_Report_Page {
 				'integration'      => array(),
 			);
 
+			$abandoned_data = array(
+				'total_abandoned'    => Forminator_Form_Entry_Model::count_report_entries( $form_id, '', '', 'abandoned' ),
+				'previous_abandoned' => Forminator_Form_Entry_Model::count_report_entries( $form_id, $previous_start_date, $previous_end_date, 'abandoned' ),
+				'selected_abandoned' => Forminator_Form_Entry_Model::count_report_entries( $form_id, $start_date, $end_date, 'abandoned' ),
+			);
+			$reports        = array_merge( $reports, $abandoned_data );
+
 			if ( 'quiz' === $module_slug ) {
 				$has_lead = false;
 				$model    = Forminator_Base_Form_Model::get_model( $form_id );
@@ -268,6 +275,15 @@ class Forminator_Admin_Report_Page {
 	public function forminator_report_array( $reports, $form_id ) {
 		$report_data = array();
 		if ( ! empty( $reports ) ) {
+			$entries_and_abandoned          = intval( $reports['selected_entries'] + $reports['selected_abandoned'] );
+			$previous_entries_and_abandoned = intval( $reports['previous_entries'] + $reports['previous_abandoned'] );
+
+			$selected_drop_off   = 0 < $entries_and_abandoned
+				? number_format( ( $reports['selected_abandoned'] * 100 ) / $entries_and_abandoned, 1 )
+				: 0;
+			$previous_drop_off   = 0 < $previous_entries_and_abandoned
+				? number_format( ( $reports['previous_abandoned'] * 100 ) / $previous_entries_and_abandoned, 1 )
+				: 0;
 			$selected_conversion = 0 < $reports['selected_views']
 				? number_format( ( $reports['selected_entries'] * 100 ) / $reports['selected_views'], 1 )
 				: 0;
@@ -292,6 +308,21 @@ class Forminator_Admin_Report_Page {
 						? number_format( floatval( $selected_conversion ) / intval( $reports['average_month'] ), 1 ) . '%'
 						: 0,
 					'difference' => $selected_conversion > $previous_conversion ? 'high' : 'low',
+				),
+				'abandoned'  => array(
+					'selected'   => intval( $reports['selected_abandoned'] ),
+					'previous'   => intval( $reports['previous_abandoned'] ),
+					'increment'  => $this->forminator_difference_calculate( $reports['selected_abandoned'], $reports['previous_abandoned'] ),
+					'average'    => 0 < $reports['average_month']
+						? round( intval( $reports['total_abandoned'] ) / intval( $reports['average_month'] ) )
+						: '',
+					'difference' => $reports['selected_abandoned'] > $reports['previous_abandoned'] ? 'high' : 'low',
+				),
+				'drop_off'   => array(
+					'selected'   => 0 < $selected_drop_off ? floatval( $selected_drop_off ) . '%' : 0,
+					'previous'   => 0 < $previous_drop_off ? floatval( $previous_drop_off ) . '%' : 0,
+					'increment'  => $this->forminator_difference_calculate( $selected_drop_off, $previous_drop_off ),
+					'difference' => $selected_drop_off > $previous_drop_off ? 'high' : 'low',
 				),
 				'payment'    => array(
 					'selected'   => 0 < $reports['selected_payment']

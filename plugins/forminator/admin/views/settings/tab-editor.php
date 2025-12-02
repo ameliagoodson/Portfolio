@@ -8,7 +8,7 @@
 $forminator_editor_settings = get_option( 'forminator_editor_settings', 'true' );
 
 ?>
-<div class="sui-box-settings-row">
+<div id="forminator-section-settings-form-editor" class="sui-box-settings-row">
 
 	<div class="sui-box-settings-col-1">
 		<span class="sui-settings-label"><?php esc_html_e( 'Form Editor', 'forminator' ); ?></span>

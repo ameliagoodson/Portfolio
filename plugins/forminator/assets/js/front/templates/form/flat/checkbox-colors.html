@@ -21,13 +21,27 @@
 		<?php if ( forminator_array_value_exists( $properties, 'radio-icon' ) && !empty( $properties['radio-icon'] ) ) { ?>
 			color: <?php echo $properties['radio-icon'] ?>;
 		<?php } else { ?>
-			color: #17A8E3;
+			color: #097BAA;
 		<?php } ?>
 	}
 
+	<?php if ( forminator_array_value_exists( $properties, 'radio-background-hover' ) && !empty( $properties['radio-background-hover'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-box:hover,
+		.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-box:hover {
+			background-color: <?php echo $properties['radio-background-hover'] ?>;
+		}
+	<?php } ?>
+
+	<?php if ( forminator_array_value_exists( $properties, 'radio-outline-focus' ) && !empty( $properties['radio-outline-focus'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox input:focus-visible + .forminator-checkbox-box {
+			outline: 2px solid <?php echo $properties['radio-outline-focus'] ?>;
+			outline-offset: 1px;
+		}
+	<?php } ?>
+
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-image {
-		<?php if ( forminator_array_value_exists( $properties, 'radio-image-background-static' ) && !empty( $properties['radio-image-background-static'] ) ) { ?>
-			background-color: <?php echo $properties['radio-image-background-static'] ?>;
+		<?php if ( forminator_array_value_exists( $properties, 'radio-image-background' ) && !empty( $properties['radio-image-background'] ) ) { ?>
+			background-color: <?php echo $properties['radio-image-background'] ?>;
 		<?php } else { ?>
 			background-color: #EDEDED;
 		<?php } ?>
@@ -62,8 +76,8 @@
 
 	@media screen and ( max-width: 782px ) {
 		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox:hover .forminator-checkbox-image {
-			<?php if ( forminator_array_value_exists( $properties, 'radio-image-background-static' ) && !empty( $properties['radio-image-background-static'] ) ) { ?>
-				background-color: <?php echo $properties['radio-image-background-static'] ?>;
+			<?php if ( forminator_array_value_exists( $properties, 'radio-image-background' ) && !empty( $properties['radio-image-background'] ) ) { ?>
+				background-color: <?php echo $properties['radio-image-background'] ?>;
 			<?php } else { ?>
 				background-color: #EDEDED;
 			<?php } ?>
@@ -84,8 +98,22 @@
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-box,
 	.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-box {
 		background-color: #EDEDED;
-		color: #17A8E3;
+		color: #097BAA;
 	}
+
+	<?php if ( forminator_array_value_exists( $properties, 'radio-background-hover' ) && !empty( $properties['radio-background-hover'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-box:hover,
+		.forminator-select-dropdown-container--open .forminator-custom-form-<?php echo $properties['form_id'] ?>.forminator-dropdown--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-box:hover {
+			background-color: #E1F6FF;
+		}
+	<?php } ?>
+
+	<?php if ( forminator_array_value_exists( $properties, 'radio-outline-focus' ) && !empty( $properties['radio-outline-focus'] ) ) { ?>
+		.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox input:focus-visible + .forminator-checkbox-box {
+			outline: 2px solid #254DEB;
+			outline-offset: 1px;
+		}
+	<?php } ?>
 
 	.forminator-ui#forminator-module-<?php echo $properties['form_id'] ?>.forminator-design--<?php echo $theme; ?> .forminator-checkbox .forminator-checkbox-image {
 		background-color: #EDEDED;

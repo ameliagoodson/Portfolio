@@ -108,6 +108,13 @@ final class Forminator_Trello extends Forminator_Integration {
 	private $identifier = '';
 
 	/**
+	 * Sensitive key names that require encryption.
+	 *
+	 * @var array
+	 */
+	protected $_sensitive_keys = array( 'api_key' );
+
+	/**
 	 * Forminator_Trello constructor.
 	 *
 	 * @since 1.0 Trello Integration
@@ -311,8 +318,9 @@ final class Forminator_Trello extends Forminator_Integration {
 			}
 
 			if ( ! $has_errors ) {
+				$real_api_key = $this->get_real_value( $api_key, 'api_key' );
 				// validate api.
-				$this->_app_key   = $api_key;
+				$this->_app_key   = $real_api_key;
 				$this->identifier = $identifier;
 			}
 		}
@@ -592,7 +600,7 @@ final class Forminator_Trello extends Forminator_Integration {
 	 */
 	public function get_api( $token = null, $api_key = null ) {
 		if ( is_null( $token ) ) {
-			$setting_values = $this->get_settings_values();
+			$setting_values = $this->get_settings_values( true );
 			if ( isset( $setting_values['token'] ) ) {
 				$token = $setting_values['token'];
 			}

@@ -74,6 +74,9 @@ class Forminator_Upload extends Forminator_Field {
 		parent::__construct();
 
 		$this->name = esc_html__( 'File Upload', 'forminator' );
+		$required   = __( 'This field is required. Please upload a file.', 'forminator' );
+
+		self::$default_required_messages[ $this->type ] = $required;
 	}
 
 	/**
@@ -179,7 +182,7 @@ class Forminator_Upload extends Forminator_Field {
 				$upload_attr['data-limit']         = $file_limit;
 				$upload_attr['data-limit-message'] = /* translators: %d: File limit */ sprintf( esc_html__( 'You can upload a maximum of %d files.', 'forminator' ), $file_limit );
 			}
-			$upload_limit = self::get_property( 'upload-limit', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
+			$upload_limit = self::get_property( 'upload-limit', $field );
 			$max_size     = wp_max_upload_size();
 			if ( ! empty( $upload_limit ) ) {
 				$filesize  = self::get_property( 'filesize', $field, 'MB' );
@@ -242,11 +245,11 @@ class Forminator_Upload extends Forminator_Field {
 	public function validate( $field, $data ) {
 		if ( $this->is_required( $field ) ) {
 			$id               = self::get_property( 'element_id', $field );
-			$required_message = self::get_property( 'required_message', $field, '' );
+			$required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			if ( empty( $data ) ) {
 				$this->validation_message[ $id ] = apply_filters(
 					'forminator_upload_field_required_validation_message',
-					( ! empty( $required_message ) ? $required_message : esc_html__( 'This field is required. Please upload a file.', 'forminator' ) ),
+					$required_message,
 					$id,
 					$field
 				);
@@ -305,17 +308,17 @@ class Forminator_Upload extends Forminator_Field {
 		$messages = '"' . $id . '": {' . "\n";
 
 		if ( $is_required ) {
-			$settings_required_message = self::get_property( 'required_message', $field, '' );
+			$settings_required_message = self::get_property( 'required_message', $field, self::$default_required_messages[ $this->type ] );
 			$required_message          = apply_filters(
 				'forminator_upload_field_required_validation_message',
-				( ! empty( $settings_required_message ) ? $settings_required_message : esc_html__( 'This field is required. Please upload a file.', 'forminator' ) ),
+				$settings_required_message,
 				$id,
 				$field
 			);
 			$messages                  = $messages . '"required": "' . forminator_addcslashes( $required_message ) . '",' . "\n";
 		}
 		$extension_message = esc_html__( 'Error saving form. Uploaded file extension is not allowed.', 'forminator' );
-		$messages         .= '"extension": "' . $extension_message . '",' . "\n";
+		$messages         .= '"extension": "' . forminator_addcslashes( $extension_message ) . '",' . "\n";
 
 		$messages .= '},' . "\n";
 
@@ -340,7 +343,7 @@ class Forminator_Upload extends Forminator_Field {
 		$id                    = self::get_property( 'element_id', $field );
 		$field_name            = $id;
 		$custom_limit_size     = true;
-		$upload_limit          = self::get_property( 'upload-limit', $field, self::FIELD_PROPERTY_VALUE_NOT_EXIST );
+		$upload_limit          = self::get_property( 'upload-limit', $field );
 		$filesize              = self::get_property( 'filesize', $field, 'MB' );
 		$custom_file_type      = self::get_property( 'custom-files', $field, false );
 		$use_library           = self::get_property( 'use_library', $field, false );
@@ -349,7 +352,7 @@ class Forminator_Upload extends Forminator_Field {
 		$mime_types            = array();
 		$additional_mime_types = array();
 
-		if ( self::FIELD_PROPERTY_VALUE_NOT_EXIST === $upload_limit || empty( $upload_limit ) ) {
+		if ( empty( $upload_limit ) ) {
 			$custom_limit_size = false;
 		}
 
@@ -491,8 +494,10 @@ class Forminator_Upload extends Forminator_Field {
 					wp_mkdir_p( $file_path );
 				}
 
-				// Create Index file.
-				self::forminator_upload_index_file( $form_id, $file_path );
+				if ( ! forminator_create_index_file_disabled() ) {
+					// Create Index file.
+					self::forminator_upload_index_file( $form_id, $file_path );
+				}
 
 				if ( wp_is_writable( $file_path ) ) {
 					$file_path = $file_path . '/' . $filename;
@@ -524,7 +529,7 @@ class Forminator_Upload extends Forminator_Field {
 				// use move_uploaded_file instead of $wp_filesystem->put_contents.
 				// increase performance, and avoid permission issues.
 				if ( false !== move_uploaded_file( $file_object['tmp_name'], $file_path ) ) {
-					if ( $use_library && ( 'multiple' !== $file_type || ( 'multiple' === $file_type && 'submit' === $upload_type ) ) ) {
+					if ( $use_library && 'submit' === $upload_type ) {
 						$upload_id = wp_insert_attachment(
 							array(
 								'guid'           => $file_path,
@@ -626,8 +631,10 @@ class Forminator_Upload extends Forminator_Field {
 				wp_mkdir_p( $upload_path );
 			}
 
-			// Create Index file.
-			self::forminator_upload_index_file( $form_id, $upload_path );
+			if ( ! forminator_create_index_file_disabled() ) {
+				// Create Index file.
+				self::forminator_upload_index_file( $form_id, $upload_path );
+			}
 
 			foreach ( $upload_data['file'] as $upload ) {
 				$upload_temp_path = forminator_upload_root_temp();
@@ -649,7 +656,7 @@ class Forminator_Upload extends Forminator_Field {
 
 					if ( file_exists( $temp_path ) ) {
 						if ( $this->move_file( $temp_path, $file_path ) ) {
-							if ( $use_library && 'multiple' === $file_type ) {
+							if ( $use_library ) {
 								$upload_id = wp_insert_attachment(
 									array(
 										'guid'           => $file_path,
@@ -896,11 +903,12 @@ class Forminator_Upload extends Forminator_Field {
 		}
 		if ( ! is_wp_error( $temp_path ) && file_exists( $temp_path ) ) {
 			if ( $this->move_file( $temp_path, $file_path ) ) {
-				if ( $use_library && 'multiple' === $file_type ) {
+				$file_mime = $this->get_mime_type( $file_path );
+				if ( $use_library ) {
 					$upload_id = wp_insert_attachment(
 						array(
 							'guid'           => $file_path,
-							'post_mime_type' => $upload['mime_type'],
+							'post_mime_type' => $file_mime,
 							'post_title'     => preg_replace( '/\.[^.]+$/', '', $filename ),
 							'post_content'   => '',
 							'post_status'    => 'inherit',

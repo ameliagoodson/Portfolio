@@ -2,17 +2,17 @@
 Contributors: themefic, hasanet, codexa, mdashikul, hemelhasan, raihan143
 Tags: before after, before after elementor, before after slider, before and after slider, elementor before and after slider
 Requires at least: 4.0
-Stable tag: 4.7.2
+Stable tag: 4.7.11
 Tested up to: 6.8
 Requires PHP: 7.4
-License: GPL-2.0+
+License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Need a Before After Image Comparison slider? Create your before and after slider with BEAF. Addon for Elementor Before and After Slider is included.
 
 == Description ==
 
-= The Easiest and Best Before After Image Slider & Gallery Plugin for WordPress =
+= A Simple and Flexible Before After Image Slider & Gallery Plugin for WordPress =
 
 👉 Official Demo Link: [BEAF Live Preview](https://themefic.com/plugins/beaf/?utm_source=wp_readme&utm_medium=beaf_top_slot&utm_campaign=demo_link)
 👉 Explore Pro: [Play with Backend Options](https://themefic.com/plugins/beaf/pro/backend-demo/?utm_source=wp_readme&utm_medium=beaf_top_slot&utm_campaign=pro_backend)
@@ -22,9 +22,9 @@ Need a Before After Image Comparison slider? Create your before and after slider
 👉 Get Support: [Click Here](https://portal.themefic.com/support/?utm_source=wp_readme&utm_medium=beaf_top_slot&utm_campaign=plugin_support)
 👉 Join Our FB Community: [BEAF Facebook Group](https://facebook.com/groups/beaf.wp)
 
-Looking for a powerful WordPress Before and After Slider & Gallery plugin? Want to create WordPress Image Comparisons slider with ease? Look no further than BEAF, the Ultimate Before and After WordPress Plugin. With BEAF, you can effortlessly create stunning Before After image comparison slider for elementor, gutenberg, bricks, wp bakery or any page builder or block editor. The best part? You can add an unlimited number of sliders and galleries to your WordPress site—for free!
+Looking for a WordPress Before and After Slider & Gallery plugin? BEAF helps you easily create image comparison sliders for Elementor, Gutenberg, Bricks, WP Bakery, and other page builders. With BEAF, you can effortlessly create a stunning Before and After image comparison slider for elementor, gutenberg, bricks, wp bakery or any page builder or block editor. The best part? You can add an unlimited number of sliders and galleries to your WordPress site—for free!
 
-BEAF also provides premium, high-quality features to help you present your Before After image portfolio more effectively than the competition. This all-in-one Before and After Slider WordPress plugin is packed with a full range of basic to advanced options, giving you everything you need to create eye-catching and beautiful image comparison sliders aka Before After slider:
+BEAF also provides advanced features in the Pro version to help you showcase your Before After image portfolio more effectively. This all-in-one Before and After Slider WordPress plugin is packed with a full range of basic to advanced options, giving you everything you need to create eye-catching and beautiful image comparison sliders aka Before After slider:
 
 * Horizontal or Vertical layout
 * Multi-Column Before and After Gallery
@@ -336,6 +336,48 @@ Yes, we provide full support on the WordPress.org forums & [Our Website](https:/
 
 == Changelog ==
 
+= 4.7.11 – 11/11/2025 =
+
+- Fixed: Minor design issue resolved.
+
+= 4.7.10 – 09/11/2025 =
+
+- Updated: Information in readme.txt file.
+- Improved: System stability and performance.
+- Improved: Compatibility with Elementor version 3.33.
+- Updated: Code escaping and security improvements.
+
+= 4.7.9 – 16/10/2025 =
+
+- Compatibility: Compatible with WordPress 6.8.3.
+- Improved: System stability improved.
+
+= 4.7.8 – 22/09/2025 =
+
+- Fixed: Helper banner issue has been resolved.
+- Fixed: Gallery label issue has been resolved.
+
+= 4.7.7 – 02/09/2025 =
+
+- Improved: System stability improved.
+- Improved: Compatibility with Elementor (v3.31).
+
+= 4.7.6 – 16/08/2025 =
+
+- Fixed: Loading text domains notice has been resolved.
+
+= 4.7.5 – 11/08/2025 =
+
+- Fixed: readme.txt file updated.
+
+= 4.7.4 – 10/08/2025 =
+
+- Fixed: readme.txt file updated.
+
+= 4.7.3 – 01/08/2025 =
+
+- Fixed: Undefined array key “content” issue resolved.
+
 = 4.7.2 – 16/06/2025 =
 
 - Improved: Security Vulnerability and System stability.
@@ -355,101 +397,6 @@ Yes, we provide full support on the WordPress.org forums & [Our Website](https:/
 
 - Improved: Security has been enhanced to address vulnerabilities.
 - Improved: System stability improved.
-
-= 4.6.11 – 29/04/2025 =
-
-- Improved: Security has been enhanced to address vulnerabilities.
-- Fixed: The 3-image slider overlay issue has been resolved.
-
-= 4.6.10 – 16/04/2025 =
-
-- Compatibility: Fully compatible with WordPress version 6.8.
-
-= 4.6.9 – 10/04/2025 =
-
-- Fixed: The Elementor widget issue has been resolved.
-
-= 4.6.8 – 18/03/2025 =
-
-- Compatibility: Compatible with Elementor (v3.28.0).
-- Fixed: Minor bug fixes & improvements.
-- Improved: System stability improved.
-
-= 4.6.7 – 17/02/2025 =
-
-- Improved: Enhanced security patches for better protection.
-
-= 4.6.6 – 02/02/2025 =
-
-- Improved: System stability improved.
-- Compatibility: Compatible with Elementor (v3.27.2).
-
-= 4.6.5 – 19/01/2025 =
-
-- Fixed: Minor bug fixes & improvements.
-- Improved: System stability improved.
-- Compatibility: Compatible with Contact Form 7 (v6.0.3)
-
-= 4.6.4 – 07/01/2025 =
-
-- Added: Dependency notice for "Auto Slider" and "Click to Move" functionality.
-
-= 4.6.3 – 30/12/2024 =
-
-- Updated: Readme.txt file and plugin information.
-- Compatibility: Fully compatible with WordPress 6.7.1.
-
-= 4.6.2 – 18/12/2024 =
-
-- Added: Double video playback settings are now available for the Video Slider.
-- Improved: Overall Assets management has been improved for better performance
-- Improved: BEAF is rebuilt into a class component for better performance.
-- Improved: The watermark addon for the BEAF plugin improved performance.
-- Improved: The video slider addon improved for better performance.
-- Improved: The 3-image slider addon improved for better performance.
-- Fixed: "Read More" button alignment issues are now resolved.
-- Fixed: The BEAF gallery generator issues have been resolved.
-- Fixed: Minor bugs and issues are now resolved.
-- System stability: Improved for smoother performance overall.
-
-= 4.6.1 – 11/12/2024 =
-
-- Minor bug fixes & improvements
-
-= 4.6.0 – 10/12/2024 =
-
-- Minor bug fixes & improvements
-
-= 4.5.34 – 20/11/2024 =
-
-- Update: Revised and updated the plugin's Readme.txt file information.
-
-= 4.5.33 – 18/11/2024 =
-
-- Compatibility: Fully compatible with WordPress 6.7
-
-= 4.5.32 – 18/11/2024 =
-
-- Improvement: Enhanced gallery CSS styling for a better visual experience.
-- Fix: Addressed minor bugs and implemented general improvements.
-- Improvement: Increased system stability and performance.
-
-= 4.5.31 – 14/11/2024 =
-
-- Minor bug fixes & improvements
-
-= 4.5.30 – 14/11/2024 =
-
-- Minor bug fixes & improvements
-- System stability improved 
-
-= 4.5.29 – 23/10/2024 =
-
-- Improvement: The free required message is updated when Pro is activated.
-- Improvement: License activation message updated.
-- Improvement: Added Readmore Button Border Color
-- Fixed: Before/After preview image issue without login.
-- Fixed: On-click shortcode copy.
 
 = Changelog Between 2020 - 2023 =
 Find them [here](https://themefic.com/plugins/beaf/#changelogs).

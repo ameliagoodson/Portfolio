@@ -109,7 +109,7 @@ class Forminator_Group extends Forminator_Field {
 		if ( ! empty( $field['field_label'] ) ) {
 			$html .= sprintf(
 				'<label class="forminator-label forminator-repeater-label">%s</label>',
-				esc_html( $field['field_label'] )
+				self::convert_markdown( esc_html( $field['field_label'] ) )
 			);
 		}
 
@@ -120,7 +120,7 @@ class Forminator_Group extends Forminator_Field {
 				'forminator_field_description',
 				sprintf(
 					'<span class="forminator-description forminator-repeater-description">%s</span>',
-					self::esc_description( $description, $name )
+					self::convert_markdown( self::esc_description( $description, $name ) )
 				),
 				$description,
 				$name,

@@ -1,11 +1,12 @@
 <?php
 /**
  * Plugin Name: Forminator
- * Version: 1.44.2
+ * Version: 1.48.3
  * Plugin URI:  https://wpmudev.com/project/forminator/
  * Description: Build powerful, customizable forms with ease using Forminator’s drag-and-drop builder, conditional logic, payment support, real-time analytics, and seamless integrations—no coding needed.
  * Author: WPMU DEV
  * Author URI: https://wpmudev.com
+ * Update URI: wordpress.org/plugins/forminator/
  * Requires at least: 6.4
  * Tested up to: 6.8
  * Requires PHP: 7.4
@@ -152,6 +153,30 @@ if ( ! class_exists( 'Forminator' ) ) {
 				delete_option( 'forminator_activation_hook' );
 				flush_rewrite_rules();
 			}
+
+			if ( is_admin() && FORMINATOR_PRO ) {
+				// Prevent updating PRO plugin to a free version.
+				add_action( 'site_transient_update_plugins', array( __CLASS__, 'remove_free_version_update' ) );
+			}
+		}
+
+		/**
+		 * Remove free version update
+		 *
+		 * @param object|bool $transient Transient object of available updates.
+		 *
+		 * @return mixed
+		 */
+		public static function remove_free_version_update( $transient ) {
+			$slug = 'forminator/forminator.php';
+
+			if ( isset( $transient->response[ $slug ] ) ) {
+				$data = $transient->response[ $slug ];
+				if ( ! isset( $data->url ) || false === strpos( $data->url, 'wpmudev.com' ) ) {
+					unset( $transient->response[ $slug ] );
+				}
+			}
+			return $transient;
 		}
 
 		/**
