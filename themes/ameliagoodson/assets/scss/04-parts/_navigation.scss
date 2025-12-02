@@ -23,6 +23,7 @@
     flex-wrap: wrap;
     line-height: 1;
     justify-content: flex-start;
+    font-size: var(--ag-body-font-size);
   }
 }
 .main-menu li:not(:first-child) {
@@ -104,18 +105,11 @@ a.sub-menu-toggle.active svg {
 }
 
 // Logo
-.site-title,
-.site-logo {
-  margin: 0 0 0 1rem;
-
-  @media (min-width: $tablet) {
-    margin: 1.2rem 0 0 2.4rem;
-  }
-}
 .site-logo {
   display: flex;
   align-items: center;
   z-index: 2;
+  margin: 0;
 }
 
 .site-title {
@@ -145,10 +139,6 @@ a.sub-menu-toggle.active svg {
   height: 100%;
   max-height: 4rem;
   width: auto;
-
-  @media (min-width: $tablet) {
-    max-height: 6rem;
-  }
 }
 
 .site-logo img.logo-dark-mode {

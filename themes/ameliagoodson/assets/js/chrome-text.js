@@ -332,9 +332,14 @@ class ShopifyDirectScene {
     this.isTouchDevice = "ontouchstart" in window;
 
     this.scene = new THREE.Scene();
+
+    // Get canvas dimensions for proper aspect ratio
+    const canvasWidth = this.canvas.width || this.canvas.clientWidth;
+    const canvasHeight = this.canvas.height || this.canvas.clientHeight;
+
     this.camera = new THREE.PerspectiveCamera(
       75,
-      window.innerWidth / window.innerHeight,
+      canvasWidth / canvasHeight,
       0.1,
       1000
     );
@@ -670,17 +675,28 @@ void main() {
 
     // SWAP YOUR "FONT" TEXTURE HERE:
     const POSITION_TEXTURE = "hero-text-11-southwave.png"; // Change this to test different fonts
+    const CITYSCAPE_TEXTURE = "cityscape_03-edited.png"; // Cyberpunk background
 
-    const [positionTexture, matcapTexture] = await Promise.all([
-      new Promise((resolve) =>
-        loader.load(`${themeUrl}/assets/textures/${POSITION_TEXTURE}`, resolve)
-      ),
-      new Promise((resolve) =>
-        loader.load(`${themeUrl}/assets/textures/matcap_512.png`, resolve)
-      ),
-    ]);
+    const [positionTexture, matcapTexture, cityscapeTexture] =
+      await Promise.all([
+        new Promise((resolve) =>
+          loader.load(
+            `${themeUrl}/assets/textures/${POSITION_TEXTURE}`,
+            resolve
+          )
+        ),
+        new Promise((resolve) =>
+          loader.load(`${themeUrl}/assets/textures/matcap_512.png`, resolve)
+        ),
+        new Promise((resolve) =>
+          loader.load(
+            `${themeUrl}/assets/textures/${CITYSCAPE_TEXTURE}`,
+            resolve
+          )
+        ),
+      ]);
 
-    console.log("✅ Textures loaded");
+    console.log("✅ Textures loaded (including cityscape)");
 
     // Extract particles using Shopify's exact method
     const particleData = extractParticlesFromTexture(
@@ -746,8 +762,8 @@ void main() {
     // Apply custom point size from params
     this.rebuildDiscShader();
 
-    // Create final scene
-    this.setupFinalScene(matcapTexture);
+    // Create final scene with background
+    this.setupFinalScene(matcapTexture, cityscapeTexture);
 
     console.log("🚀 Shopify Direct Scene initialized");
     this.animate();
@@ -825,7 +841,157 @@ void main() {
     this.composer.addPass(this.blurPass);
   }
 
-  setupFinalScene(matcapTexture) {
+  setupFinalScene(matcapTexture, cityscapeTexture) {
+    // Add cyberpunk cityscape background
+    if (cityscapeTexture) {
+      // Get canvas aspect ratio
+      const canvasWidth = this.canvas.width || this.canvas.clientWidth;
+      const canvasHeight = this.canvas.height || this.canvas.clientHeight;
+      const canvasAspect = canvasWidth / canvasHeight;
+
+      // Calculate visible area at background plane position
+      // Camera is at z=2, background will be at z=-2, so distance = 4
+      const distance = 4;
+      const vFOV = (this.camera.fov * Math.PI) / 180; // Convert to radians
+      const visibleHeight = 2 * Math.tan(vFOV / 2) * distance;
+      const visibleWidth = visibleHeight * canvasAspect;
+
+      // Get texture aspect ratio
+      const textureAspect =
+        cityscapeTexture.image.width / cityscapeTexture.image.height;
+
+      // Calculate scale to cover (like CSS background-size: cover)
+      let bgWidth, bgHeight;
+      if (canvasAspect > textureAspect) {
+        // Canvas is wider - fit to width
+        bgWidth = visibleWidth;
+        bgHeight = visibleWidth / textureAspect;
+      } else {
+        // Canvas is taller - fit to height
+        bgHeight = visibleHeight;
+        bgWidth = visibleHeight * textureAspect;
+      }
+
+      const bgGeometry = new THREE.PlaneGeometry(bgWidth, bgHeight);
+
+      // Custom shader for neon flickering effect
+      const bgMaterial = new THREE.ShaderMaterial({
+        uniforms: {
+          uTexture: { value: cityscapeTexture },
+          uTime: { value: 0 },
+          uBrightnessThreshold: { value: 0.8 }, // 0-1: Higher = only very bright pixels flicker
+          uFlickerSpeed: { value: 2.0 }, // Speed of flickering (slower is more realistic)
+          uFlickerIntensity: { value: 0.5 }, // How much brightness varies (0-1)
+
+          // Color filtering (set to 0,0,0 to disable color filtering)
+          uTargetColor: { value: new THREE.Vector3(0.0, 0.8, 1.0) }, // Cyan neons only
+          uColorTolerance: { value: 0.4 }, // How close color must be to cyan (adjust if needed)
+
+          // Location filtering (set both to 0,0,1,1 to disable)
+          uRegionMin: { value: new THREE.Vector2(0.0, 0.0) }, // Min UV coords (left, bottom)
+          uRegionMax: { value: new THREE.Vector2(1.0, 1.0) }, // Max UV coords (right, top)
+        },
+        vertexShader: `
+          varying vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D uTexture;
+          uniform float uTime;
+          uniform float uBrightnessThreshold;
+          uniform float uFlickerSpeed;
+          uniform float uFlickerIntensity;
+          uniform vec3 uTargetColor;
+          uniform float uColorTolerance;
+          uniform vec2 uRegionMin;
+          uniform vec2 uRegionMax;
+
+          varying vec2 vUv;
+
+          // Noise function for randomness
+          float hash(vec2 p) {
+            return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
+          }
+
+          float noise(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            f = f * f * (3.0 - 2.0 * f);
+
+            float a = hash(i);
+            float b = hash(i + vec2(1.0, 0.0));
+            float c = hash(i + vec2(0.0, 1.0));
+            float d = hash(i + vec2(1.0, 1.0));
+
+            return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+          }
+
+          void main() {
+            vec4 texColor = texture2D(uTexture, vUv);
+
+            // Calculate brightness
+            float brightness = max(texColor.r, max(texColor.g, texColor.b));
+
+            // Check if pixel passes brightness threshold
+            bool passesBrightness = brightness > uBrightnessThreshold;
+
+            // Check if pixel is in target region (if region filtering is enabled)
+            bool inRegion = (vUv.x >= uRegionMin.x && vUv.x <= uRegionMax.x &&
+                            vUv.y >= uRegionMin.y && vUv.y <= uRegionMax.y);
+
+            // Check if pixel matches target color (if color filtering is enabled)
+            bool matchesColor = true;
+            if (length(uTargetColor) > 0.01) { // Color filter is active
+              float colorDistance = distance(texColor.rgb, uTargetColor);
+              matchesColor = colorDistance < uColorTolerance;
+            }
+
+            // Only apply flickering if all conditions pass
+            if (passesBrightness && inRegion && matchesColor) {
+              // Create smooth position-based variation using noise instead of hash for less grain
+              vec2 positionSeed = vUv * 5.0; // Lower frequency = bigger zones
+              float positionPhase = noise(positionSeed) * 6.28318; // Smooth phase offset
+
+              // Each area gets its own time offset based on position
+              float localTime = uTime * uFlickerSpeed + positionPhase;
+
+              // Multi-layered noise for organic flicker
+              float flickerNoise1 = noise(vec2(localTime, positionPhase));
+              float flickerNoise2 = noise(vec2(localTime * 0.5, positionPhase + 10.0));
+
+              // Combine for more interesting variation
+              float flickerNoise = flickerNoise1 * 0.7 + flickerNoise2 * 0.3;
+
+              // More dramatic flicker range - can go from 0.5x to 1.4x brightness
+              float flickerAmount = 0.5 + flickerNoise * 0.9;
+
+              // Apply flicker to color
+              texColor.rgb *= flickerAmount;
+            }
+
+            gl_FragColor = texColor;
+          }
+        `,
+        depthTest: false,
+        transparent: false,
+      });
+
+      this.backgroundPlane = new THREE.Mesh(bgGeometry, bgMaterial);
+      this.backgroundPlane.position.z = -2; // Behind chrome text
+      this.scene.add(this.backgroundPlane);
+
+      console.log(
+        `Background: ${bgWidth.toFixed(2)}x${bgHeight.toFixed(
+          2
+        )} units, texture aspect: ${textureAspect.toFixed(
+          2
+        )}, canvas aspect: ${canvasAspect.toFixed(2)}`
+      );
+    }
+
     // Final material using blurred texture
     this.finalMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -845,18 +1011,20 @@ void main() {
     const fsQuadGeometry = new THREE.PlaneGeometry(2, planeHeight);
     this.fullscreenQuad = new THREE.Mesh(fsQuadGeometry, this.finalMaterial);
 
-    // Scale and position
-    const aspectRatio = window.innerWidth / window.innerHeight;
-    let scale = Math.min(1200, window.innerWidth) / window.innerWidth;
+    // Scale and position using canvas dimensions
+    const canvasWidth = this.canvas.width || this.canvas.clientWidth;
+    const canvasHeight = this.canvas.height || this.canvas.clientHeight;
+    const aspectRatio = canvasWidth / canvasHeight;
+    let scale = Math.min(1200, canvasWidth) / canvasWidth;
 
     if (aspectRatio > 1) {
-      if (window.innerHeight < 500) scale *= 0.35;
-      else if (window.innerHeight < 600) scale *= 0.5;
-      else if (window.innerHeight < 700) scale *= 0.6;
-      else if (window.innerHeight < 800) scale *= 0.65;
-      else if (window.innerHeight < 900) scale *= 0.7;
-      else if (window.innerHeight < 1100) scale *= 0.85;
-      else if (window.innerHeight < 1200) scale *= 0.9;
+      if (canvasHeight < 500) scale *= 0.35;
+      else if (canvasHeight < 600) scale *= 0.5;
+      else if (canvasHeight < 700) scale *= 0.6;
+      else if (canvasHeight < 800) scale *= 0.65;
+      else if (canvasHeight < 900) scale *= 0.7;
+      else if (canvasHeight < 1100) scale *= 0.85;
+      else if (canvasHeight < 1200) scale *= 0.9;
     }
 
     const yOffset = aspectRatio > 1 ? 1 - 2 * 0.434 : 1 - 2 * 0.345;
@@ -864,7 +1032,7 @@ void main() {
     this.fullscreenQuad.position.y = yOffset;
     this.fullscreenQuad.scale.set(
       scale * this.SCALE,
-      scale * this.SCALE * (window.innerWidth / window.innerHeight),
+      scale * this.SCALE * (canvasWidth / canvasHeight),
       1
     );
 
@@ -973,6 +1141,11 @@ void main() {
     this.finalMaterial.uniforms.uBlurredTexture.value =
       this.composer.readBuffer.texture;
 
+    // Update background shader time for neon flickering
+    if (this.backgroundPlane && this.backgroundPlane.material.uniforms) {
+      this.backgroundPlane.material.uniforms.uTime.value = now * 0.001; // Convert to seconds
+    }
+
     // Render final scene
     this.renderer.render(this.scene, this.camera);
 
@@ -980,12 +1153,12 @@ void main() {
   }
 
   onWindowResize() {
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    // Canvas is resized by threejs-hero.js, just update camera
+    const width = this.canvas.width || this.canvas.clientWidth;
+    const height = this.canvas.height || this.canvas.clientHeight;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(width, height);
 
     // Update fullscreen quad scaling
     const aspectRatio = width / height;

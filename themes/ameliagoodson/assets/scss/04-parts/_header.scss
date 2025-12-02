@@ -19,14 +19,13 @@
   width: 100%;
   display: flex;
   color: var(--ag-site-header-text-color);
-  min-height: var(--ag-site-header-height);
+  // min-height: var(--ag-site-header-height);
   padding: 1.2rem 0;
   transition-property: background, color, min-height;
   transition: var(--ag-trans-speed-slow) var(--ag-trans-ease);
 
   @media (min-width: $tablet) {
-    // min-height: 12rem;
-    padding: 2.4rem 0;
+    padding: 1.6rem 0;
   }
 }
 

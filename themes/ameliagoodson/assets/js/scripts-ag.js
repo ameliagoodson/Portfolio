@@ -171,17 +171,17 @@ $agthemeDoc.ready(function () {
 /*  BACK TO TOP BUTTON
 /* ------------------------------------------------------------------------------ */
 
-window.addEventListener("scroll", displayButton);
+// window.addEventListener("scroll", displayButton);
 
-function displayButton() {
-  let btn = document.getElementById("btn-back-to-top");
+// function displayButton() {
+//   let btn = document.getElementById("btn-back-to-top");
 
-  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-    btn.classList.add("show");
-  } else {
-    btn.classList.remove("show");
-  }
-}
+//   if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+//     btn.classList.add("show");
+//   } else {
+//     btn.classList.remove("show");
+//   }
+// }
 
 function backToTop() {
   document.body.scrollTop = 0; // for Safari

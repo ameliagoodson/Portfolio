@@ -153,7 +153,7 @@ $header-background-color: var(--ag-background-color);
 $header-text-color: var(--ag-primary-color);
 $header-fixed-background-color: var(--ag-black-color);
 $header-fixed-text-color: var(--ag-white-color);
-$header-min-height: clamp(6.4rem, calc(14.2vw - 2.667rem), 16rem);
+$header-min-height: fit-content;
 
 // Site Footer ---------------------------------- //
 

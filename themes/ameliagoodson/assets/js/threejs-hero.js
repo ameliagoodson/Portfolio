@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   console.log("Initializing Chrome Text Scene...");
 
+  // Get the hero container to properly size the canvas
+  const heroSection = canvas.closest('.hero');
+
   // Create WebGL renderer with alpha for transparency
   const renderer = new THREE.WebGLRenderer({
     canvas,
@@ -22,8 +25,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set pixel ratio for sharp rendering on high-DPI displays
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
+  // Function to resize canvas to fit hero section
+  const resizeCanvas = () => {
+    const rect = heroSection.getBoundingClientRect();
+    renderer.setSize(rect.width, rect.height);
+  };
+
   // Set initial size
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  resizeCanvas();
 
   // Initialize the chrome text scene
   // Scene handles its own animation loop internally
@@ -32,7 +41,5 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Chrome Text Scene initialized");
 
   // Handle window resize
-  window.addEventListener("resize", () => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+  window.addEventListener("resize", resizeCanvas);
 });

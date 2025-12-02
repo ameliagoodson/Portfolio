@@ -6,6 +6,8 @@
   "scripts": {
       "dev": "vite",
       "build": "vite build",
+      "sass:watch": "sass --watch assets/scss/theme.scss:assets/css/theme.css assets/scss/admin.scss:assets/css/admin.css assets/scss/editor.scss:assets/css/editor.css assets/scss/print.scss:assets/css/print.css --no-source-map",
+      "sass:compile": "sass assets/scss/theme.scss:assets/css/theme.css assets/scss/admin.scss:assets/css/admin.css assets/scss/editor.scss:assets/css/editor.css assets/scss/print.scss:assets/css/print.css --no-source-map",
       "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,6 +23,7 @@
 
   },
   "devDependencies": {
+    "sass": "^1.80.0",
     "vite": "^7.0.0"
   }
 }
