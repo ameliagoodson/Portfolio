@@ -28,8 +28,6 @@ $archive_columns_class_attr = 'list' !== $archive_layout && $archive_columns_cla
   <div class="section-inner">
 
     <div class="posts-grid grid load-more-target<?php echo esc_attr($archive_columns_class_attr); ?>" data-layout="<?php echo esc_attr($archive_layout); ?>">
-
-      <div class="col grid-sizer<?php echo esc_attr($archive_columns_class_attr); ?>"></div>
       <?php
       while ($query->have_posts()) : $query->the_post(); ?>
         <div class="article-wrapper col js-grid-item reveal">

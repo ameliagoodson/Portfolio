@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import Isotope from "isotope-layout";
 import ScrollReveal from "scrollreveal";
 import "./threejs-hero";
 
@@ -27,75 +26,10 @@ const agthemeIsIE11 = !!window.MSInputMethodContext && !!document.documentMode;
 /*  GRID
 /* ------------------------------------------------------------------------------ */
 
+// Posts grid now uses simple CSS Grid - no JavaScript needed
 agtheme.grid = {
   init: function () {
-    // ONLY handle posts grid (archive page)
-    var $postsGrid = $(".posts-grid");
-    if ($postsGrid.length) {
-      // Make sure the grid-sizer has proper classes for posts grid
-      var postsColumnClasses =
-        $postsGrid.attr("class").match(/cols-[^ ]*/g) || [];
-      if (postsColumnClasses.length > 0) {
-        $postsGrid.find(".grid-sizer").addClass(postsColumnClasses.join(" "));
-      }
-
-      // Initialize Isotope for posts grid
-      $postsGrid.imagesLoaded(function () {
-        var $grid = $postsGrid.isotope({
-          columnWidth: ".grid-sizer",
-          itemSelector: ".js-grid-item",
-          percentPosition: true,
-          transitionDuration: "0.25s",
-        });
-
-        // Force layout refresh
-        setTimeout(function () {
-          $grid.isotope("layout");
-        }, 100);
-      });
-    }
-
-    // Do NOT initialize Isotope for bento grid
-  },
-};
-
-/* ------------------------------------------------------------------------------ /*
-/*  SCROLL REVEAL JS
-/* ------------------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------------------ /*
-/*  GRID
-/* ------------------------------------------------------------------------------ */
-
-agtheme.grid = {
-  init: function () {
-    // ONLY handle posts grid (archive page)
-    var $postsGrid = $(".posts-grid");
-    if ($postsGrid.length) {
-      // Make sure the grid-sizer has proper classes for posts grid
-      var postsColumnClasses =
-        $postsGrid.attr("class").match(/cols-[^ ]*/g) || [];
-      if (postsColumnClasses.length > 0) {
-        $postsGrid.find(".grid-sizer").addClass(postsColumnClasses.join(" "));
-      }
-
-      // Initialize Isotope for posts grid
-      $postsGrid.imagesLoaded(function () {
-        var $grid = $postsGrid.isotope({
-          columnWidth: ".grid-sizer",
-          itemSelector: ".js-grid-item",
-          percentPosition: true,
-          transitionDuration: "0.25s",
-        });
-
-        // Force layout refresh
-        setTimeout(function () {
-          $grid.isotope("layout");
-        }, 100);
-      });
-    }
-
-    // Do NOT initialize Isotope for bento grid
+    // Grid is handled by CSS Grid, no JavaScript initialization needed
   },
 };
 
@@ -128,10 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
       },
       afterReveal: function (el) {
-        // Force Isotope layout after revelation
-        if ($(".posts-grid").data("isotope")) {
-          $(".posts-grid").isotope("layout");
-        }
+        // Grid is handled by CSS Grid, no layout refresh needed
       },
     });
   }
@@ -150,14 +81,6 @@ document.addEventListener("DOMContentLoaded", function () {
   sr.reveal(".reveal-200", { delay: 200 });
   sr.reveal(".reveal-300", { delay: 300 });
   sr.reveal(".reveal-400", { delay: 400 });
-});
-
-/* ------------------------------------------------------------------------------ /*
-/*  INIT
-/* ------------------------------------------------------------------------------ */
-
-$agthemeDoc.ready(function () {
-  agtheme.grid.init();
 });
 
 /* ------------------------------------------------------------------------------ /*

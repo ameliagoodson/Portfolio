@@ -16,7 +16,6 @@
   "type": "commonjs",
   "dependencies": {
     "css-vars-ponyfill": "^2.4.9",
-    "isotope-layout": "^3.0.6",
     "scrollreveal": "^4.0.9",
     "three": "^0.178.0",
     "three-kawase-blur": "github:ycw/three-kawase-blur"
