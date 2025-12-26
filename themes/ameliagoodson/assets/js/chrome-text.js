@@ -670,7 +670,7 @@ void main() {
       threshold: 0.36,
       cutoff: 0.6,
       strength: 7.0,
-      pointSize: isMobile ? 15.0 : 20.0, // Start with reasonable mobile value
+      pointSize: 5.0, // Shopify's value - same for all devices
     };
 
     console.log("🎨 Params:", {
@@ -839,19 +839,19 @@ void main() {
     // Setup composer with blur - scale based on pixel ratio like Shopify
     this.composer = new EffectComposer(this.renderer);
 
-    // Use full offscreen buffer size for blur (no DPI scaling)
-    // DPI scaling made blur spread too much on mobile, causing letters to blob together
-    const composerWidth = this.OFFSCREEN_WIDTH;
-    const composerHeight = this.OFFSCREEN_HEIGHT;
+    // Scale composer based on pixel ratio (Shopify's approach)
+    // Higher DPI = smaller blur buffer = sharper result
+    const nativePixelRatio = window.devicePixelRatio;
+    const composerScale = 2 / Math.max(0.5, nativePixelRatio);
+    const composerWidth = this.OFFSCREEN_WIDTH * composerScale;
+    const composerHeight = this.OFFSCREEN_HEIGHT * composerScale;
 
     console.log("📊 Composer size calculation:", {
-      nativePixelRatio: window.devicePixelRatio,
+      nativePixelRatio,
       rendererPixelRatio: this.renderer.getPixelRatio(),
+      composerScale,
       offscreenBuffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
-      composerSize: `${Math.round(composerWidth)}x${Math.round(
-        composerHeight
-      )}`,
-      note: "Using full buffer size (no scaling)"
+      composerSize: `${Math.round(composerWidth)}x${Math.round(composerHeight)}`,
     });
 
     this.composer.setSize(composerWidth, composerHeight);
@@ -864,8 +864,8 @@ void main() {
     let blurKernels, blurResolution;
 
     if (screenWidth < 900) {
-      blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - middle ground for mobile
-      blurResolution = 0.35; // Middle ground between weak and strong
+      blurKernels = [0, 1, 2, 3]; // 4 passes - Shopify's exact setting
+      blurResolution = 0.25; // Shopify's exact setting
     } else if (screenWidth < 1200) {
       blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - tablet
       blurResolution = 0.4;
@@ -1109,7 +1109,7 @@ void main() {
     // Responsive sizing - desktop working values
     let maxSize;
     if (canvasWidth < 900) {
-      maxSize = 900; // Mobile (extended to include larger phones)
+      maxSize = 650; // Mobile - smaller to increase particle density (reduce mesh)
     } else if (canvasWidth < 1200) {
       maxSize = 1100; // Tablet - WORKING
     } else if (canvasWidth < 2000) {
