@@ -150,9 +150,9 @@ uniform float uOpacity;
 uniform float uIntroProgress;
 
 const float matcapRotation = 3.1459;
-const float threshold = 0.25; // Lowered to capture more gradient (less grey borders)
-const float cutoff = 0.5; // Lowered slightly for softer edges
-const float strength = 4.5; // Reduced to sample more colorful center of matcap
+const float threshold = 0.36; // Shopify's value - filters out soft blur
+const float cutoff = 0.6; // Shopify's value - keeps only sharp core
+const float strength = 7.0; // Shopify's value - stronger normals
 const float offsetStrength = 0.008;
 
 // Helper function to sample with threshold
@@ -304,21 +304,24 @@ class ShopifyDirectScene {
     this.canvas = canvas;
 
     // === CONFIGURATION OPTIONS ===
-    // Organized from FASTEST (Option 1) to SLOWEST (Option 3)
-
-    // OPTION 1: Fastest - Smallest buffer, 32k particles (~2.5M pixels)
-    // this.OFFSCREEN_WIDTH = 1600 * 1.5; // 2400
-    // this.OFFSCREEN_HEIGHT = 700 * 1.5; // 1050
-    // this.SCALE = 2;
-    // this.GRID_WIDTH = 256;
-    // this.GRID_HEIGHT = 128;
-
-    // OPTION 2: Balanced - Shopify's dimensions, 32k particles (~3.1M pixels)
-    this.OFFSCREEN_WIDTH = 1340 * 2; // 2680
-    this.OFFSCREEN_HEIGHT = 584 * 2; // 1168
-    this.SCALE = 2.58;
+    // Use buffer matched to our 1600x700 source PNG
+    this.OFFSCREEN_WIDTH = 1600 * 1.5; // 2400 - proportional to source
+    this.OFFSCREEN_HEIGHT = 700 * 1.5; // 1050 - proportional to source
+    this.SCALE = 2;
     this.GRID_WIDTH = 256;
     this.GRID_HEIGHT = 128;
+
+    console.log('🎨 Offscreen buffer (matched to source):', {
+      buffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
+      scale: this.SCALE
+    });
+
+    // OPTION 2: Balanced - Shopify's dimensions, 32k particles (~3.1M pixels)
+    // this.OFFSCREEN_WIDTH = 1340 * 2; // 2680
+    // this.OFFSCREEN_HEIGHT = 584 * 2; // 1168
+    // this.SCALE = 2.58;
+    // this.GRID_WIDTH = 256;
+    // this.GRID_HEIGHT = 128;
 
     // OPTION 3: Slowest - Higher quality, 131k particles (~2.5M pixels)
     // this.OFFSCREEN_WIDTH = 1600 * 1.5; // 2400
@@ -333,9 +336,9 @@ class ShopifyDirectScene {
 
     this.scene = new THREE.Scene();
 
-    // Get canvas dimensions for proper aspect ratio
-    const canvasWidth = this.canvas.width || this.canvas.clientWidth;
-    const canvasHeight = this.canvas.height || this.canvas.clientHeight;
+    // Use CSS dimensions (not internal canvas resolution) for consistency with mouse coords
+    const canvasWidth = this.canvas.clientWidth;
+    const canvasHeight = this.canvas.clientHeight;
 
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -654,18 +657,23 @@ void main() {
   async init() {
     console.log("🎨 Initializing Shopify Direct Scene...");
 
-    // Initialize parameters
+    // Initialize parameters - desktop working values, mobile needs investigation
+    const screenWidth = this.canvas.clientWidth;
+    const isMobile = screenWidth < 768;
+
     this.params = {
       pushStrength: 150,
       interactionRadius: 0.04,
       velocityScale: 150,
       maxVelocity: 10,
-      velocitySmoothing: 0.2,
-      threshold: 0.25,
-      cutoff: 0.5,
-      strength: 4.5,
-      pointSize: 20.0,
+      velocitySmoothing: 0.05,
+      threshold: 0.36,
+      cutoff: 0.6,
+      strength: 7.0,
+      pointSize: 20.0, // Keep desktop working value for now
     };
+
+    console.log('🎨 Params:', { pointSize: this.params.pointSize, isMobile, screenWidth });
 
     // Load textures
     const loader = new THREE.TextureLoader();
@@ -674,8 +682,8 @@ void main() {
     const themeUrl = window.agtheme_config?.themeUrl || "";
 
     // SWAP YOUR "FONT" TEXTURE HERE:
-    const POSITION_TEXTURE = "hero-text-11-southwave.png"; // Change this to test different fonts
-    const CITYSCAPE_TEXTURE = "cityscape_03-edited.png"; // Cyberpunk background
+    const POSITION_TEXTURE = "hero-text-11-southwave.png"; // Back to your original
+    const CITYSCAPE_TEXTURE = "cityscape_06-edited-compressed.jpg"; // Cyberpunk background
 
     const [positionTexture, matcapTexture, cityscapeTexture] =
       await Promise.all([
@@ -824,19 +832,37 @@ void main() {
     this.offscreenPoints.scale.set(this.SCALE, this.SCALE, 1);
     this.offscreenScene.add(this.offscreenPoints);
 
-    // Setup composer with blur
+    // Setup composer with blur - use offscreen buffer size directly
     this.composer = new EffectComposer(this.renderer);
     this.composer.setSize(this.OFFSCREEN_WIDTH, this.OFFSCREEN_HEIGHT);
     this.composer.addPass(
       new RenderPass(this.offscreenScene, this.offscreenCamera)
     );
 
-    // Blur configuration - maintain quality
-    // resolutionScale: higher = smoother but slower
+    // Blur configuration - responsive for desktop quality
+    const screenWidth = this.canvas.clientWidth;
+    let blurKernels, blurResolution;
+
+    if (screenWidth < 768) {
+      blurKernels = [0, 1, 2, 3]; // 4 passes - Shopify's setting
+      blurResolution = 0.25;
+    } else if (screenWidth < 1200) {
+      blurKernels = [0, 1, 2, 3]; // 4 passes
+      blurResolution = 0.35;
+    } else if (screenWidth < 2000) {
+      blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - laptop quality
+      blurResolution = 0.4;
+    } else {
+      blurKernels = [0, 1, 2, 3, 4, 5, 6, 7]; // 8 passes - desktop quality
+      blurResolution = 0.5;
+    }
+
+    console.log('🌀 Blur config:', { passes: blurKernels.length, resolution: blurResolution, screenWidth });
+
     this.blurPass = new KawaseBlurPass({
       renderer: this.renderer,
-      kernels: [0, 1, 2, 3, 4, 5, 6], // Full 7 passes for smooth chrome
-      resolutionScale: 0.5, // Keep quality high
+      kernels: blurKernels,
+      resolutionScale: blurResolution,
     });
     this.composer.addPass(this.blurPass);
   }
@@ -879,13 +905,15 @@ void main() {
         uniforms: {
           uTexture: { value: cityscapeTexture },
           uTime: { value: 0 },
-          uBrightnessThreshold: { value: 0.8 }, // 0-1: Higher = only very bright pixels flicker
+          uBrightnessThreshold: { value: 0.7 }, // 0-1: Higher = only very bright pixels flicker
           uFlickerSpeed: { value: 2.0 }, // Speed of flickering (slower is more realistic)
           uFlickerIntensity: { value: 0.5 }, // How much brightness varies (0-1)
 
-          // Color filtering (set to 0,0,0 to disable color filtering)
-          uTargetColor: { value: new THREE.Vector3(0.0, 0.8, 1.0) }, // Cyan neons only
-          uColorTolerance: { value: 0.4 }, // How close color must be to cyan (adjust if needed)
+          // Color filtering - multiple target colors
+          uTargetColor1: { value: new THREE.Vector3(0.0, 0.8, 1.0) }, // Cyan neons
+          uTargetColor2: { value: new THREE.Vector3(0.96, 0.07, 0.76) }, // Magenta neons (#F513C3)
+          uTargetColor3: { value: new THREE.Vector3(0.996, 0.651, 0.333) }, // Orange neons (#FEA655)
+          uColorTolerance: { value: 0.99 }, // How close color must be to target colors
 
           // Location filtering (set both to 0,0,1,1 to disable)
           uRegionMin: { value: new THREE.Vector2(0.0, 0.0) }, // Min UV coords (left, bottom)
@@ -904,7 +932,9 @@ void main() {
           uniform float uBrightnessThreshold;
           uniform float uFlickerSpeed;
           uniform float uFlickerIntensity;
-          uniform vec3 uTargetColor;
+          uniform vec3 uTargetColor1;
+          uniform vec3 uTargetColor2;
+          uniform vec3 uTargetColor3;
           uniform float uColorTolerance;
           uniform vec2 uRegionMin;
           uniform vec2 uRegionMax;
@@ -942,11 +972,34 @@ void main() {
             bool inRegion = (vUv.x >= uRegionMin.x && vUv.x <= uRegionMax.x &&
                             vUv.y >= uRegionMin.y && vUv.y <= uRegionMax.y);
 
-            // Check if pixel matches target color (if color filtering is enabled)
-            bool matchesColor = true;
-            if (length(uTargetColor) > 0.01) { // Color filter is active
-              float colorDistance = distance(texColor.rgb, uTargetColor);
-              matchesColor = colorDistance < uColorTolerance;
+            // Check if pixel matches any target color (if color filtering is enabled)
+            bool matchesColor = false;
+
+            // Check if any target color is active (not black)
+            if (length(uTargetColor1) > 0.01) {
+              float colorDistance1 = distance(texColor.rgb, uTargetColor1);
+              if (colorDistance1 < uColorTolerance) {
+                matchesColor = true;
+              }
+            }
+
+            if (length(uTargetColor2) > 0.01) {
+              float colorDistance2 = distance(texColor.rgb, uTargetColor2);
+              if (colorDistance2 < uColorTolerance) {
+                matchesColor = true;
+              }
+            }
+
+            if (length(uTargetColor3) > 0.01) {
+              float colorDistance3 = distance(texColor.rgb, uTargetColor3);
+              if (colorDistance3 < uColorTolerance) {
+                matchesColor = true;
+              }
+            }
+
+            // If no color filters active, match all colors
+            if (length(uTargetColor1) < 0.01 && length(uTargetColor2) < 0.01 && length(uTargetColor3) < 0.01) {
+              matchesColor = true;
             }
 
             // Only apply flickering if all conditions pass
@@ -1011,11 +1064,23 @@ void main() {
     const fsQuadGeometry = new THREE.PlaneGeometry(2, planeHeight);
     this.fullscreenQuad = new THREE.Mesh(fsQuadGeometry, this.finalMaterial);
 
-    // Scale and position using canvas dimensions
-    const canvasWidth = this.canvas.width || this.canvas.clientWidth;
-    const canvasHeight = this.canvas.height || this.canvas.clientHeight;
+    // Scale and position using CSS dimensions (consistent with mouse coords)
+    const canvasWidth = this.canvas.clientWidth;
+    const canvasHeight = this.canvas.clientHeight;
     const aspectRatio = canvasWidth / canvasHeight;
-    let scale = Math.min(1200, canvasWidth) / canvasWidth;
+
+    // Responsive sizing - desktop working values
+    let maxSize;
+    if (canvasWidth < 768) {
+      maxSize = 900; // Mobile - TO BE FIXED
+    } else if (canvasWidth < 1200) {
+      maxSize = 1100; // Small desktop/tablet - WORKING
+    } else if (canvasWidth < 2000) {
+      maxSize = 1400; // Laptops - WORKING
+    } else {
+      maxSize = 1100; // Large displays - WORKING
+    }
+    let scale = Math.min(maxSize, canvasWidth) / canvasWidth;
 
     if (aspectRatio > 1) {
       if (canvasHeight < 500) scale *= 0.35;
@@ -1027,7 +1092,10 @@ void main() {
       else if (canvasHeight < 1200) scale *= 0.9;
     }
 
-    const yOffset = aspectRatio > 1 ? 1 - 2 * 0.434 : 1 - 2 * 0.345;
+    // Push text down to account for semi-transparent header
+    // Lower values = further down the screen
+    const yOffset =
+      aspectRatio > 1 ? 1 - 2 * 0.434 - 0.35 : 1 - 2 * 0.345 - 0.35;
 
     this.fullscreenQuad.position.y = yOffset;
     this.fullscreenQuad.scale.set(
@@ -1049,20 +1117,12 @@ void main() {
       this.baselineQuadScale = { x: quadScale.x, y: quadScale.y };
     }
 
-    // Calculate dynamic compression factor based on offscreen dimensions and SCALE
-    // Original Shopify (2680x1168, SCALE=2.58) used 0.87
-    // Adjust proportionally for different setups
-    const shopifyReference = { width: 1340 * 2, scale: 2.58, factor: 0.87 };
-    const baseCompressionFactor =
-      shopifyReference.factor *
-      (shopifyReference.scale / this.SCALE) *
-      (shopifyReference.width / this.OFFSCREEN_WIDTH);
-    const scaleRatioX = this.baselineQuadScale.x / quadScale.x;
-    const scaleRatioY = this.baselineQuadScale.y / quadScale.y;
-
+    // Simplified mouse transformation - direct mapping without complex compression
+    // The mouse is already in normalized device coords (-1 to 1)
+    // We just need to account for the quad's scale
     const transformedMouse = new THREE.Vector2(
-      this.mouse.x * baseCompressionFactor * scaleRatioX,
-      (this.mouse.y - quadPos.y) * baseCompressionFactor * scaleRatioY
+      this.mouse.x / quadScale.x,
+      (this.mouse.y - quadPos.y) / quadScale.y
     );
 
     this.simulationMaterial.uniforms.uMouse.value.copy(transformedMouse);
@@ -1074,8 +1134,8 @@ void main() {
         Transform: (${transformedMouse.x.toFixed(
           3
         )}, ${transformedMouse.y.toFixed(3)})<br>
-        Compression: ${(baseCompressionFactor * scaleRatioX).toFixed(3)}<br>
-        ScaleRatio: ${scaleRatioX.toFixed(3)}
+        QuadScale: (${quadScale.x.toFixed(3)}, ${quadScale.y.toFixed(3)})<br>
+        QuadPos: ${quadPos.y.toFixed(3)}
       `;
     }
 
@@ -1153,16 +1213,28 @@ void main() {
   }
 
   onWindowResize() {
-    // Canvas is resized by threejs-hero.js, just update camera
-    const width = this.canvas.width || this.canvas.clientWidth;
-    const height = this.canvas.height || this.canvas.clientHeight;
+    // Use CSS dimensions (not internal canvas resolution) for consistency with mouse coords
+    const width = this.canvas.clientWidth;
+    const height = this.canvas.clientHeight;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
 
     // Update fullscreen quad scaling
     const aspectRatio = width / height;
-    let scale = Math.min(1200, width) / width;
+
+    // Responsive sizing - desktop working values
+    let maxSize;
+    if (width < 768) {
+      maxSize = 900; // Mobile - TO BE FIXED
+    } else if (width < 1200) {
+      maxSize = 1100; // Small desktop/tablet - WORKING
+    } else if (width < 2000) {
+      maxSize = 1400; // Laptops - WORKING
+    } else {
+      maxSize = 1100; // Large displays - WORKING
+    }
+    let scale = Math.min(maxSize, width) / width;
 
     if (aspectRatio > 1) {
       if (height < 500) scale *= 0.35;
@@ -1174,7 +1246,9 @@ void main() {
       else if (height < 1200) scale *= 0.9;
     }
 
-    const yOffset = aspectRatio > 1 ? 1 - 2 * 0.434 : 1 - 2 * 0.345;
+    // Push text down to account for semi-transparent header
+    const yOffset =
+      aspectRatio > 1 ? 1 - 2 * 0.434 - 0.35 : 1 - 2 * 0.345 - 0.35;
 
     if (this.fullscreenQuad) {
       this.fullscreenQuad.position.y = yOffset;

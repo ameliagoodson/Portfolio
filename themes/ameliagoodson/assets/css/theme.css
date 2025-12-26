@@ -426,12 +426,6 @@ section:not(.hero) {
 }
 
 /* Grid Structure ---------------------------- */
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
 .container {
   display: flex;
   flex-wrap: wrap;
@@ -3267,7 +3261,7 @@ ul.social-icons li {
   width: 100%;
   display: flex;
   color: var(--ag-site-header-text-color);
-  padding: 0.4rem 0;
+  padding: 0.4Irem 0;
   transition-property: background, color, min-height;
   transition: var(--ag-trans-speed-slow) var(--ag-trans-ease);
 }

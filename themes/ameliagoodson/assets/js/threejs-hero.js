@@ -22,8 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
     antialias: true
   });
 
-  // Set pixel ratio for sharp rendering on high-DPI displays
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  // Set pixel ratio - use native on mobile for maximum sharpness
+  const isMobile = window.innerWidth < 768;
+  const pixelRatio = isMobile ? window.devicePixelRatio : Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(pixelRatio);
+
+  console.log('🖥️ Renderer pixel ratio:', {
+    native: window.devicePixelRatio,
+    used: pixelRatio,
+    isMobile
+  });
 
   // Function to resize canvas to fit hero section
   const resizeCanvas = () => {
