@@ -148,17 +148,17 @@ uniform sampler2D uBlurredTexture;
 uniform sampler2D uMatcap;
 uniform float uOpacity;
 uniform float uIntroProgress;
+uniform float uThreshold;
+uniform float uCutoff;
 
 const float matcapRotation = 3.1459;
-const float threshold = 0.36; // Shopify's value - filters out soft blur
-const float cutoff = 0.6; // Shopify's value - keeps only sharp core
 const float strength = 7.0; // Shopify's value - stronger normals
 const float offsetStrength = 0.008;
 
 // Helper function to sample with threshold
 float sampleWithThreshold(vec2 uv) {
   float value = texture2D(uBlurredTexture, uv).r;
-  return value > threshold ? value : 0.0;
+  return value > uThreshold ? value : 0.0;
 }
 
 // Multi-step sampling for smoother normals
@@ -170,7 +170,7 @@ void main() {
   float normalSample = sampleWithThreshold(vUv);
 
   // Skip transparent pixels
-  if (normalSample <= cutoff || uOpacity <= 0.0) {
+  if (normalSample <= uCutoff || uOpacity <= 0.0) {
     discard;
     return;
   }
@@ -657,9 +657,9 @@ void main() {
   async init() {
     console.log("🎨 Initializing Shopify Direct Scene...");
 
-    // Initialize parameters - desktop working values, mobile needs investigation
+    // Initialize parameters - responsive for mobile vs desktop
     const screenWidth = this.canvas.clientWidth;
-    const isMobile = screenWidth < 768;
+    const isMobile = screenWidth < 900; // Extended for larger phones
 
     this.params = {
       pushStrength: 150,
@@ -670,7 +670,7 @@ void main() {
       threshold: 0.36,
       cutoff: 0.6,
       strength: 7.0,
-      pointSize: 20.0, // Keep desktop working value for now
+      pointSize: isMobile ? 12.0 : 20.0, // Increased from 5.0 to 12.0 for thicker mobile text
     };
 
     console.log('🎨 Params:', { pointSize: this.params.pointSize, isMobile, screenWidth });
@@ -682,7 +682,7 @@ void main() {
     const themeUrl = window.agtheme_config?.themeUrl || "";
 
     // SWAP YOUR "FONT" TEXTURE HERE:
-    const POSITION_TEXTURE = "hero-text-11-southwave.png"; // Back to your original
+    const POSITION_TEXTURE = "horizons.png"; // Using Shopify's PNG to minimize variables
     const CITYSCAPE_TEXTURE = "cityscape_06-edited-compressed.jpg"; // Cyberpunk background
 
     const [positionTexture, matcapTexture, cityscapeTexture] =
@@ -832,9 +832,26 @@ void main() {
     this.offscreenPoints.scale.set(this.SCALE, this.SCALE, 1);
     this.offscreenScene.add(this.offscreenPoints);
 
-    // Setup composer with blur - use offscreen buffer size directly
+    // Setup composer with blur - scale based on pixel ratio like Shopify
     this.composer = new EffectComposer(this.renderer);
-    this.composer.setSize(this.OFFSCREEN_WIDTH, this.OFFSCREEN_HEIGHT);
+
+    // Calculate composer size: scale down on high DPI devices (Shopify's approach)
+    // Use NATIVE devicePixelRatio, not renderer's capped value
+    // This prevents blur from being too aggressive on mobile
+    const nativePixelRatio = window.devicePixelRatio;
+    const composerScale = 2 / Math.max(0.5, nativePixelRatio);
+    const composerWidth = this.OFFSCREEN_WIDTH * composerScale;
+    const composerHeight = this.OFFSCREEN_HEIGHT * composerScale;
+
+    console.log('📊 Composer size calculation:', {
+      nativePixelRatio,
+      rendererPixelRatio: this.renderer.getPixelRatio(),
+      composerScale,
+      offscreenBuffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
+      composerSize: `${Math.round(composerWidth)}x${Math.round(composerHeight)}`
+    });
+
+    this.composer.setSize(composerWidth, composerHeight);
     this.composer.addPass(
       new RenderPass(this.offscreenScene, this.offscreenCamera)
     );
@@ -843,11 +860,11 @@ void main() {
     const screenWidth = this.canvas.clientWidth;
     let blurKernels, blurResolution;
 
-    if (screenWidth < 768) {
-      blurKernels = [0, 1, 2, 3]; // 4 passes - Shopify's setting
+    if (screenWidth < 900) {
+      blurKernels = [0, 1, 2, 3]; // 4 passes - Shopify's setting for mobile
       blurResolution = 0.25;
     } else if (screenWidth < 1200) {
-      blurKernels = [0, 1, 2, 3]; // 4 passes
+      blurKernels = [0, 1, 2, 3]; // 4 passes - tablet
       blurResolution = 0.35;
     } else if (screenWidth < 2000) {
       blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - laptop quality
@@ -1046,17 +1063,30 @@ void main() {
     }
 
     // Final material using blurred texture
+    // Lower threshold/cutoff for mobile to fill in the chrome effect properly
+    const screenWidth = this.canvas.clientWidth;
+    const isMobile = screenWidth < 900;
+
     this.finalMaterial = new THREE.ShaderMaterial({
       uniforms: {
         uBlurredTexture: { value: null },
         uOpacity: { value: 1 },
         uMatcap: { value: matcapTexture },
         uIntroProgress: { value: 1.5 },
+        uThreshold: { value: isMobile ? 0.2 : 0.36 }, // Lower for mobile to include more blur
+        uCutoff: { value: isMobile ? 0.3 : 0.6 }, // Lower for mobile to fill center
       },
       vertexShader: finalVertexShader,
       fragmentShader: finalFragmentShader,
       depthTest: false,
       transparent: true,
+    });
+
+    console.log('🎨 Shader thresholds:', {
+      threshold: this.finalMaterial.uniforms.uThreshold.value,
+      cutoff: this.finalMaterial.uniforms.uCutoff.value,
+      isMobile,
+      screenWidth
     });
 
     // Create fullscreen quad
@@ -1071,10 +1101,10 @@ void main() {
 
     // Responsive sizing - desktop working values
     let maxSize;
-    if (canvasWidth < 768) {
-      maxSize = 900; // Mobile - TO BE FIXED
+    if (canvasWidth < 900) {
+      maxSize = 900; // Mobile (extended to include larger phones)
     } else if (canvasWidth < 1200) {
-      maxSize = 1100; // Small desktop/tablet - WORKING
+      maxSize = 1100; // Tablet - WORKING
     } else if (canvasWidth < 2000) {
       maxSize = 1400; // Laptops - WORKING
     } else {

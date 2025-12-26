@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Set pixel ratio - use native on mobile for maximum sharpness
-  const isMobile = window.innerWidth < 768;
+  const isMobile = window.innerWidth < 900;
   const pixelRatio = isMobile ? window.devicePixelRatio : Math.min(window.devicePixelRatio, 2);
   renderer.setPixelRatio(pixelRatio);
 
