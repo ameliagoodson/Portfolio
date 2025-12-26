@@ -311,9 +311,9 @@ class ShopifyDirectScene {
     this.GRID_WIDTH = 256;
     this.GRID_HEIGHT = 128;
 
-    console.log('🎨 Offscreen buffer (matched to source):', {
+    console.log("🎨 Offscreen buffer (matched to source):", {
       buffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
-      scale: this.SCALE
+      scale: this.SCALE,
     });
 
     // OPTION 2: Balanced - Shopify's dimensions, 32k particles (~3.1M pixels)
@@ -670,10 +670,14 @@ void main() {
       threshold: 0.36,
       cutoff: 0.6,
       strength: 7.0,
-      pointSize: isMobile ? 12.0 : 20.0, // Increased from 5.0 to 12.0 for thicker mobile text
+      pointSize: isMobile ? 15.0 : 20.0, // Start with reasonable mobile value
     };
 
-    console.log('🎨 Params:', { pointSize: this.params.pointSize, isMobile, screenWidth });
+    console.log("🎨 Params:", {
+      pointSize: this.params.pointSize,
+      isMobile,
+      screenWidth,
+    });
 
     // Load textures
     const loader = new THREE.TextureLoader();
@@ -835,20 +839,19 @@ void main() {
     // Setup composer with blur - scale based on pixel ratio like Shopify
     this.composer = new EffectComposer(this.renderer);
 
-    // Calculate composer size: scale down on high DPI devices (Shopify's approach)
-    // Use NATIVE devicePixelRatio, not renderer's capped value
-    // This prevents blur from being too aggressive on mobile
-    const nativePixelRatio = window.devicePixelRatio;
-    const composerScale = 2 / Math.max(0.5, nativePixelRatio);
-    const composerWidth = this.OFFSCREEN_WIDTH * composerScale;
-    const composerHeight = this.OFFSCREEN_HEIGHT * composerScale;
+    // Use full offscreen buffer size for blur (no DPI scaling)
+    // DPI scaling made blur spread too much on mobile, causing letters to blob together
+    const composerWidth = this.OFFSCREEN_WIDTH;
+    const composerHeight = this.OFFSCREEN_HEIGHT;
 
-    console.log('📊 Composer size calculation:', {
-      nativePixelRatio,
+    console.log("📊 Composer size calculation:", {
+      nativePixelRatio: window.devicePixelRatio,
       rendererPixelRatio: this.renderer.getPixelRatio(),
-      composerScale,
       offscreenBuffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
-      composerSize: `${Math.round(composerWidth)}x${Math.round(composerHeight)}`
+      composerSize: `${Math.round(composerWidth)}x${Math.round(
+        composerHeight
+      )}`,
+      note: "Using full buffer size (no scaling)"
     });
 
     this.composer.setSize(composerWidth, composerHeight);
@@ -861,11 +864,11 @@ void main() {
     let blurKernels, blurResolution;
 
     if (screenWidth < 900) {
-      blurKernels = [0, 1, 2, 3]; // 4 passes - Shopify's setting for mobile
-      blurResolution = 0.25;
+      blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - middle ground for mobile
+      blurResolution = 0.35; // Middle ground between weak and strong
     } else if (screenWidth < 1200) {
-      blurKernels = [0, 1, 2, 3]; // 4 passes - tablet
-      blurResolution = 0.35;
+      blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - tablet
+      blurResolution = 0.4;
     } else if (screenWidth < 2000) {
       blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - laptop quality
       blurResolution = 0.4;
@@ -874,7 +877,11 @@ void main() {
       blurResolution = 0.5;
     }
 
-    console.log('🌀 Blur config:', { passes: blurKernels.length, resolution: blurResolution, screenWidth });
+    console.log("🌀 Blur config:", {
+      passes: blurKernels.length,
+      resolution: blurResolution,
+      screenWidth,
+    });
 
     this.blurPass = new KawaseBlurPass({
       renderer: this.renderer,
@@ -1073,8 +1080,8 @@ void main() {
         uOpacity: { value: 1 },
         uMatcap: { value: matcapTexture },
         uIntroProgress: { value: 1.5 },
-        uThreshold: { value: isMobile ? 0.2 : 0.36 }, // Lower for mobile to include more blur
-        uCutoff: { value: isMobile ? 0.3 : 0.6 }, // Lower for mobile to fill center
+        uThreshold: { value: 0.36 }, // Use desktop's proven values
+        uCutoff: { value: 0.6 }, // Use desktop's proven values
       },
       vertexShader: finalVertexShader,
       fragmentShader: finalFragmentShader,
@@ -1082,11 +1089,11 @@ void main() {
       transparent: true,
     });
 
-    console.log('🎨 Shader thresholds:', {
+    console.log("🎨 Shader thresholds:", {
       threshold: this.finalMaterial.uniforms.uThreshold.value,
       cutoff: this.finalMaterial.uniforms.uCutoff.value,
       isMobile,
-      screenWidth
+      screenWidth,
     });
 
     // Create fullscreen quad
