@@ -307,7 +307,7 @@ class ShopifyDirectScene {
     // Use Shopify's EXACT buffer dimensions
     this.OFFSCREEN_WIDTH = 1340 * 2; // 2680 - Shopify's exact size
     this.OFFSCREEN_HEIGHT = 584 * 2; // 1168 - Shopify's exact size
-    this.SCALE = 2;
+    this.SCALE = 2.58; // Shopify's exact SCALE value
     this.GRID_WIDTH = 256; // Shopify's particle count
     this.GRID_HEIGHT = 128;
 
