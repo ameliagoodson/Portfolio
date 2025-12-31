@@ -337,9 +337,9 @@ class ShopifyDirectScene {
 
     this.scene = new THREE.Scene();
 
-    // Use CSS dimensions (not internal canvas resolution) for consistency with mouse coords
-    const canvasWidth = this.canvas.clientWidth;
-    const canvasHeight = this.canvas.clientHeight;
+    // Use window dimensions like the working pure JS version
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
 
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -382,10 +382,9 @@ class ShopifyDirectScene {
 
     this.lastMouse.copy(this.mouse);
 
-    // Normalized device coordinates (-1 to 1) relative to canvas
-    const rect = this.canvas.getBoundingClientRect();
-    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    // Normalized device coordinates (-1 to 1) using window dimensions like working version
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     const deltaX = this.mouse.x - this.lastMouse.x;
     const deltaY = this.mouse.y - this.lastMouse.y;
@@ -658,9 +657,9 @@ void main() {
   async init() {
     console.log("🎨 Initializing Shopify Direct Scene...");
 
-    // Initialize parameters - responsive for mobile vs desktop
-    const screenWidth = this.canvas.clientWidth;
-    const isMobile = screenWidth < 900; // Extended for larger phones
+    // Initialize parameters - use window dimensions like working version
+    const screenWidth = window.innerWidth;
+    const isMobile = screenWidth < 900;
 
     this.params = {
       pushStrength: 150,
@@ -840,50 +839,21 @@ void main() {
     // Setup composer with blur - scale based on pixel ratio like Shopify
     this.composer = new EffectComposer(this.renderer);
 
-    // Scale composer based on pixel ratio (Shopify's approach)
-    // Higher DPI = smaller blur buffer = sharper result
-    const nativePixelRatio = window.devicePixelRatio;
-    const composerScale = 2 / Math.max(0.5, nativePixelRatio);
-    const composerWidth = this.OFFSCREEN_WIDTH * composerScale;
-    const composerHeight = this.OFFSCREEN_HEIGHT * composerScale;
-
-    console.log("📊 Composer size calculation:", {
-      nativePixelRatio,
-      rendererPixelRatio: this.renderer.getPixelRatio(),
-      composerScale,
-      offscreenBuffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
-      composerSize: `${Math.round(composerWidth)}x${Math.round(
-        composerHeight
-      )}`,
-    });
-
-    this.composer.setSize(composerWidth, composerHeight);
+    // Use offscreen dimensions directly - no pixel ratio scaling
+    // This matches the working pure JS version
+    this.composer.setSize(this.OFFSCREEN_WIDTH, this.OFFSCREEN_HEIGHT);
     this.composer.addPass(
       new RenderPass(this.offscreenScene, this.offscreenCamera)
     );
 
-    // Blur configuration - responsive for desktop quality
-    const screenWidth = this.canvas.clientWidth;
-    let blurKernels, blurResolution;
+    // Blur configuration - match working pure JS version
+    // Universal settings for all devices
+    const blurKernels = [0, 1, 2, 3, 4, 5, 6]; // 7 passes
+    const blurResolution = 0.5; // High quality
 
-    if (screenWidth < 900) {
-      blurKernels = [0, 1, 2, 3]; // 4 passes - Shopify's exact setting
-      blurResolution = 0.25; // Shopify's exact setting
-    } else if (screenWidth < 1200) {
-      blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - tablet
-      blurResolution = 0.4;
-    } else if (screenWidth < 2000) {
-      blurKernels = [0, 1, 2, 3, 4, 5]; // 6 passes - laptop quality
-      blurResolution = 0.4;
-    } else {
-      blurKernels = [0, 1, 2, 3, 4, 5, 6, 7]; // 8 passes - desktop quality
-      blurResolution = 0.5;
-    }
-
-    console.log("🌀 Blur config:", {
+    console.log("🌀 Blur config (working version):", {
       passes: blurKernels.length,
       resolution: blurResolution,
-      screenWidth,
     });
 
     console.log('🔧 Creating blur pass with:', { blurKernels, blurResolution });
@@ -1082,10 +1052,7 @@ void main() {
       );
     }
 
-    // Final material using blurred texture
-    // Lower threshold/cutoff for mobile to fill in the chrome effect properly
-    const screenWidth = this.canvas.clientWidth;
-    const isMobile = screenWidth < 900;
+    // Final material using blurred texture - use window dimensions like working version
 
     this.finalMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -1102,11 +1069,9 @@ void main() {
       transparent: true,
     });
 
-    console.log("🎨 Shader thresholds:", {
+    console.log("🎨 Shader thresholds (universal):", {
       threshold: this.finalMaterial.uniforms.uThreshold.value,
       cutoff: this.finalMaterial.uniforms.uCutoff.value,
-      isMobile,
-      screenWidth,
     });
 
     // Create fullscreen quad
@@ -1114,28 +1079,13 @@ void main() {
     const fsQuadGeometry = new THREE.PlaneGeometry(2, planeHeight);
     this.fullscreenQuad = new THREE.Mesh(fsQuadGeometry, this.finalMaterial);
 
-    // Scale and position using CSS dimensions (consistent with mouse coords)
-    const canvasWidth = this.canvas.clientWidth;
-    const canvasHeight = this.canvas.clientHeight;
+    // Scale and position using window dimensions like working version
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
     const aspectRatio = canvasWidth / canvasHeight;
 
-    // Responsive sizing - desktop working values
-    let maxSize;
-    let scale;
-
-    if (canvasWidth < 900) {
-      // Mobile: compensate for removing this.SCALE multiplication
-      scale = 2.7; // Fine-tuning to match Shopify's exact size
-    } else if (canvasWidth < 1200) {
-      maxSize = 1100; // Tablet - WORKING
-      scale = (Math.min(maxSize, canvasWidth) / canvasWidth) * this.SCALE;
-    } else if (canvasWidth < 2000) {
-      maxSize = 1400; // Laptops - WORKING
-      scale = (Math.min(maxSize, canvasWidth) / canvasWidth) * this.SCALE;
-    } else {
-      maxSize = 1100; // Large displays - WORKING
-      scale = (Math.min(maxSize, canvasWidth) / canvasWidth) * this.SCALE;
-    }
+    // Shopify's universal scale formula - from working version
+    let scale = Math.min(1200, canvasWidth) / canvasWidth;
     const initialScale = scale;
 
     if (aspectRatio > 1) {
@@ -1148,8 +1098,7 @@ void main() {
       else if (canvasHeight < 1200) scale *= 0.9;
     }
 
-    console.log('📏 Text scaling:', {
-      maxSize,
+    console.log('📏 Text scaling (working version):', {
       canvasWidth,
       canvasHeight,
       aspectRatio: aspectRatio.toFixed(2),
@@ -1165,17 +1114,18 @@ void main() {
 
     this.fullscreenQuad.position.y = yOffset;
 
-    // Don't multiply by this.SCALE - that's for particle rendering, not final display
+    // Multiply by this.SCALE like the working version
     this.fullscreenQuad.scale.set(
-      scale,
-      scale * (canvasWidth / canvasHeight),
+      scale * this.SCALE,
+      scale * this.SCALE * (canvasWidth / canvasHeight),
       1
     );
 
     console.log('🎯 ACTUAL mesh scale:', {
       scaleValue: scale,
-      finalScaleX: scale,
-      finalScaleY: scale * (canvasWidth / canvasHeight),
+      SCALE: this.SCALE,
+      finalScaleX: scale * this.SCALE,
+      finalScaleY: scale * this.SCALE * (canvasWidth / canvasHeight),
       meshScale: this.fullscreenQuad.scale
     });
 
@@ -1288,9 +1238,9 @@ void main() {
   }
 
   onWindowResize() {
-    // Use CSS dimensions (not internal canvas resolution) for consistency with mouse coords
-    const width = this.canvas.clientWidth;
-    const height = this.canvas.clientHeight;
+    // Use window dimensions like working version
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();

@@ -33,10 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
     capped: pixelRatio < window.devicePixelRatio
   });
 
-  // Function to resize canvas to fit hero section
+  // Function to resize canvas to full window (like working version)
   const resizeCanvas = () => {
-    const rect = heroSection.getBoundingClientRect();
-    renderer.setSize(rect.width, rect.height);
+    renderer.setSize(window.innerWidth, window.innerHeight);
   };
 
   // Set initial size
