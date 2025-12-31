@@ -304,16 +304,17 @@ class ShopifyDirectScene {
     this.canvas = canvas;
 
     // === CONFIGURATION OPTIONS ===
-    // Use buffer matched to our 1600x700 source PNG
-    this.OFFSCREEN_WIDTH = 1600 * 1.5; // 2400 - proportional to source
-    this.OFFSCREEN_HEIGHT = 700 * 1.5; // 1050 - proportional to source
+    // Use Shopify's EXACT buffer dimensions
+    this.OFFSCREEN_WIDTH = 1340 * 2; // 2680 - Shopify's exact size
+    this.OFFSCREEN_HEIGHT = 584 * 2; // 1168 - Shopify's exact size
     this.SCALE = 2;
-    this.GRID_WIDTH = 256;
+    this.GRID_WIDTH = 256; // Shopify's particle count
     this.GRID_HEIGHT = 128;
 
-    console.log("🎨 Offscreen buffer (matched to source):", {
+    console.log("🎨 Offscreen buffer (Shopify's exact settings):", {
       buffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
       scale: this.SCALE,
+      particles: `${this.GRID_WIDTH}x${this.GRID_HEIGHT} = ${this.GRID_WIDTH * this.GRID_HEIGHT}`,
     });
 
     // OPTION 2: Balanced - Shopify's dimensions, 32k particles (~3.1M pixels)
@@ -670,7 +671,7 @@ void main() {
       threshold: 0.36,
       cutoff: 0.6,
       strength: 7.0,
-      pointSize: 5.0, // Shopify's value - same for all devices
+      pointSize: 5.0, // Shopify's exact value
     };
 
     console.log("🎨 Params:", {
@@ -686,7 +687,7 @@ void main() {
     const themeUrl = window.agtheme_config?.themeUrl || "";
 
     // SWAP YOUR "FONT" TEXTURE HERE:
-    const POSITION_TEXTURE = "horizons.png"; // Using Shopify's PNG to minimize variables
+    const POSITION_TEXTURE = "horizons.png"; // Shopify's PNG for comparison
     const CITYSCAPE_TEXTURE = "cityscape_06-edited-compressed.jpg"; // Cyberpunk background
 
     const [positionTexture, matcapTexture, cityscapeTexture] =
@@ -851,7 +852,9 @@ void main() {
       rendererPixelRatio: this.renderer.getPixelRatio(),
       composerScale,
       offscreenBuffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
-      composerSize: `${Math.round(composerWidth)}x${Math.round(composerHeight)}`,
+      composerSize: `${Math.round(composerWidth)}x${Math.round(
+        composerHeight
+      )}`,
     });
 
     this.composer.setSize(composerWidth, composerHeight);
@@ -883,11 +886,21 @@ void main() {
       screenWidth,
     });
 
+    console.log('🔧 Creating blur pass with:', { blurKernels, blurResolution });
+
     this.blurPass = new KawaseBlurPass({
       renderer: this.renderer,
       kernels: blurKernels,
       resolutionScale: blurResolution,
     });
+
+    console.log('🔧 Blur pass created:', {
+      passExists: !!this.blurPass,
+      passType: this.blurPass?.constructor?.name,
+      composerExists: !!this.composer,
+      composerType: this.composer?.constructor?.name
+    });
+
     this.composer.addPass(this.blurPass);
   }
 
@@ -1080,8 +1093,8 @@ void main() {
         uOpacity: { value: 1 },
         uMatcap: { value: matcapTexture },
         uIntroProgress: { value: 1.5 },
-        uThreshold: { value: 0.36 }, // Use desktop's proven values
-        uCutoff: { value: 0.6 }, // Use desktop's proven values
+        uThreshold: { value: 0.36 }, // Shopify's value - filters weak blur
+        uCutoff: { value: 0.6 }, // Shopify's exact value
       },
       vertexShader: finalVertexShader,
       fragmentShader: finalFragmentShader,
@@ -1108,16 +1121,22 @@ void main() {
 
     // Responsive sizing - desktop working values
     let maxSize;
+    let scale;
+
     if (canvasWidth < 900) {
-      maxSize = 650; // Mobile - smaller to increase particle density (reduce mesh)
+      // Mobile: compensate for removing this.SCALE multiplication
+      scale = 2.7; // Fine-tuning to match Shopify's exact size
     } else if (canvasWidth < 1200) {
       maxSize = 1100; // Tablet - WORKING
+      scale = (Math.min(maxSize, canvasWidth) / canvasWidth) * this.SCALE;
     } else if (canvasWidth < 2000) {
       maxSize = 1400; // Laptops - WORKING
+      scale = (Math.min(maxSize, canvasWidth) / canvasWidth) * this.SCALE;
     } else {
       maxSize = 1100; // Large displays - WORKING
+      scale = (Math.min(maxSize, canvasWidth) / canvasWidth) * this.SCALE;
     }
-    let scale = Math.min(maxSize, canvasWidth) / canvasWidth;
+    const initialScale = scale;
 
     if (aspectRatio > 1) {
       if (canvasHeight < 500) scale *= 0.35;
@@ -1129,17 +1148,36 @@ void main() {
       else if (canvasHeight < 1200) scale *= 0.9;
     }
 
+    console.log('📏 Text scaling:', {
+      maxSize,
+      canvasWidth,
+      canvasHeight,
+      aspectRatio: aspectRatio.toFixed(2),
+      initialScale: initialScale.toFixed(3),
+      finalScale: scale.toFixed(3),
+      scaledByAspect: initialScale !== scale
+    });
+
     // Push text down to account for semi-transparent header
     // Lower values = further down the screen
     const yOffset =
       aspectRatio > 1 ? 1 - 2 * 0.434 - 0.35 : 1 - 2 * 0.345 - 0.35;
 
     this.fullscreenQuad.position.y = yOffset;
+
+    // Don't multiply by this.SCALE - that's for particle rendering, not final display
     this.fullscreenQuad.scale.set(
-      scale * this.SCALE,
-      scale * this.SCALE * (canvasWidth / canvasHeight),
+      scale,
+      scale * (canvasWidth / canvasHeight),
       1
     );
+
+    console.log('🎯 ACTUAL mesh scale:', {
+      scaleValue: scale,
+      finalScaleX: scale,
+      finalScaleY: scale * (canvasWidth / canvasHeight),
+      meshScale: this.fullscreenQuad.scale
+    });
 
     this.scene.add(this.fullscreenQuad);
   }
