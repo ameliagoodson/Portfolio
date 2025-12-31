@@ -360,6 +360,10 @@ class ShopifyDirectScene {
     this.mouseMoveHandler = this.handleMouseMove.bind(this);
     window.addEventListener("mousemove", this.mouseMoveHandler);
 
+    this.touchMoveHandler = this.handleTouchMove.bind(this);
+    window.addEventListener("touchmove", this.touchMoveHandler, { passive: true });
+    window.addEventListener("touchstart", this.touchMoveHandler, { passive: true });
+
     this.resizeHandler = this.onWindowResize.bind(this);
     window.addEventListener("resize", this.resizeHandler);
 
@@ -382,9 +386,12 @@ class ShopifyDirectScene {
 
     this.lastMouse.copy(this.mouse);
 
-    // Normalized device coordinates (-1 to 1) using window dimensions like working version
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // Get canvas bounding rect to handle positioning and overflow correctly
+    const rect = this.canvas.getBoundingClientRect();
+
+    // Normalized device coordinates (-1 to 1) relative to canvas position
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
 
     const deltaX = this.mouse.x - this.lastMouse.x;
     const deltaY = this.mouse.y - this.lastMouse.y;
@@ -412,6 +419,17 @@ class ShopifyDirectScene {
     }
 
     this.lastMoveTime = now;
+  }
+
+  handleTouchMove(event) {
+    if (event.touches && event.touches.length > 0) {
+      const touch = event.touches[0];
+      const fakeEvent = {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      };
+      this.handleMouseMove(fakeEvent);
+    }
   }
 
   createControlPanel() {
@@ -1295,6 +1313,11 @@ void main() {
 
     if (this.mouseMoveHandler) {
       window.removeEventListener("mousemove", this.mouseMoveHandler);
+    }
+
+    if (this.touchMoveHandler) {
+      window.removeEventListener("touchmove", this.touchMoveHandler);
+      window.removeEventListener("touchstart", this.touchMoveHandler);
     }
 
     if (this.resizeHandler) {

@@ -35,7 +35,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to resize canvas to full window (like working version)
   const resizeCanvas = () => {
+    console.log('📐 BEFORE setSize:', {
+      'window.innerWidth': window.innerWidth,
+      'window.innerHeight': window.innerHeight,
+      'canvas.width': canvas.width,
+      'canvas.height': canvas.height,
+      'canvas.style.width': canvas.style.width,
+      'canvas.style.height': canvas.style.height
+    });
+
     renderer.setSize(window.innerWidth, window.innerHeight);
+
+    console.log('📐 AFTER setSize:', {
+      'canvas.width': canvas.width,
+      'canvas.height': canvas.height,
+      'canvas.style.width': canvas.style.width,
+      'canvas.style.height': canvas.style.height,
+      'EXPECTED canvas.width': window.innerWidth * pixelRatio,
+      'EXPECTED canvas.height': window.innerHeight * pixelRatio
+    });
   };
 
   // Set initial size
@@ -46,6 +64,16 @@ document.addEventListener("DOMContentLoaded", () => {
   new ChromeTextScene(renderer, canvas);
 
   console.log("✅ Chrome Text Scene initialized");
+
+  // Additional mobile debugging
+  console.log('🔍 Mobile debug:', {
+    userAgent: navigator.userAgent,
+    devicePixelRatio: window.devicePixelRatio,
+    usedPixelRatio: pixelRatio,
+    canvasElement: canvas,
+    canvasParent: canvas.parentElement,
+    canvasComputedStyle: window.getComputedStyle(canvas)
+  });
 
   // Handle window resize
   window.addEventListener("resize", resizeCanvas);
