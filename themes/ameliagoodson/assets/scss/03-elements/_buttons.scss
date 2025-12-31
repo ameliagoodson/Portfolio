@@ -127,7 +127,7 @@ input[type="submit"],
   height: 5rem;
   width: 5rem;
   border-radius: 50%;
-  z-index: 2;
+  z-index: 1000;
   margin: 0;
 
   &:focus,
