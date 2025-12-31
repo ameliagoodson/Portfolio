@@ -3540,6 +3540,10 @@ a.sub-menu-toggle.active svg {
     display: block;
   }
 }
+body {
+  overflow-x: hidden;
+}
+
 body.menu-open {
   overflow: hidden;
 }
@@ -3560,18 +3564,13 @@ body.menu-open {
 }
 .mobile-header .mobile-menu-container {
   position: fixed;
-  transform: translateX(100%);
-  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
   background-color: var(--ag-background-color);
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   padding: 1rem;
-  width: 100%;
-  border-radius: 1rem;
-  overflow: hidden;
-  z-index: 1;
+  z-index: 999;
   /* Initial state: hidden off-screen */
   opacity: 0;
   transform: translateX(100%);
