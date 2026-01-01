@@ -906,9 +906,10 @@ void main() {
   setupFinalScene(matcapTexture, cityscapeTexture) {
     // Add cyberpunk cityscape background
     if (cityscapeTexture) {
-      // Get canvas aspect ratio
-      const canvasWidth = this.canvas.width || this.canvas.clientWidth;
-      const canvasHeight = this.canvas.height || this.canvas.clientHeight;
+      // Use ACTUAL viewport dimensions for background (not render buffer)
+      // The render buffer may be wider than viewport on portrait mobile for text quality
+      const canvasWidth = window.innerWidth;
+      const canvasHeight = window.innerHeight;
       const canvasAspect = canvasWidth / canvasHeight;
 
       // Calculate visible area at background plane position
@@ -1070,15 +1071,40 @@ void main() {
 
       this.backgroundPlane = new THREE.Mesh(bgGeometry, bgMaterial);
       this.backgroundPlane.position.z = -2; // Behind chrome text
+
+      // Compensate for aspect ratio distortion on portrait mobile
+      // The render buffer is wider than the viewport, so the CSS squishes horizontally
+      // We need to stretch the background to counteract this squish
+      const renderDimensions = this.getViewportDimensions();
+      const renderAspect = renderDimensions.width / renderDimensions.height;
+      const viewportAspect = canvasWidth / canvasHeight;
+
+      if (renderAspect > viewportAspect) {
+        // Render buffer is wider than viewport - CSS will squish horizontally
+        // Stretch background horizontally to compensate
+        const stretchFactor = renderAspect / viewportAspect;
+        this.backgroundPlane.scale.x = stretchFactor;
+        console.log("🖼️ Background aspect compensation:", {
+          renderAspect: renderAspect.toFixed(3),
+          viewportAspect: viewportAspect.toFixed(3),
+          stretchFactor: stretchFactor.toFixed(3),
+        });
+      }
+
       this.scene.add(this.backgroundPlane);
 
-      console.log(
-        `Background: ${bgWidth.toFixed(2)}x${bgHeight.toFixed(
-          2
-        )} units, texture aspect: ${textureAspect.toFixed(
-          2
-        )}, canvas aspect: ${canvasAspect.toFixed(2)}`
-      );
+      console.log("🖼️ Background sizing:", {
+        actualViewport: `${canvasWidth}x${canvasHeight}`,
+        canvasAspect: canvasAspect.toFixed(3),
+        textureAspect: textureAspect.toFixed(3),
+        textureDimensions: `${cityscapeTexture.image.width}x${cityscapeTexture.image.height}`,
+        visibleArea: `${visibleWidth.toFixed(2)}x${visibleHeight.toFixed(2)}`,
+        bgSize: `${bgWidth.toFixed(2)}x${bgHeight.toFixed(2)}`,
+        branch:
+          canvasAspect > textureAspect
+            ? "wider (fit width)"
+            : "taller (fit height)",
+      });
     }
 
     // Final material using blurred texture - use window dimensions like working version
