@@ -2786,7 +2786,7 @@ label {
   display: block;
   font-size: 1.3rem;
   margin: 0 0 0.5rem 0;
-  color: var(--ag-background-color);
+  color: var(--ag-primary-color);
 }
 @media (min-width: 700px) {
   label {
@@ -2812,7 +2812,7 @@ input,
 textarea {
   background-color: var(--ag-white-color);
   border-color: var(--ag-border-color);
-  color: var(--ag-background-color) !important;
+  color: var(--ag-primary-color) !important;
 }
 
 input[type=text],
@@ -2833,7 +2833,7 @@ textarea {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
-  border-radius: var(--ag-border-radius);
+  border-radius: calc(var(--ag-border-radius) / 2);
   border-style: solid;
   border-width: 0.1rem;
   box-shadow: none;
