@@ -699,7 +699,7 @@ void main() {
       threshold: 0.36,
       cutoff: 0.6,
       strength: 7.0,
-      pointSize: 5.0, // Shopify's exact value
+      pointSize: 20.0, // Shopify's exact value
     };
 
     console.log("🎨 Params:", {
@@ -715,7 +715,7 @@ void main() {
     const themeUrl = window.agtheme_config?.themeUrl || "";
 
     // SWAP YOUR "FONT" TEXTURE HERE:
-    const POSITION_TEXTURE = "horizons.png"; // Shopify's PNG for comparison
+    const POSITION_TEXTURE = "hero-text-11-southwave.png"; // Shopify's PNG for comparison
     const CITYSCAPE_TEXTURE = "cityscape_06-edited-compressed.jpg"; // Cyberpunk background
 
     const [positionTexture, matcapTexture, cityscapeTexture] =
