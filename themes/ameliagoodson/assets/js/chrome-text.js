@@ -302,10 +302,12 @@ class ShopifyDirectScene {
   constructor(renderer, canvas, getViewportDimensions) {
     this.renderer = renderer;
     this.canvas = canvas;
-    this.getViewportDimensions = getViewportDimensions || (() => ({
-      width: window.innerWidth,
-      height: window.innerHeight
-    }));
+    this.getViewportDimensions =
+      getViewportDimensions ||
+      (() => ({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      }));
 
     // === CONFIGURATION OPTIONS ===
     // Use Shopify's EXACT buffer dimensions
@@ -318,7 +320,9 @@ class ShopifyDirectScene {
     console.log("🎨 Offscreen buffer (Shopify's exact settings):", {
       buffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
       scale: this.SCALE,
-      particles: `${this.GRID_WIDTH}x${this.GRID_HEIGHT} = ${this.GRID_WIDTH * this.GRID_HEIGHT}`,
+      particles: `${this.GRID_WIDTH}x${this.GRID_HEIGHT} = ${
+        this.GRID_WIDTH * this.GRID_HEIGHT
+      }`,
     });
 
     // OPTION 2: Balanced - Shopify's dimensions, 32k particles (~3.1M pixels)
@@ -337,7 +341,13 @@ class ShopifyDirectScene {
 
     this.PARTICLE_COUNT = this.GRID_WIDTH * this.GRID_HEIGHT;
 
+    // Original mobile detection (exactly as before)
     this.isTouchDevice = "ontouchstart" in window;
+
+    console.log("📱 Device detection:", {
+      isTouchDevice: this.isTouchDevice,
+      screenWidth: window.innerWidth,
+    });
 
     this.scene = new THREE.Scene();
 
@@ -346,9 +356,9 @@ class ShopifyDirectScene {
     const canvasWidth = viewport.width;
     const canvasHeight = viewport.height;
 
-    console.log('📐 Scene dimensions:', {
+    console.log("📐 Scene dimensions:", {
       viewport: `${canvasWidth}x${canvasHeight}`,
-      renderBuffer: `${this.renderer.domElement.width}x${this.renderer.domElement.height}`
+      renderBuffer: `${this.renderer.domElement.width}x${this.renderer.domElement.height}`,
     });
 
     this.camera = new THREE.PerspectiveCamera(
@@ -368,22 +378,31 @@ class ShopifyDirectScene {
     this.lastMoveTime = performance.now();
 
     this.mouseMoveHandler = this.handleMouseMove.bind(this);
+    this.touchMoveHandler = this.handleTouchMove.bind(this);
     window.addEventListener("mousemove", this.mouseMoveHandler);
+    window.addEventListener("touchmove", this.touchMoveHandler, {
+      passive: true,
+    });
+    window.addEventListener("touchstart", this.touchMoveHandler, {
+      passive: true,
+    });
 
     this.resizeHandler = this.onWindowResize.bind(this);
     window.addEventListener("resize", this.resizeHandler);
 
-    // Listen for browser zoom changes (Cmd/Ctrl +/-)
-    if (window.visualViewport) {
-      this.visualViewport = window.visualViewport;
-      this.zoomHandler = () => {
-        // Reset baseline when zoom changes
-        this.baselineQuadScale = null;
-      };
-      this.visualViewport.addEventListener("resize", this.zoomHandler);
-    }
-
     this.init();
+  }
+
+  handleTouchMove(event) {
+    // Convert touch event to mouse-like coordinates
+    if (event.touches && event.touches.length > 0) {
+      const touch = event.touches[0];
+      // Create a fake event object with clientX/clientY
+      this.handleMouseMove({
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      });
+    }
   }
 
   handleMouseMove(event) {
@@ -866,7 +885,7 @@ void main() {
       resolution: blurResolution,
     });
 
-    console.log('🔧 Creating blur pass with:', { blurKernels, blurResolution });
+    console.log("🔧 Creating blur pass with:", { blurKernels, blurResolution });
 
     this.blurPass = new KawaseBlurPass({
       renderer: this.renderer,
@@ -874,11 +893,11 @@ void main() {
       resolutionScale: blurResolution,
     });
 
-    console.log('🔧 Blur pass created:', {
+    console.log("🔧 Blur pass created:", {
       passExists: !!this.blurPass,
       passType: this.blurPass?.constructor?.name,
       composerExists: !!this.composer,
-      composerType: this.composer?.constructor?.name
+      composerType: this.composer?.constructor?.name,
     });
 
     this.composer.addPass(this.blurPass);
@@ -1108,13 +1127,13 @@ void main() {
       else if (canvasHeight < 1200) scale *= 0.9;
     }
 
-    console.log('📏 Text scaling (working version):', {
+    console.log("📏 Text scaling (working version):", {
       canvasWidth,
       canvasHeight,
       aspectRatio: aspectRatio.toFixed(2),
       initialScale: initialScale.toFixed(3),
       finalScale: scale.toFixed(3),
-      scaledByAspect: initialScale !== scale
+      scaledByAspect: initialScale !== scale,
     });
 
     // Push text down to account for semi-transparent header
@@ -1131,34 +1150,50 @@ void main() {
       1
     );
 
-    console.log('🎯 ACTUAL mesh scale:', {
+    console.log("🎯 ACTUAL mesh scale:", {
       scaleValue: scale,
       SCALE: this.SCALE,
       finalScaleX: scale * this.SCALE,
       finalScaleY: scale * this.SCALE * (canvasWidth / canvasHeight),
-      meshScale: this.fullscreenQuad.scale
+      meshScale: this.fullscreenQuad.scale,
     });
 
     this.scene.add(this.fullscreenQuad);
   }
 
   updateParticleSimulation(deltaTime) {
-    // The quad is scaled and positioned, so we need to inverse-transform the mouse
     const quadScale = this.fullscreenQuad.scale;
     const quadPos = this.fullscreenQuad.position;
 
-    // Store baseline scale on first run
-    if (!this.baselineQuadScale) {
-      this.baselineQuadScale = { x: quadScale.x, y: quadScale.y };
-    }
+    // Use Shopify's coordinate transformation for BOTH mobile and desktop
+    // Only velocity scaling differs between devices
+    // Shopify: ze = Se.x / (H * i), x = ((-(Se.y + w) / H) * Ce) / (i * (r / o))
 
-    // Simplified mouse transformation - direct mapping without complex compression
-    // The mouse is already in normalized device coords (-1 to 1)
-    // We just need to account for the quad's scale
+    const canvasWidth = window.innerWidth;
+    const canvasHeight = window.innerHeight;
+    const aspectRatio = canvasHeight / canvasWidth; // Ce in Shopify
+    const textureAspect = this.OFFSCREEN_HEIGHT / this.OFFSCREEN_WIDTH; // r/o in Shopify
+
+    // Extract the scale factor (H in Shopify) - quadScale.x = scale * SCALE
+    const scale = quadScale.x / this.SCALE;
+    const yOffset = quadPos.y; // w in Shopify
+
+    // Transform X: ze = Se.x / (H * i)
+    const transformedMouseX = this.mouse.x / (scale * this.SCALE);
+
+    // Transform Y: x = ((-(Se.y + w) / H) * Ce) / (i * (r / o))
+    const transformedMouseY =
+      (((this.mouse.y - yOffset) / scale) * aspectRatio) /
+      (this.SCALE * textureAspect);
+
     const transformedMouse = new THREE.Vector2(
-      this.mouse.x / quadScale.x,
-      (this.mouse.y - quadPos.y) / quadScale.y
+      transformedMouseX,
+      transformedMouseY
     );
+
+    // Velocity scaling differs by device type
+    const xVelocityScale = aspectRatio * 0.5;
+    const yVelocityScale = this.isTouchDevice ? 2.5 : 1.5;
 
     this.simulationMaterial.uniforms.uMouse.value.copy(transformedMouse);
 
@@ -1166,17 +1201,14 @@ void main() {
     if (this.debugReadout) {
       this.debugReadout.innerHTML = `
         Raw: (${this.mouse.x.toFixed(3)}, ${this.mouse.y.toFixed(3)})<br>
-        Transform: (${transformedMouse.x.toFixed(
+        Transform: (${transformedMouseX.toFixed(
           3
-        )}, ${transformedMouse.y.toFixed(3)})<br>
-        QuadScale: (${quadScale.x.toFixed(3)}, ${quadScale.y.toFixed(3)})<br>
-        QuadPos: ${quadPos.y.toFixed(3)}
+        )}, ${transformedMouseY.toFixed(3)})<br>
+        Scale: ${scale.toFixed(3)}, AR: ${aspectRatio.toFixed(3)}<br>
+        Device: ${this.isTouchDevice ? "Touch" : "Desktop"}
       `;
     }
 
-    // Apply Shopify's exact velocity scaling
-    const xVelocityScale = 0.5;
-    const yVelocityScale = this.isTouchDevice ? 2.5 : 1.5;
     this.simulationMaterial.uniforms.uMouseVelocity.value.set(
       this.mouseVelocity.x * xVelocityScale,
       this.mouseVelocity.y * yVelocityScale
@@ -1293,9 +1325,6 @@ void main() {
         scale * this.SCALE * (width / height),
         1
       );
-
-      // Reset baseline scale so compression factor recalculates
-      this.baselineQuadScale = null;
     }
   }
 
@@ -1308,12 +1337,13 @@ void main() {
       window.removeEventListener("mousemove", this.mouseMoveHandler);
     }
 
-    if (this.resizeHandler) {
-      window.removeEventListener("resize", this.resizeHandler);
+    if (this.touchMoveHandler) {
+      window.removeEventListener("touchmove", this.touchMoveHandler);
+      window.removeEventListener("touchstart", this.touchMoveHandler);
     }
 
-    if (this.zoomHandler && this.visualViewport) {
-      this.visualViewport.removeEventListener("resize", this.zoomHandler);
+    if (this.resizeHandler) {
+      window.removeEventListener("resize", this.resizeHandler);
     }
 
     if (this.simulationRT1) this.simulationRT1.dispose();
