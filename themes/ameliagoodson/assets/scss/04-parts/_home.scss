@@ -209,4 +209,15 @@ body .background-image {
   form {
     margin-top: 0;
   }
+
+  .contact-container {
+    padding: 2.4rem;
+
+    .col {
+      padding: 0;
+    }
+  }
+  .contact-info {
+    padding-bottom: 2.4rem;
+  }
 }

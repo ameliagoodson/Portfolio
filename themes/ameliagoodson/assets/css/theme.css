@@ -7000,3 +7000,12 @@ body .background-image {
 #contact form {
   margin-top: 0;
 }
+#contact .contact-container {
+  padding: 2.4rem;
+}
+#contact .contact-container .col {
+  padding: 0;
+}
+#contact .contact-info {
+  padding-bottom: 2.4rem;
+}
