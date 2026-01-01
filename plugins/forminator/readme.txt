@@ -2,8 +2,8 @@
 Contributors: WPMUDEV
 Tags: contact form, custom form, forms, payment form, WordPress form plugin
 Requires at least: 6.4
-Tested up to: 6.8
-Stable tag: 1.48.3
+Tested up to: 6.9
+Stable tag: 1.49.1
 Requires PHP: 7.4
 License: GPL v3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -117,7 +117,7 @@ Protect your forms with built-in antispam tools like reCAPTCHA, hCaptcha, and Cl
 
 ### Cloud and Preset Templates
 
-Jumpstart form creation with free and premium Preset Templates, or save time by reusing your own custom forms across sites using Cloud Templates synced through the HUB.
+Jumpstart form creation with Preset Templates, or save time by reusing your own custom forms across sites using Cloud Templates synced through the HUB.
 
 ### Collect, Track and GDPR Ready
 
@@ -230,6 +230,52 @@ We take plugin security incredibly seriously; if you have a bug or vulnerability
 6. Publish Polls with Real-time Stats
 
 == Changelog ==
+
+= 1.49.2 ( 2025-12-18 ) =
+
+- Fix: Security improvements
+
+
+= 1.49.1 ( 2025-12-12 ) =
+
+- Miscellaneous improvements
+
+
+= 1.49.0 ( 2025-01-12 ) =
+
+- Enhancement: Add Instant Preview
+- Enhancement: Add the ability to insert new fields at any location in the Form Editor
+- Enhancement: Update the Status Bar in the Editor
+- Enhancement: Update the Editor sidebar
+- Enhancement: Update Appearance settings
+- Enhancement: Remove other admin notices in the Editor
+- Enhancement: Show a success notification after creating an Appearance Preset
+- Enhancement: Show free templates without errors when the Hub has issues
+- Enhancement: Include information about using Cloud Templates in the Import and Export modals
+- Enhancement: Remove the file name format from the PDF title
+- Enhancement: Add a survey to collect user feedback
+- Fix: Stripe notice appears in logs when a subscription payment requiring additional steps is submitted
+- Fix: PayPal field throws an error when the amount is greater than 1000 in Japanese Yen
+- Fix: Visibility Conditions missing on the Email Notification tab for Quizzes
+- Fix: Some hidden fields trigger accessibility issues
+- Fix: Export adds a <br> tag when multiple checkbox values are selected
+- Fix: Active submissions count in form stats shows all submission types when clicked
+- Fix: Incomplete submissions appear in the stats graph on the forms listing page
+- Fix: Removing an image in the Upload field doesn't toggle visibility conditions
+- Fix: Notices appear when using Number and Calculation fields in a form
+- Fix: Issue with required Radio fields that have no options
+- Fix: Fatal error when using the {signature-1} placeholder in PDFs
+- Fix: Calculations not showing the slider value when it's not a whole number
+- Fix: Sending multiple options from Checkbox and Select fields to HubSpot
+- Fix: Fatal error on the Add-ons page when the Add-ons list from the Dashboard plugin is not synced due to a network issue
+- Fix: Retention description for the '0' case
+- Fix: Highlighting the parent block when selecting the child element in Appearance settings
+
+
+= 1.48.3 ( 2025-11-20 ) =
+
+- Miscellaneous improvements
+
 
 = 1.48.2 ( 2025-10-15 ) =
 

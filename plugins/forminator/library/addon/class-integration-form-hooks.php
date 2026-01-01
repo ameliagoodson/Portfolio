@@ -347,6 +347,43 @@ abstract class Forminator_Integration_Form_Hooks extends Forminator_Integration_
 	}
 
 	/**
+	 * Check if element_id is Multi option
+	 *
+	 * @since 1.49
+	 *
+	 * @param string $element_id Element Id.
+	 * @param int    $form_id Form Id.
+	 *
+	 * @return bool
+	 */
+	public static function element_is_multi_option( $element_id, $form_id ) {
+		$is_multi_option = false;
+		if ( strpos( $element_id, 'checkbox-' ) !== false ) {
+			$is_multi_option = true;
+		} elseif ( strpos( $element_id, 'select-' ) !== false ) {
+			$field = Forminator_API::get_form_field( $form_id, $element_id );
+			if ( 'multiselect' === $field['value_type'] ) {
+				$is_multi_option = true;
+			}
+		}
+
+		/**
+		 * Filter Multi option flag of element
+		 *
+		 * @since 1.49
+		 *
+		 * @param bool   $is_multi_option Multi option flag.
+		 * @param string $element_id Element Id.
+		 * @param int    $form_id Form Id.
+		 *
+		 * @return bool
+		 */
+		$is_multi_option = apply_filters( 'forminator_addon_element_is_multi_option', $is_multi_option, $element_id, $form_id );
+
+		return $is_multi_option;
+	}
+
+	/**
 	 * Check if element_id is Signature
 	 *
 	 * @param string $element_id Field slug.

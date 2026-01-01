@@ -57,6 +57,12 @@ $nonce = wp_create_nonce( 'forminator_save_import_' . $slug );
 
 	</div>
 
+	<?php
+	if ( 'form' === $slug ) {
+		echo forminator_template( 'common/popup/cloud-templates-notice', array( 'slug' => $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	?>
+
 </div>
 
 <div class="sui-box-footer">

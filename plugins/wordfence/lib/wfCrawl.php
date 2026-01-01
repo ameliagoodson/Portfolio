@@ -22,7 +22,7 @@ class wfCrawl {
 		$table = wfDB::networkTable('wfCrawlers');
 		$db = new wfDB();
 		$IPn = wfUtils::inet_pton($IP);
-		$ipHex = wfDB::binaryValueToSQLHex(wfUtils::inet_pton($IPn));
+		$ipHex = wfDB::binaryValueToSQLHex($IPn);
 		$status = $db->querySingle("select status from $table where IP={$ipHex} and patternSig=UNHEX(MD5('%s')) and lastUpdate > unix_timestamp() - %d", $hostPattern, WORDFENCE_CRAWLER_VERIFY_CACHE_TIME);
 		if($status){
 			if($status == 'verified'){

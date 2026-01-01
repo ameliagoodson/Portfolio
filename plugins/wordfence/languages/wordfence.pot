@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv3.
 msgid ""
 msgstr ""
-"Project-Id-Version: Wordfence Security 8.1.2\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wordfence-zip-7rLpGwBNf\n"
+"Project-Id-Version: Wordfence Security 8.1.4\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wordfence-zip-ZSJgBchaN\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-12T17:53:29+00:00\n"
+"POT-Creation-Date: 2025-12-20T20:40:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: wordfence\n"
@@ -8642,13 +8642,13 @@ msgstr[1] ""
 msgid "less than 1 second"
 msgstr ""
 
-#: lib/wfUtils.php:1740
-#: lib/wfUtils.php:1749
+#: lib/wfUtils.php:1751
+#: lib/wfUtils.php:1760
 msgid "Wordfence error: No encryption key found!"
 msgstr ""
 
 #. translators: Error message.
-#: lib/wfUtils.php:2062
+#: lib/wfUtils.php:2073
 msgid "Call to Wordfence API to resolve IPs failed: %s"
 msgstr ""
 

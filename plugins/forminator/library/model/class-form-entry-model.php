@@ -2436,6 +2436,7 @@ class Forminator_Form_Entry_Model {
 							FROM {$entry_table_name} e
 							WHERE e.form_id = %d
 							AND e.date_created > %s
+							AND e.status = 'active'
 							{$end_date}
 							GROUP BY DATE(e.date_created)
 							ORDER BY e.date_created DESC";
@@ -2471,6 +2472,7 @@ class Forminator_Form_Entry_Model {
 							ON(e.`entry_id` = m.`entry_id`)
 							WHERE e.form_id = %d
 							AND e.date_created > %s
+							AND e.status = 'active'
 							AND m.meta_key = 'skip_form'
 							AND m.meta_value = ''
 							GROUP BY DATE(e.date_created)

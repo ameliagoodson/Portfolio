@@ -133,11 +133,11 @@ class Forminator_Admin_Data {
 			'resetTrackingDataNonce'         => wp_create_nonce( 'forminator_reset_tracking_data' ),
 			'createNonce'                    => wp_create_nonce( 'forminator_create_module' ),
 			'previewNonce'                   => wp_create_nonce( 'forminator_load_module' ),
+			'updateLivePreviewNonce'         => wp_create_nonce( 'forminator_update_live_preview' ),
 			'searchNonce'                    => wp_create_nonce( 'forminator_search_emails' ),
 			'gFontNonce'                     => wp_create_nonce( 'forminator_load_google_fonts' ),
 			'dismissNonce'                   => wp_create_nonce( 'forminator_dismiss_notification' ),
 			'dismissNoticeNonce'             => wp_create_nonce( 'forminator_dismiss_notice' ),
-			'savedChangesDismissed'          => is_int( $id ) && Forminator_Admin::was_notification_dismissed( 'forminator_saved_changes_' . $id ),
 			'formProcessNonce'               => wp_create_nonce( 'forminator_form_request' ),
 			'formExportNonce'                => wp_create_nonce( 'forminator_popup_export_form' ),
 			'pollProcessNonce'               => wp_create_nonce( 'forminator_poll_request' ),
@@ -219,6 +219,8 @@ class Forminator_Admin_Data {
 			'isSiteRegistrationEnabled'      => forminator_is_site_registration_enabled(),
 			'networkAdminUrl'                => network_admin_url(),
 			'isMultisite'                    => is_multisite(),
+			'shareFeedbackNonce'             => wp_create_nonce( 'forminator_share_feedback' ),
+			'feedbackDisabled'               => forminator_feedback_disabled(),
 		);
 	}
 

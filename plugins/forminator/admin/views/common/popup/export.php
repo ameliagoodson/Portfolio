@@ -22,41 +22,27 @@ $text_area_id = uniqid( 'export-text-' );
 
 	<div class="sui-form-field">
 		<textarea class="sui-form-control" readonly="readonly" rows="10" id="<?php echo esc_attr( $text_area_id ); ?>"></textarea>
-		<span class="sui-description"><?php esc_html_e( 'Copy ALL text above, and paste to import dialog.', 'forminator' ); ?></span>
-	</div>
+		<span class="sui-description">
+			<?php esc_html_e( 'Copy ALL text above, and paste it into the import dialog.', 'forminator' ); ?>
 
-	<div
-		role="alert"
-		class="sui-notice sui-notice-blue sui-active"
-		style="display: block; text-align: left;"
-		aria-live="assertive"
-	>
-
-		<div class="sui-notice-content">
-
-			<div class="sui-notice-message">
-
-				<span class="sui-notice-icon sui-icon-info" aria-hidden="true"></span>
-
-				<p>
-					<?php
-					printf(
-					/* Translators: 1. Module slug, 2. Opening <strong> tag 3. Forminator version 4. closing <strong> tag, 5. Module slug */
-						esc_html__( 'You can import this %1$s in Forminator %2$s%3$s%4$s or above. The %5$s may break on a version lower than your install.', 'forminator' ),
-						esc_html( $slug ),
-						'<strong>',
-						esc_html( FORMINATOR_VERSION ),
-						'</strong>',
-						esc_html( $slug )
-					);
-					?>
-				</p>
-
-			</div>
-
+			<br>
+			<?php
+			printf(
+			/* Translators: 1. Opening <strong> tag 2. Forminator version 3. closing <strong> tag */
+				esc_html__( 'Import requires %1$sForminator %2$s%3$s or higher; older versions may not work.', 'forminator' ),
+				'<b>',
+				esc_html( FORMINATOR_VERSION ),
+				'</b>'
+			);
+			?>
+			</span>
 		</div>
 
-	</div>
+	<?php
+	if ( 'form' === $slug ) {
+		echo forminator_template( 'common/popup/cloud-templates-notice', array( 'slug' => $slug ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+	?>
 
 </div>
 

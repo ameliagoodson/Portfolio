@@ -110,6 +110,48 @@ abstract class Forminator_Admin_Page {
 		add_action( 'load-' . $this->page_id, array( $this, 'before_render' ) );
 		add_action( 'load-' . $this->page_id, array( $this, 'trigger_before_render_action' ) );
 		add_filter( 'load-' . $this->page_id, array( $this, 'add_page_hooks' ) );
+
+		if ( $this->is_edit_page() ) {
+			add_filter( 'forminator_data', array( $this, 'add_forminator_data' ) );
+			// Suppress admin notices on edit page.
+			add_action( 'in_admin_header', array( $this, 'suppress_wp_admin_notices' ), PHP_INT_MAX );
+		}
+	}
+
+	/**
+	 * Suppress WP admin notices.
+	 *
+	 * @return void
+	 */
+	public function suppress_wp_admin_notices() {
+		remove_all_actions( 'admin_notices' );
+		remove_all_actions( 'all_admin_notices' );
+		remove_all_actions( 'user_admin_notices' );
+		remove_all_actions( 'network_admin_notices' );
+	}
+
+	/**
+	 * Check if current page is edit page
+	 *
+	 * @return bool
+	 */
+	public function is_edit_page() {
+		global $plugin_page;
+		return ! empty( $plugin_page ) && $this->page_slug === $plugin_page &&
+			in_array( $this->page_slug, array( 'forminator-cform-wizard', 'forminator-poll-wizard', 'forminator-knowledge-wizard', 'forminator-nowrong-wizard' ), true );
+	}
+
+	/**
+	 * Add logo info in Forminator data.
+	 *
+	 * @param array $data Data.
+	 *
+	 * @return array
+	 */
+	public function add_forminator_data( $data ) {
+		$data['statusBarLogoClass'] = $this->get_box_summary_classes();
+
+		return $data;
 	}
 
 	/**
@@ -324,11 +366,15 @@ abstract class Forminator_Admin_Page {
 			if ( $hub_connecting && ! Forminator_Hub_Connector::hub_connector_connected() ) {
 				do_action( 'wpmudev_hub_connector_ui', 'forminator' );
 			} else {
-				$this->render_header();
+				if ( ! $this->is_edit_page() ) {
+					$this->render_header();
+				}
 
 				$this->render_page_content();
 
-				$this->render_footer();
+				if ( ! $this->is_edit_page() ) {
+					$this->render_footer();
+				}
 
 				if ( $hub_connecting && Forminator_Hub_Connector::hub_connector_connected() ) {
 					self::hub_connected_successfully_modal();

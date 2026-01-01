@@ -81,6 +81,7 @@ class Forminator_Mixpanel {
 		include_once $this->mixpanel_dir() . 'class-general.php';
 		include_once $this->mixpanel_dir() . 'class-modules.php';
 		include_once $this->mixpanel_dir() . 'class-notifications.php';
+		include_once $this->mixpanel_dir() . 'class-feedback.php';
 	}
 
 	/**
@@ -93,6 +94,7 @@ class Forminator_Mixpanel {
 		Forminator_Mixpanel_General::init();
 		Forminator_Mixpanel_Modules::init();
 		Forminator_Mixpanel_Notifications::init();
+		Forminator_Mixpanel_Feedback::init();
 	}
 
 	/**

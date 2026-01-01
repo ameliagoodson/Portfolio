@@ -105,12 +105,14 @@ class Forminator_Export {
 			return;
 		}
 
-		if ( ! forminator_get_permission( 'forminator-entries' ) ) {
+		if ( ! forminator_is_user_allowed( 'forminator-entries' ) ) {
+			wp_die( esc_html__( 'You are not allowed to export submissions.', 'forminator' ) );
 			return;
 		}
 
 		$nonce = Forminator_Core::sanitize_text_field( '_forminator_nonce' );
 		if ( ! wp_verify_nonce( $nonce, 'forminator_export' ) ) {
+			wp_die( esc_html__( 'Invalid nonce.', 'forminator' ) );
 			return;
 		}
 

@@ -536,10 +536,10 @@
 											var $element = $(this),
 												$slide = $element.find('.forminator-slide'),
 												$slider = $slide.slider("option"),
-												$minRange = parseInt($slide.data('min')) || 0,
-												$maxRange = parseInt($slide.data('max')) || 100,
-												$value = parseInt($slide.data('value')) || $minRange,
-												$valueMax = parseInt($slide.data('value-max')) || $maxRange;
+												$minRange = parseFloat($slide.data('min')) || 0,
+												$maxRange = parseFloat($slide.data('max')) || 100,
+												$value = parseFloat($slide.data('value')) || $minRange,
+												$valueMax = parseFloat($slide.data('value-max')) || $maxRange;
 
 											// Remove slider custom labels.
 											$element.find('.forminator-slider-labels').remove();

@@ -179,6 +179,9 @@ function forminator_get_registered_addons_grouped_by_module_connected( $module_i
 				return ! empty( $value ) && array( 'a:0:{}' ) !== $value;
 			}
 		);
+		if ( ! is_array( $post_meta ) ) {
+			$post_meta = array();
+		}
 		$meta_keys = array_keys( $post_meta );
 		$addons    = array_filter(
 			$addons,

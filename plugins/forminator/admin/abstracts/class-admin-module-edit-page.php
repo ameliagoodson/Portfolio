@@ -288,7 +288,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 			}
 			?>
 
-			<div class="sui-accordion-item<?php echo esc_attr( $opened_class ); ?>">
+			<div class="sui-accordion-item<?php echo esc_attr( $opened_class ); ?>" data-module-id="<?php echo esc_attr( $module['id'] ); ?>">
 
 				<div class="sui-accordion-item-header">
 
@@ -505,7 +505,7 @@ abstract class Forminator_Admin_Module_Edit_Page extends Forminator_Admin_Page {
 								<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-quiz-view&form_id=' . $module['id'] ) ); ?>" class="forminator-leads-leads" style="display:none;"><?php echo esc_html( $module['leads'] ); ?></a>
 							<?php endif; ?>
 							<strong class="forminator-leads-submissions"><?php esc_html_e( 'Submissions', 'forminator' ); ?></strong>
-							<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-entries&form_type=' . $post_type . '&form_id=' . $module['id'] ) ); ?>" class="forminator-leads-submissions"><?php echo esc_html( $module['entries'] ); ?></a>
+							<a href="<?php echo esc_url( admin_url( 'admin.php?page=forminator-entries&form_type=' . $post_type . '&entry_status=completed&form_id=' . $module['id'] ) ); ?>" class="forminator-leads-submissions"><?php echo esc_html( $module['entries'] ); ?></a>
 						</li>
 						<?php if ( forminator_global_tracking() ) { ?>
 							<li>

@@ -116,3 +116,13 @@ function forminator_disable_regenerate_css_on_form_load() {
 function forminator_usage_tracking_disabled() {
 	return apply_filters( 'forminator_usage_tracking_disabled', false );
 }
+
+/**
+ * Check if feedback functionality is disabled.
+ *
+ * @since 1.49.0
+ * @return boolean
+ */
+function forminator_feedback_disabled() {
+	return apply_filters( 'forminator_feedback_disabled', false );
+}

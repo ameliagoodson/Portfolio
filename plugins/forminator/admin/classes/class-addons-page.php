@@ -469,10 +469,13 @@ class Forminator_Admin_Addons_Page {
 	public static function get_project_info_from_wpmudev_dashboard( $pid, $fetch_full = false ) {
 		$res = array();
 		if ( class_exists( 'WPMUDEV_Dashboard' ) ) {
-			$res = clone WPMUDEV_Dashboard::$site->get_project_info( $pid, $fetch_full );
+			$project_info = WPMUDEV_Dashboard::$site->get_project_info( $pid, $fetch_full );
+			if ( ! empty( $project_info ) ) {
+				$res = clone $project_info;
 
-			// Override the content from plugin to load the translated content.
-			$res = self::override_content_from_static_addons( $res );
+				// Override the content from plugin to load the translated content.
+				$res = self::override_content_from_static_addons( $res );
+			}
 		}
 
 		return $res;

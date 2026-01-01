@@ -334,24 +334,24 @@ class Forminator_Slider extends Forminator_Field {
 	 * Get slider max limit
 	 *
 	 * @param array $field Field settings.
-	 * @return int
+	 * @return float
 	 */
-	private static function get_max_limit( array $field ): int {
+	private static function get_max_limit( array $field ): float {
 		$slider_max = self::get_property( 'slider_max', $field );
 		if ( ! is_numeric( $slider_max ) ) {
 			$slider_max = 10;
 		}
-		return intval( $slider_max );
+		return floatval( $slider_max );
 	}
 
 	/**
 	 * Get slider min limit
 	 *
 	 * @param array $field Field settings.
-	 * @return int
+	 * @return float
 	 */
-	private static function get_min_limit( array $field ): int {
-		return self::get_property( 'slider_min', $field, 1, 'num' );
+	private static function get_min_limit( array $field ): float {
+		return floatval( self::get_property( 'slider_min', $field, 1, 'num' ) );
 	}
 
 	/**
@@ -380,7 +380,7 @@ class Forminator_Slider extends Forminator_Field {
 			if ( self::is_range_slider( $field ) && ( (
 					$min > $data['min'] || $max < $data['min'] || $min > $data['max'] || $max < $data['max'] || $data['min'] > $data['max']
 				) || ( ! is_array( $data ) && ( ( $min > $data ) || ( $max < $data ) ) ) ) ) {
-				$validation_message = /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The slider should be less than %1$d and greater than %2$d.', 'forminator' ), $min, $max );
+				$validation_message = /* translators: 1: Minimum value, 2: Maximum value */ sprintf( esc_html__( 'The slider should be less than %1$s and greater than %2$s.', 'forminator' ), $max, $min );
 
 				$this->validation_message[ $sub_id ] = sprintf(
 					apply_filters(
@@ -423,7 +423,7 @@ class Forminator_Slider extends Forminator_Field {
 			return self::FIELD_NOT_CALCULABLE;
 		}
 
-		return intval( $submitted_field );
+		return floatval( $submitted_field );
 	}
 
 	/**
@@ -431,7 +431,7 @@ class Forminator_Slider extends Forminator_Field {
 	 *
 	 * @param array $submitted_field_data Original field value.
 	 * @param array $field_settings Field settings.
-	 * @return int|string
+	 * @return float|string
 	 */
 	public static function get_calculable_value( $submitted_field_data, $field_settings ) {
 		$calculable_value = self::calculable_value( $submitted_field_data, $field_settings );
@@ -439,11 +439,11 @@ class Forminator_Slider extends Forminator_Field {
 		/**
 		 * Filter formula being used on calculable value on slider field
 		 *
-		 * @param int   $calculable_value Calculable value,
+		 * @param float $calculable_value Calculable value,
 		 * @param array $submitted_field_data Original field value.
 		 * @param array $field_settings Field settings.
 		 *
-		 * @return string|int
+		 * @return string|float
 		 */
 		return apply_filters( 'forminator_field_slider_calculable_value', $calculable_value, $submitted_field_data, $field_settings );
 	}

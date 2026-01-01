@@ -36,6 +36,4 @@ include('global/note-font.html');
 include self::get_template( $theme, 'response-colors.html');
 include('global/response-font.html');
 
-if ( forminator_array_value_exists( $properties, 'use-custom-css' ) && forminator_array_value_exists( $properties, 'custom_css' ) ) {
-	echo $properties['custom_css'];
-}
+echo $properties['custom_css'];

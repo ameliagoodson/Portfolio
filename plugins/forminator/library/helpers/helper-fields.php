@@ -647,6 +647,10 @@ function forminator_replace_form_data( $content, ?Forminator_Form_Model $custom_
 				$value = forminator_get_value_from_form_entry( $element_id, $custom_form, $entry, $get_labels, $urlencode, $user_meta, $is_pdf );
 			}
 
+			// If null, set to empty string.
+			if ( is_null( $value ) ) {
+				$value = '';
+			}
 			if ( ! $urlencode ) {
 				$content = forminator_replace_placeholder_in_urls( $content, $match, $value );
 			}
@@ -831,10 +835,12 @@ function forminator_replace_field_data( $custom_form, $element_id, $data, $is_pd
 						$display_items[] = $selected_value;
 					}
 				}
-
-				$value = implode( '<br/>', $display_items );
-			} else {
-				$value = implode( ', ', array_keys( array_intersect( array_flip( array_column( $field_options, 'label' ) ), array_map( 'stripslashes', $selected_values ) ) ) );
+				if ( $enable_images && $is_email ) {
+					// To display images on new lines in emails.
+					$value = implode( '<br/>', $display_items );
+				} else {
+					$value = implode( ', ', $display_items );
+				}
 			}
 		}
 	}
@@ -1390,6 +1396,10 @@ function forminator_replace_variables( $content, $id = false, $entry = null ) {
 		}
 
 		foreach ( $variables as $placeholder => $value ) {
+			// If null, set to empty string.
+			if ( is_null( $value ) ) {
+				$value = '';
+			}
 			$content = forminator_replace_placeholder_in_urls( $content, $placeholder, $value );
 		}
 

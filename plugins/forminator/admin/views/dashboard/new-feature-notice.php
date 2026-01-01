@@ -32,7 +32,7 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 		aria-labelledby="forminator-new-feature__title"
 	>
 
-		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1470"
+		<div class="sui-box forminator-feature-modal" data-prop="forminator_dismiss_feature_1490"
 			data-nonce="<?php echo esc_attr( wp_create_nonce( 'forminator_dismiss_notification' ) ); ?>">
 
 			<div class="sui-box-header sui-flatten sui-content-center">
@@ -52,7 +52,7 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 
 				<h3 class="sui-box-title sui-lg" style="overflow: initial; white-space: initial; text-overflow: initial;">
 				<?php
-					esc_html_e( 'New: Visibility conditions for Page Break', 'forminator' );
+					esc_html_e( 'New! Form Editor & Instant Preview', 'forminator' );
 				?>
 				</h3>
 
@@ -60,7 +60,7 @@ $hub_connected = Forminator_Hub_Connector::hub_connector_connected();
 				<?php
 				printf(
 					/* translators: 1. Admin name */
-					esc_html__( 'Hey %s! Are you creating multi-page forms? Then we have good news for you! You can now apply rules to your form to show or hide any page based on conditional logic.', 'forminator' ),
+					esc_html__( 'Hey %s! We\'re excited to introduce the first phase of our Form Editor improvements. You\'ll notice a refreshed design and a new instant preview in the Appearance section, allowing you to see your changes as you customize your form. Check it out and let us know what you think!', 'forminator' ),
 					esc_html( ucfirst( $user->display_name ) ),
 				);
 				?>

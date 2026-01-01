@@ -124,6 +124,21 @@ class Forminator_Hubspot_Form_Hooks extends Forminator_Integration_Form_Hooks {
 						if ( 'date' === $hs_field_type && ! empty( $element_value ) ) {
 							$element_value = self::get_date_in_ms( $element_id, $submitted_data[ $element_id ], $form_id );
 						}
+					} elseif ( self::element_is_multi_option( $element_id, $form_id ) ) {
+						$hs_field_type = $api->get_property( 'fieldType', $common_field, $args );
+						if ( 'checkbox' === $hs_field_type ) {
+							// Handle multiple selectbox values.
+							if ( strpos( $element_id, 'select-' ) !== false ) {
+								$element_value = json_decode( $element_value );
+								if ( is_array( $element_value ) ) {
+									$element_value = implode( ', ', $element_value );
+								}
+							}
+							// Remove semicolon from value to avoid conflict.
+							$element_value = str_replace( ';', '', $element_value );
+							// For checkbox, it should be ; separated.
+							$element_value = str_replace( ', ', ';', $element_value );
+						}
 					}
 					if ( ! is_null( $element_value ) ) {
 						$args[ $common_field ] = $element_value;

@@ -120,6 +120,7 @@ class Forminator_Custom_Forms extends Forminator_Module {
 		new Forminator_CForm_Front();
 
 		add_action( 'wp_ajax_forminator_preset_templates', array( $this, 'get_preset_templates' ) );
+		add_action( 'wp_ajax_forminator_update_live_preview', array( 'Forminator_CForm_Front', 'update_live_preview' ) );
 
 		add_action( 'wp_ajax_forminator_load_form', array( 'Forminator_CForm_Front', 'ajax_load_module' ) );
 		add_action( 'wp_ajax_nopriv_forminator_load_form', array( 'Forminator_CForm_Front', 'ajax_load_module' ) );

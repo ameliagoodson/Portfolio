@@ -856,6 +856,10 @@ abstract class Forminator_Render_Form {
 	 * @return string
 	 */
 	protected static function get_custom_css( $properties ) {
+		if ( empty( $properties['use-custom-css'] ) || 'false' === $properties['use-custom-css'] ) {
+			return '';
+		}
+
 		$slug   = forminator_get_prefix( static::$module_slug, 'custom-' );
 		$prefix = '.forminator-ui.forminator-' . $slug . '-' . $properties['form_id'];
 		if ( method_exists( static::class, 'get_css_prefix' ) ) {
@@ -1418,6 +1422,7 @@ abstract class Forminator_Render_Form {
 		$verify_nonce = apply_filters( 'forminator_ajax_load_module_nonce_verification', false );
 		$nonce        = Forminator_Core::sanitize_text_field( 'nonce' );
 		$is_preview   = filter_input( INPUT_POST, 'is_preview', FILTER_VALIDATE_BOOLEAN );
+		$live_preview = filter_input( INPUT_POST, 'instant_preview', FILTER_VALIDATE_BOOLEAN );
 
 		if ( $verify_nonce && ! $is_preview && ! wp_verify_nonce( $nonce, 'forminator_load_module' ) ) {
 			wp_send_json_error( new WP_Error( 'invalid_code' ) );
@@ -1486,6 +1491,39 @@ abstract class Forminator_Render_Form {
 			$response['style']        = $response['style'] . $lead_response['style'];
 			$response['lead_options'] = $lead_response['options'];
 		}
+
+		wp_send_json_success( $response );
+	}
+
+	/**
+	 * Update live preview
+	 */
+	public static function update_live_preview() {
+		$nonce = Forminator_Core::sanitize_text_field( '_wpnonce' );
+		if ( ! $nonce || ! wp_verify_nonce( $nonce, 'forminator_update_live_preview' ) ) {
+			wp_send_json_error( new WP_Error( 'invalid_nonce' ) );
+		}
+
+		$id    = filter_input( INPUT_POST, 'id', FILTER_VALIDATE_INT );
+		$model = Forminator_Base_Form_Model::get_model( $id );
+
+		if ( 'form' !== $model::$module_slug ) {
+			wp_send_json_error( new WP_Error( 'invalid_module_type' ) );
+		}
+		$preview_data = isset( $_POST['preview_data'] ) ? Forminator_Core::sanitize_array( $_POST['preview_data'], 'preview_data' ) : '{}'; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		$preview_data = json_decode( $preview_data, true );
+
+		if ( ! empty( $preview_data['settings'] ) ) {
+			$model->settings = $preview_data['settings'];
+		}
+
+		$obj = new Forminator_CForm_Front();
+		ob_start();
+		$obj->generate_styles( $model );
+		$styles   = ob_get_clean();
+		$response = array(
+			'styles' => $styles,
+		);
 
 		wp_send_json_success( $response );
 	}
@@ -1600,7 +1638,7 @@ abstract class Forminator_Render_Form {
 		}
 
 		// setup extra param.
-		if ( isset( $extra ) && is_array( $extra ) ) {
+		if ( ! empty( $extra ) && is_array( $extra ) ) {
 			if ( isset( $extra['_wp_http_referer'] ) ) {
 				$this->_wp_http_referer = $extra['_wp_http_referer'];
 			}
@@ -1689,6 +1727,8 @@ abstract class Forminator_Render_Form {
 
 				if ( isset( $properties['custom_css'] ) && isset( $properties['form_id'] ) ) {
 					$properties['custom_css'] = static::get_custom_css( $properties );
+				} else {
+					$properties['custom_css'] = '';
 				}
 
 				$theme = $this->get_form_design();

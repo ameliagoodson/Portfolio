@@ -22,6 +22,7 @@
 		    id: '',
 		    render_id: '',
 		    is_preview: '',
+		    instant_preview: '',
 		    preview_data: [],
 			 nonce: false,
 		    last_submit_data: {},
@@ -61,6 +62,7 @@
 			param.id               = this.settings.id;
 			param.render_id        = this.settings.render_id;
 			param.is_preview       = this.settings.is_preview;
+			param.instant_preview  = this.settings.instant_preview;
 			param.preview_data     = JSON.stringify(this.settings.preview_data);
 			param.last_submit_data = this.settings.last_submit_data;
 			param.extra            = this.settings.extra;
@@ -190,6 +192,9 @@
 			// Show form only after initialized ForminatorFront to avoid showing hidden fields.
 			let $element = $('#forminator-module-' + id + '[data-forminator-render=' + render_id + ']');
 			$element.hide();
+			if ( ! this.$el.parent().has( '#forminator-instant-preview' ) ) {
+				$element.hide();
+			}
 
 			if (message) {
 				$('#forminator-module-' + id + '[data-forminator-render=' + render_id + '] .forminator-response-message')
@@ -200,8 +205,8 @@
 
 			//response.style
 			if (style) {
-				if ($('style#forminator-module-' + id).length) {
-					$('style#forminator-module-' + id).remove();
+				if ($('style#forminator-module-styles-' + id).length) {
+					$('style#forminator-module-styles-' + id).remove();
 				}
 				$('body').append(style);
 			}

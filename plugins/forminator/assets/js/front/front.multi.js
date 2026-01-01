@@ -161,8 +161,7 @@
 		init_custom_form: function ( form_selector ) {
 
 			var self 			= this,
-				$saveDraft 		= this.$el.find( '.forminator-save-draft-link' ),
-				saveDraftExists = 0 !== $saveDraft.length ? true : false,
+				instantPreview = $( form_selector ).closest( '#forminator-instant-preview' ).length,
 				draftTimer
 				;
 
@@ -223,8 +222,10 @@
 				});
 			}
 
-			//initiate condition
-			$( form_selector ).forminatorFrontCondition(this.settings.conditions, this.settings.calendar);
+			//initiate condition - skip in instant preview
+			if ( ! instantPreview ) {
+				$( form_selector ).forminatorFrontCondition(this.settings.conditions, this.settings.calendar);
+			}
 
 			//initiate forminator ui scripts
 			this.init_fui( form_selector );
@@ -266,17 +267,23 @@
 				self.maybeRemoveDuplicateFields( form_selector );
 			});
 
+			var $saveDrafts = this.$el.find( '.forminator-save-draft-link' );
+
 			// We have to declare initialData here, after everything has been set initially, to prevent triggering change event.
-			var initialData	= saveDraftExists ? this.$el.serializeArray() : '';
-			this.$el.find( ".forminator-field input, .forminator-row input[type=hidden], .forminator-field select, .forminator-field textarea, .forminator-field-signature").on( 'change input', function (e) {
-				if ( saveDraftExists && $saveDraft.hasClass( 'disabled' ) ) {
-					clearTimeout( draftTimer );
-					draftTimer = setTimeout( function() {
-							self.maybe_enable_save_draft( $saveDraft, initialData );
-						},
-						500
-					);
-				}
+			$saveDrafts.each(function() {
+				const $saveDraft = $(this),
+					$parent = $saveDraft.closest('.forminator-pagination, form');
+				var initialData	= $parent.find(':input').serializeArray();
+				$parent.find( ".forminator-field input, .forminator-row input[type=hidden], .forminator-field select, .forminator-field textarea, .forminator-field-signature").on( 'change input', function (e) {
+					if ( $saveDraft.hasClass( 'disabled' ) ) {
+						clearTimeout( draftTimer );
+						draftTimer = setTimeout( function() {
+								self.maybe_enable_save_draft( $parent, $saveDraft, initialData );
+							},
+							500
+						);
+					}
+				});
 			});
 
 			if( 'undefined' !== typeof self.settings.hasLeads ) {
@@ -1055,8 +1062,8 @@
 				var inputType = $( this ).attr( 'type' );
 				if ( 'number' === inputType ) {
 					var decimals = $( this ).data( 'decimals' );
-					$( this ).change( function ( e ) {
-						this.value = parseFloat( this.value ).toFixed( decimals );
+					$( this ).on('change', function ( e ) {
+						this.value = this.value !== '' ? parseFloat( this.value ).toFixed( decimals ) : '';
 					});
 					$( this ).trigger( 'change' );
 				}
@@ -1553,10 +1560,10 @@
 		},
 
         // Enable save draft button once a change is made
-		maybe_enable_save_draft: function ( $saveDraft, initialData ) {
-			var changedData = this.$el.serializeArray(),
+		maybe_enable_save_draft: function ( $parent, $saveDraft, initialData ) {
+			var changedData = $parent.find(':input').serializeArray(),
 				hasChanged	= false,
-				hasSig		= this.$el.find( '.forminator-field-signature' ).length ? true : false
+				hasSig		= $parent.find( '.forminator-field-signature' ).length ? true : false
 				;
 
 			// Remove signature field from changedData, will process later
@@ -1574,7 +1581,7 @@
 
 			// Check for signature change
 			if ( hasSig && false === hasChanged ) {
-				this.$el.find( '.forminator-field-signature' ).each( function(e) {
+				$parent.find( '.forminator-field-signature' ).each( function(e) {
 					var sigPrefix = $( this ).find( '.signature-prefix' ).val();
 
 					if (

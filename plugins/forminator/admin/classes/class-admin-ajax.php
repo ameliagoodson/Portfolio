@@ -163,6 +163,10 @@ class Forminator_Admin_AJAX {
 
 		// Process Permission settings.
 		add_action( 'wp_ajax_forminator_save_permissions', array( $this, 'save_permissions' ) );
+
+		if ( ! forminator_feedback_disabled() ) {
+			add_action( 'wp_ajax_forminator_share_feedback', array( $this, 'forminator_share_feedback' ) );
+		}
 	}
 
 	/**
@@ -3099,5 +3103,21 @@ class Forminator_Admin_AJAX {
 		} else {
 			wp_send_json_error();
 		}
+	}
+
+	/**
+	 * Share Feedback to mixpanel.
+	 */
+	public function forminator_share_feedback() {
+		forminator_validate_ajax( 'forminator_share_feedback' );
+
+		$rating             = filter_input( INPUT_POST, 'rating', FILTER_VALIDATE_INT );
+		$additional_details = Forminator_Core::sanitize_text_field( 'additional_details' );
+		if ( $rating < 1 || $rating > 5 ) {
+			wp_send_json_error( esc_html__( 'Invalid rating value', 'forminator' ) );
+		}
+		Forminator_Core::init_mixpanel( true );
+		do_action( 'forminator_share_feedback_to_mixpanel', $rating, $additional_details );
+		wp_send_json_success();
 	}
 }

@@ -898,8 +898,14 @@ class wfUtils {
 	 * @return string
 	 */
 	public static function inet_aton($ip) {
-		$ip = preg_replace('/(?<=^|\.)0+([1-9])/', '$1', $ip);
-		return sprintf("%u", ip2long($ip));
+		try {
+			$ip = preg_replace('/(?<=^|\.)0+([1-9])/', '$1', $ip);
+			return sprintf("%u", ip2long($ip));
+		}
+		catch (Throwable $t) {
+			//Ignore -- fall through to default
+		}
+		return '0';
 	}
 
 	/**
@@ -923,9 +929,14 @@ class wfUtils {
 	 * @return string
 	 */
 	public static function inet_pton($ip) {
-		// convert the 4 char IPv4 to IPv6 mapped version.
-		$pton = str_pad(self::hasIPv6Support() ? @inet_pton($ip) : self::_inet_pton($ip), 16,
-			"\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\x00\x00", STR_PAD_LEFT);
+		$default = "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xff\x00\x00\x00\x00";
+		try {
+			// convert the 4 char IPv4 to IPv6 mapped version.
+			$pton = str_pad(self::hasIPv6Support() ? @inet_pton($ip) : self::_inet_pton($ip), 16, $default, STR_PAD_LEFT);
+		}
+		catch (Throwable $t) {
+			$pton = $default;
+		}
 		return $pton;
 	}
 

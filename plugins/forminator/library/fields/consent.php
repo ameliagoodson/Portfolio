@@ -144,7 +144,7 @@ class Forminator_Consent extends Forminator_Field {
 
 			$html .= '<div class="forminator-checkbox__wrapper">';
 
-				$html .= sprintf( '<label id="%s__label" class="forminator-checkbox forminator-consent" aria-labelledby="%s" aria-hidden="true">', $id, $id . '-label' );
+				$html .= sprintf( '<label id="%s__label" class="forminator-checkbox forminator-consent" aria-labelledby="%s">', $id, $id . '-label' );
 
 					$html .= sprintf(
 						'<input type="checkbox" name="%1$s" id="%2$s" value="%3$s" aria-labelledby="%4$s"%5$s data-required="%6$s" aria-required="%7$s" />',

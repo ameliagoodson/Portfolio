@@ -70,6 +70,9 @@
 					</div>
 				</div>
 			</div>
+			<span class="sui-description">
+				<?php esc_html_e( 'Set the value to "0" or leave it blank to store data forever.', 'forminator' ); ?>
+			</span>
 
 		</div>
 

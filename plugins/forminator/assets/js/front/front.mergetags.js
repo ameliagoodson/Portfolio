@@ -104,7 +104,7 @@
 				'.forminator-textarea, input.forminator-input, .forminator-input input, .forminator-checkbox input, .forminator-radio input, .forminator-input-file, select.forminator-select2, .forminator-multiselect input'
 				+ ', input.forminator-slider-hidden, input.forminator-slider-hidden-min, input.forminator-slider-hidden-max, select.forminator-rating'
 			).each(function () {
-				$(this).on('change', function () {
+				$(this).on('change forminator.change', function () {
 					// Give jquery sometime to apply changes
 					setTimeout( function() {
 					   self.replaceAll();

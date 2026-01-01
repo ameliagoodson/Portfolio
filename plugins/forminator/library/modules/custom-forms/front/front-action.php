@@ -132,7 +132,7 @@ class Forminator_CForm_Front_Action extends Forminator_Front_Action {
 			'TWD',
 		);
 		if ( isset( $amount['currency_code'] ) && in_array( $amount['currency_code'], $integer_currencies, true ) ) {
-			$amount['value'] = number_format( (float) $amount['value'] );
+			$amount['value'] = number_format( (float) $amount['value'], 0, '.', '' );
 		} else {
 			$amount['value'] = number_format( (float) $amount['value'], 2, '.', '' );
 		}

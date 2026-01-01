@@ -97,6 +97,4 @@ include('global/rating-colors.html');
 include('global/slider-font.html');
 include self::get_template( $theme,'slider-colors.html');
 
-if ( forminator_array_value_exists( $properties, 'use-custom-css' ) && forminator_array_value_exists( $properties, 'custom_css' ) ) {
-	echo $properties['custom_css'];
-}
+echo $properties['custom_css'];
