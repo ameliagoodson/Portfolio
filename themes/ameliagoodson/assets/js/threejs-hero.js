@@ -33,47 +33,66 @@ document.addEventListener("DOMContentLoaded", () => {
     capped: pixelRatio < window.devicePixelRatio
   });
 
-  // Function to resize canvas to full window (like working version)
+  // Function to resize canvas - force landscape aspect on portrait mobile
   const resizeCanvas = () => {
-    console.log('📐 BEFORE setSize:', {
-      'window.innerWidth': window.innerWidth,
-      'window.innerHeight': window.innerHeight,
-      'canvas.width': canvas.width,
-      'canvas.height': canvas.height,
-      'canvas.style.width': canvas.style.width,
-      'canvas.style.height': canvas.style.height
-    });
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
 
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    // Check if portrait orientation
+    const isPortrait = viewportHeight > viewportWidth;
 
-    console.log('📐 AFTER setSize:', {
-      'canvas.width': canvas.width,
-      'canvas.height': canvas.height,
-      'canvas.style.width': canvas.style.width,
-      'canvas.style.height': canvas.style.height,
-      'EXPECTED canvas.width': window.innerWidth * pixelRatio,
-      'EXPECTED canvas.height': window.innerHeight * pixelRatio
-    });
+    if (isPortrait) {
+      // On portrait mobile, render to a wider buffer for crisp text
+      // Use setSize with updateStyle=false so CSS doesn't change
+      const minAspectRatio = 1.4; // Landscape-ish aspect
+      const renderWidth = Math.floor(viewportHeight * minAspectRatio);
+      const renderHeight = viewportHeight;
+
+      // Set renderer size without updating CSS (third parameter = false)
+      renderer.setSize(renderWidth, renderHeight, false);
+
+      // Manually set canvas CSS to viewport size
+      canvas.style.width = viewportWidth + 'px';
+      canvas.style.height = viewportHeight + 'px';
+
+      console.log('📱 Portrait mode:', {
+        viewport: `${viewportWidth}x${viewportHeight}`,
+        renderBuffer: `${renderWidth}x${renderHeight}`,
+        pixelBuffer: `${renderWidth * pixelRatio}x${renderHeight * pixelRatio}`
+      });
+    } else {
+      // Desktop/landscape - use actual viewport
+      renderer.setSize(viewportWidth, viewportHeight);
+    }
   };
 
   // Set initial size
   resizeCanvas();
 
+  // Pass render dimensions to scene for proper scaling
+  const getRenderDimensions = () => {
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+    const isPortrait = viewportHeight > viewportWidth;
+
+    if (isPortrait) {
+      const minAspectRatio = 1.4;
+      return {
+        width: Math.floor(viewportHeight * minAspectRatio),
+        height: viewportHeight
+      };
+    }
+    return {
+      width: viewportWidth,
+      height: viewportHeight
+    };
+  };
+
   // Initialize the chrome text scene
   // Scene handles its own animation loop internally
-  new ChromeTextScene(renderer, canvas);
+  new ChromeTextScene(renderer, canvas, getRenderDimensions);
 
   console.log("✅ Chrome Text Scene initialized");
-
-  // Additional mobile debugging
-  console.log('🔍 Mobile debug:', {
-    userAgent: navigator.userAgent,
-    devicePixelRatio: window.devicePixelRatio,
-    usedPixelRatio: pixelRatio,
-    canvasElement: canvas,
-    canvasParent: canvas.parentElement,
-    canvasComputedStyle: window.getComputedStyle(canvas)
-  });
 
   // Handle window resize
   window.addEventListener("resize", resizeCanvas);

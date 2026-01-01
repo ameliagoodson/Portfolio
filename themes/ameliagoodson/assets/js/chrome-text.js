@@ -299,9 +299,13 @@ function extractParticlesFromTexture(texture, particleCount) {
 }
 
 class ShopifyDirectScene {
-  constructor(renderer, canvas) {
+  constructor(renderer, canvas, getViewportDimensions) {
     this.renderer = renderer;
     this.canvas = canvas;
+    this.getViewportDimensions = getViewportDimensions || (() => ({
+      width: window.innerWidth,
+      height: window.innerHeight
+    }));
 
     // === CONFIGURATION OPTIONS ===
     // Use Shopify's EXACT buffer dimensions
@@ -337,9 +341,15 @@ class ShopifyDirectScene {
 
     this.scene = new THREE.Scene();
 
-    // Use window dimensions like the working pure JS version
-    const canvasWidth = window.innerWidth;
-    const canvasHeight = window.innerHeight;
+    // Use viewport dimensions for camera/scene (not render buffer size)
+    const viewport = this.getViewportDimensions();
+    const canvasWidth = viewport.width;
+    const canvasHeight = viewport.height;
+
+    console.log('📐 Scene dimensions:', {
+      viewport: `${canvasWidth}x${canvasHeight}`,
+      renderBuffer: `${this.renderer.domElement.width}x${this.renderer.domElement.height}`
+    });
 
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -359,10 +369,6 @@ class ShopifyDirectScene {
 
     this.mouseMoveHandler = this.handleMouseMove.bind(this);
     window.addEventListener("mousemove", this.mouseMoveHandler);
-
-    this.touchMoveHandler = this.handleTouchMove.bind(this);
-    window.addEventListener("touchmove", this.touchMoveHandler, { passive: true });
-    window.addEventListener("touchstart", this.touchMoveHandler, { passive: true });
 
     this.resizeHandler = this.onWindowResize.bind(this);
     window.addEventListener("resize", this.resizeHandler);
@@ -386,12 +392,9 @@ class ShopifyDirectScene {
 
     this.lastMouse.copy(this.mouse);
 
-    // Get canvas bounding rect to handle positioning and overflow correctly
-    const rect = this.canvas.getBoundingClientRect();
-
-    // Normalized device coordinates (-1 to 1) relative to canvas position
-    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+    // Normalized device coordinates (-1 to 1) using window dimensions like working version
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     const deltaX = this.mouse.x - this.lastMouse.x;
     const deltaY = this.mouse.y - this.lastMouse.y;
@@ -419,17 +422,6 @@ class ShopifyDirectScene {
     }
 
     this.lastMoveTime = now;
-  }
-
-  handleTouchMove(event) {
-    if (event.touches && event.touches.length > 0) {
-      const touch = event.touches[0];
-      const fakeEvent = {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      };
-      this.handleMouseMove(fakeEvent);
-    }
   }
 
   createControlPanel() {
@@ -1256,9 +1248,10 @@ void main() {
   }
 
   onWindowResize() {
-    // Use window dimensions like working version
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    // Use viewport dimensions for camera (not render buffer size)
+    const viewport = this.getViewportDimensions();
+    const width = viewport.width;
+    const height = viewport.height;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
@@ -1313,11 +1306,6 @@ void main() {
 
     if (this.mouseMoveHandler) {
       window.removeEventListener("mousemove", this.mouseMoveHandler);
-    }
-
-    if (this.touchMoveHandler) {
-      window.removeEventListener("touchmove", this.touchMoveHandler);
-      window.removeEventListener("touchstart", this.touchMoveHandler);
     }
 
     if (this.resizeHandler) {

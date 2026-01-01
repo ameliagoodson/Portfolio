@@ -155,9 +155,6 @@ a.sub-menu-toggle.active svg {
 }
 
 // MOBILE NAVIGATION
-body.menu-open {
-  overflow: hidden;
-}
 .mobile-header {
   padding: 1rem;
   width: 100%;
@@ -174,8 +171,6 @@ body.menu-open {
 
   .mobile-menu-container {
     position: fixed;
-    transform: translateX(100%);
-    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
     background-color: var(--ag-background-color);
     top: 0;
     left: 0;
@@ -186,14 +181,16 @@ body.menu-open {
     height: 100vh;
     z-index: 999;
 
-    /* Initial state: hidden off-screen */
+    /* Hidden state: invisible and non-interactive, no off-screen positioning */
     opacity: 0;
-    transform: translateX(100%);
-    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 
     &.active {
       opacity: 1;
-      transform: translateX(0);
+      visibility: visible;
+      pointer-events: auto;
     }
 
     .mobile-menu {

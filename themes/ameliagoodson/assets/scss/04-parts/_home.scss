@@ -18,13 +18,18 @@ body .background-image {
   // Three.js hero specific styles
   &.hero--threejs {
     padding: 0;
+    // Container clips overflow but canvas can render wider for crisp mobile text
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
 
     #three-hero {
       position: absolute;
       top: 0;
-      left: 0;
-      width: 100% !important;
-      height: 100% !important;
+      left: 50%;
+      transform: translateX(-50%);
+      // Don't constrain canvas - let Three.js size it for optimal rendering
       display: block;
     }
   }

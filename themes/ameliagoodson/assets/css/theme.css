@@ -3540,10 +3540,6 @@ a.sub-menu-toggle.active svg {
     display: block;
   }
 }
-body.menu-open {
-  overflow: hidden;
-}
-
 .mobile-header {
   padding: 1rem;
   width: 100%;
@@ -3560,8 +3556,6 @@ body.menu-open {
 }
 .mobile-header .mobile-menu-container {
   position: fixed;
-  transform: translateX(100%);
-  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
   background-color: var(--ag-background-color);
   top: 0;
   left: 0;
@@ -3571,14 +3565,16 @@ body.menu-open {
   width: 100%;
   height: 100vh;
   z-index: 999;
-  /* Initial state: hidden off-screen */
+  /* Hidden state: invisible and non-interactive, no off-screen positioning */
   opacity: 0;
-  transform: translateX(100%);
-  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
 }
 .mobile-header .mobile-menu-container.active {
   opacity: 1;
-  transform: translateX(0);
+  visibility: visible;
+  pointer-events: auto;
 }
 .mobile-header .mobile-menu-container .mobile-menu {
   list-style-type: none;
@@ -6843,13 +6839,16 @@ body .background-image {
 }
 .hero.hero--threejs {
   padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 .hero.hero--threejs #three-hero {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
+  left: 50%;
+  transform: translateX(-50%);
   display: block;
 }
 .hero .hero-content .hero-copy {
