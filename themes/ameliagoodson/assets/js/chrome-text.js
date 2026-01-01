@@ -275,16 +275,16 @@ function extractParticlesFromTexture(texture, particleCount) {
     }
   }
 
-  console.log(
-    "🔍 Particle Y range:",
-    minY,
-    "to",
-    maxY,
-    "(span:",
-    maxY - minY,
-    ")"
-  );
-  console.log("🔍 Total particles extracted:", count, "/", maxCount);
+  // console.log(
+  //   "🔍 Particle Y range:",
+  //   minY,
+  //   "to",
+  //   maxY,
+  //   "(span:",
+  //   maxY - minY,
+  //   ")"
+  // );
+  // console.log("🔍 Total particles extracted:", count, "/", maxCount);
 
   // Fill remaining slots with zeros
   for (let i = count; i < particleCount; i++) {
@@ -317,13 +317,13 @@ class ShopifyDirectScene {
     this.GRID_WIDTH = 256; // Shopify's particle count
     this.GRID_HEIGHT = 128;
 
-    console.log("🎨 Offscreen buffer (Shopify's exact settings):", {
-      buffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
-      scale: this.SCALE,
-      particles: `${this.GRID_WIDTH}x${this.GRID_HEIGHT} = ${
-        this.GRID_WIDTH * this.GRID_HEIGHT
-      }`,
-    });
+    // console.log("🎨 Offscreen buffer (Shopify's exact settings):", {
+    //   buffer: `${this.OFFSCREEN_WIDTH}x${this.OFFSCREEN_HEIGHT}`,
+    //   scale: this.SCALE,
+    //   particles: `${this.GRID_WIDTH}x${this.GRID_HEIGHT} = ${
+    //     this.GRID_WIDTH * this.GRID_HEIGHT
+    //   }`,
+    // });
 
     // OPTION 2: Balanced - Shopify's dimensions, 32k particles (~3.1M pixels)
     // this.OFFSCREEN_WIDTH = 1340 * 2; // 2680
@@ -344,10 +344,10 @@ class ShopifyDirectScene {
     // Original mobile detection (exactly as before)
     this.isTouchDevice = "ontouchstart" in window;
 
-    console.log("📱 Device detection:", {
-      isTouchDevice: this.isTouchDevice,
-      screenWidth: window.innerWidth,
-    });
+    // console.log("📱 Device detection:", {
+    //   isTouchDevice: this.isTouchDevice,
+    //   screenWidth: window.innerWidth,
+    // });
 
     this.scene = new THREE.Scene();
     this.isVisible = true; // Track visibility for smooth scroll transitions
@@ -357,10 +357,10 @@ class ShopifyDirectScene {
     const canvasWidth = viewport.width;
     const canvasHeight = viewport.height;
 
-    console.log("📐 Scene dimensions:", {
-      viewport: `${canvasWidth}x${canvasHeight}`,
-      renderBuffer: `${this.renderer.domElement.width}x${this.renderer.domElement.height}`,
-    });
+    // console.log("📐 Scene dimensions:", {
+    //   viewport: `${canvasWidth}x${canvasHeight}`,
+    //   renderBuffer: `${this.renderer.domElement.width}x${this.renderer.domElement.height}`,
+    // });
 
     this.camera = new THREE.PerspectiveCamera(
       75,
@@ -685,7 +685,7 @@ void main() {
   }
 
   async init() {
-    console.log("🎨 Initializing Shopify Direct Scene...");
+    // console.log("🎨 Initializing Shopify Direct Scene...");
 
     // Initialize parameters - use window dimensions like working version
     const screenWidth = window.innerWidth;
@@ -703,11 +703,11 @@ void main() {
       pointSize: 20.0, // Shopify's exact value
     };
 
-    console.log("🎨 Params:", {
-      pointSize: this.params.pointSize,
-      isMobile,
-      screenWidth,
-    });
+    // console.log("🎨 Params:", {
+    //   pointSize: this.params.pointSize,
+    //   isMobile,
+    //   screenWidth,
+    // });
 
     // Load textures
     const loader = new THREE.TextureLoader();
@@ -738,7 +738,7 @@ void main() {
         ),
       ]);
 
-    console.log("✅ Textures loaded (including cityscape)");
+    // console.log("✅ Textures loaded (including cityscape)");
 
     // Extract particles using Shopify's exact method
     const particleData = extractParticlesFromTexture(
@@ -807,7 +807,7 @@ void main() {
     // Create final scene with background
     this.setupFinalScene(matcapTexture, cityscapeTexture);
 
-    console.log("🚀 Shopify Direct Scene initialized");
+    // console.log("🚀 Shopify Direct Scene initialized");
     this.animate();
   }
 
@@ -881,12 +881,12 @@ void main() {
     const blurKernels = [0, 1, 2, 3, 4, 5, 6]; // 7 passes
     const blurResolution = 0.5; // High quality
 
-    console.log("🌀 Blur config (working version):", {
-      passes: blurKernels.length,
-      resolution: blurResolution,
-    });
+    // console.log("🌀 Blur config (working version):", {
+    //   passes: blurKernels.length,
+    //   resolution: blurResolution,
+    // });
 
-    console.log("🔧 Creating blur pass with:", { blurKernels, blurResolution });
+    // console.log("🔧 Creating blur pass with:", { blurKernels, blurResolution });
 
     this.blurPass = new KawaseBlurPass({
       renderer: this.renderer,
@@ -894,12 +894,12 @@ void main() {
       resolutionScale: blurResolution,
     });
 
-    console.log("🔧 Blur pass created:", {
-      passExists: !!this.blurPass,
-      passType: this.blurPass?.constructor?.name,
-      composerExists: !!this.composer,
-      composerType: this.composer?.constructor?.name,
-    });
+    // console.log("🔧 Blur pass created:", {
+    //   passExists: !!this.blurPass,
+    //   passType: this.blurPass?.constructor?.name,
+    //   composerExists: !!this.composer,
+    //   composerType: this.composer?.constructor?.name,
+    // });
 
     this.composer.addPass(this.blurPass);
   }
@@ -1085,27 +1085,27 @@ void main() {
         // Stretch background horizontally to compensate
         const stretchFactor = renderAspect / viewportAspect;
         this.backgroundPlane.scale.x = stretchFactor;
-        console.log("🖼️ Background aspect compensation:", {
-          renderAspect: renderAspect.toFixed(3),
-          viewportAspect: viewportAspect.toFixed(3),
-          stretchFactor: stretchFactor.toFixed(3),
-        });
+        // console.log("🖼️ Background aspect compensation:", {
+        //   renderAspect: renderAspect.toFixed(3),
+        //   viewportAspect: viewportAspect.toFixed(3),
+        //   stretchFactor: stretchFactor.toFixed(3),
+        // });
       }
 
       this.scene.add(this.backgroundPlane);
 
-      console.log("🖼️ Background sizing:", {
-        actualViewport: `${canvasWidth}x${canvasHeight}`,
-        canvasAspect: canvasAspect.toFixed(3),
-        textureAspect: textureAspect.toFixed(3),
-        textureDimensions: `${cityscapeTexture.image.width}x${cityscapeTexture.image.height}`,
-        visibleArea: `${visibleWidth.toFixed(2)}x${visibleHeight.toFixed(2)}`,
-        bgSize: `${bgWidth.toFixed(2)}x${bgHeight.toFixed(2)}`,
-        branch:
-          canvasAspect > textureAspect
-            ? "wider (fit width)"
-            : "taller (fit height)",
-      });
+      // console.log("🖼️ Background sizing:", {
+      //   actualViewport: `${canvasWidth}x${canvasHeight}`,
+      //   canvasAspect: canvasAspect.toFixed(3),
+      //   textureAspect: textureAspect.toFixed(3),
+      //   textureDimensions: `${cityscapeTexture.image.width}x${cityscapeTexture.image.height}`,
+      //   visibleArea: `${visibleWidth.toFixed(2)}x${visibleHeight.toFixed(2)}`,
+      //   bgSize: `${bgWidth.toFixed(2)}x${bgHeight.toFixed(2)}`,
+      //   branch:
+      //     canvasAspect > textureAspect
+      //       ? "wider (fit width)"
+      //       : "taller (fit height)",
+      // });
     }
 
     // Final material using blurred texture - use window dimensions like working version
@@ -1125,10 +1125,10 @@ void main() {
       transparent: true,
     });
 
-    console.log("🎨 Shader thresholds (universal):", {
-      threshold: this.finalMaterial.uniforms.uThreshold.value,
-      cutoff: this.finalMaterial.uniforms.uCutoff.value,
-    });
+    // console.log("🎨 Shader thresholds (universal):", {
+    //   threshold: this.finalMaterial.uniforms.uThreshold.value,
+    //   cutoff: this.finalMaterial.uniforms.uCutoff.value,
+    // });
 
     // Create fullscreen quad
     const planeHeight = 2 * (this.OFFSCREEN_HEIGHT / this.OFFSCREEN_WIDTH);
@@ -1144,6 +1144,12 @@ void main() {
     let scale = Math.min(1200, canvasWidth) / canvasWidth;
     const initialScale = scale;
 
+    // Desktop size boost - 20% bigger
+    const DESKTOP_SCALE_BOOST = 1.2;
+    if (canvasWidth >= 768) {
+      scale *= DESKTOP_SCALE_BOOST;
+    }
+
     if (aspectRatio > 1) {
       if (canvasHeight < 500) scale *= 0.35;
       else if (canvasHeight < 600) scale *= 0.5;
@@ -1154,14 +1160,14 @@ void main() {
       else if (canvasHeight < 1200) scale *= 0.9;
     }
 
-    console.log("📏 Text scaling (working version):", {
-      canvasWidth,
-      canvasHeight,
-      aspectRatio: aspectRatio.toFixed(2),
-      initialScale: initialScale.toFixed(3),
-      finalScale: scale.toFixed(3),
-      scaledByAspect: initialScale !== scale,
-    });
+    // console.log("📏 Text scaling (working version):", {
+    //   canvasWidth,
+    //   canvasHeight,
+    //   aspectRatio: aspectRatio.toFixed(2),
+    //   initialScale: initialScale.toFixed(3),
+    //   finalScale: scale.toFixed(3),
+    //   scaledByAspect: initialScale !== scale,
+    // });
 
     // Push text down to account for semi-transparent header
     // Lower values = further down the screen
@@ -1177,13 +1183,13 @@ void main() {
       1
     );
 
-    console.log("🎯 ACTUAL mesh scale:", {
-      scaleValue: scale,
-      SCALE: this.SCALE,
-      finalScaleX: scale * this.SCALE,
-      finalScaleY: scale * this.SCALE * (canvasWidth / canvasHeight),
-      meshScale: this.fullscreenQuad.scale,
-    });
+    // console.log("🎯 ACTUAL mesh scale:", {
+    //   scaleValue: scale,
+    //   SCALE: this.SCALE,
+    //   finalScaleX: scale * this.SCALE,
+    //   finalScaleY: scale * this.SCALE * (canvasWidth / canvasHeight),
+    //   meshScale: this.fullscreenQuad.scale,
+    // });
 
     this.scene.add(this.fullscreenQuad);
   }
@@ -1325,7 +1331,7 @@ void main() {
 
       // Restart animation loop if it was stopped
       if (!this.animationId) {
-        console.log("🔄 Restarting animation loop");
+        // console.log("🔄 Restarting animation loop");
         this.animate();
       }
     } else if (!isVisible && wasVisible) {
@@ -1333,7 +1339,7 @@ void main() {
       if (this.animationId) {
         cancelAnimationFrame(this.animationId);
         this.animationId = null;
-        console.log("⏸️ Pausing animation loop");
+        // console.log("⏸️ Pausing animation loop");
       }
     }
   }
@@ -1350,18 +1356,24 @@ void main() {
     // Update fullscreen quad scaling
     const aspectRatio = width / height;
 
-    // Responsive sizing - desktop working values
+    // Responsive sizing
     let maxSize;
     if (width < 768) {
-      maxSize = 900; // Mobile - TO BE FIXED
+      maxSize = 900; // Mobile
     } else if (width < 1200) {
-      maxSize = 1100; // Small desktop/tablet - WORKING
+      maxSize = 1100; // Small desktop/tablet
     } else if (width < 2000) {
-      maxSize = 1400; // Laptops - WORKING
+      maxSize = 1400; // Laptops
     } else {
-      maxSize = 1100; // Large displays - WORKING
+      maxSize = 1100; // Large displays
     }
     let scale = Math.min(maxSize, width) / width;
+
+    // Desktop size boost - 20% bigger
+    const DESKTOP_SCALE_BOOST = 1.2;
+    if (width >= 768) {
+      scale *= DESKTOP_SCALE_BOOST;
+    }
 
     if (aspectRatio > 1) {
       if (height < 500) scale *= 0.35;

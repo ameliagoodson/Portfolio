@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  console.log("Initializing Chrome Text Scene...");
+  // console.log("Initializing Chrome Text Scene...");
 
   // Get the hero container to properly size the canvas
   const heroSection = canvas.closest(".hero");
@@ -27,11 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const pixelRatio = Math.min(window.devicePixelRatio, 2);
   renderer.setPixelRatio(pixelRatio);
 
-  console.log("🖥️ Renderer pixel ratio:", {
-    native: window.devicePixelRatio,
-    used: pixelRatio,
-    capped: pixelRatio < window.devicePixelRatio,
-  });
+  // console.log("🖥️ Renderer pixel ratio:", {
+  //   native: window.devicePixelRatio,
+  //   used: pixelRatio,
+  //   capped: pixelRatio < window.devicePixelRatio,
+  // });
 
   // Function to resize canvas - force landscape aspect on portrait mobile
   const resizeCanvas = () => {
@@ -55,11 +55,11 @@ document.addEventListener("DOMContentLoaded", () => {
       canvas.style.width = viewportWidth + "px";
       canvas.style.height = viewportHeight + "px";
 
-      console.log("📱 Portrait mode:", {
-        viewport: `${viewportWidth}x${viewportHeight}`,
-        renderBuffer: `${renderWidth}x${renderHeight}`,
-        pixelBuffer: `${renderWidth * pixelRatio}x${renderHeight * pixelRatio}`,
-      });
+      // console.log("📱 Portrait mode:", {
+      //   viewport: `${viewportWidth}x${viewportHeight}`,
+      //   renderBuffer: `${renderWidth}x${renderHeight}`,
+      //   pixelBuffer: `${renderWidth * pixelRatio}x${renderHeight * pixelRatio}`,
+      // });
     } else {
       // Desktop/landscape - use actual viewport
       renderer.setSize(viewportWidth, viewportHeight);
@@ -92,13 +92,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // Scene handles its own animation loop internally
   const scene = new ChromeTextScene(renderer, canvas, getRenderDimensions);
 
-  console.log("✅ Chrome Text Scene initialized");
+  // console.log("✅ Chrome Text Scene initialized");
 
   // Handle window resize
   window.addEventListener("resize", resizeCanvas);
 
   // Use IntersectionObserver to manage visibility for smoother scroll transitions
-  // Large rootMargin means we start/stop animation well before the section is visible
+  // Observe the hero--threejs section specifically
+  const heroThreejs = document.querySelector(".hero--threejs");
+
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -108,10 +110,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     },
     {
-      // Start animation 50% of viewport height before entering view
-      rootMargin: "50% 0px",
+      // No margin - pause immediately when hero leaves viewport
+      rootMargin: "0px",
       threshold: 0,
     }
   );
-  observer.observe(canvas);
+
+  // Observe the hero--threejs section
+  if (heroThreejs) {
+    observer.observe(heroThreejs);
+  }
 });
