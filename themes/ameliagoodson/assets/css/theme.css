@@ -6848,8 +6848,10 @@ body .background-image {
   position: absolute;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateZ(0);
   display: block;
+  will-change: contents;
+  contain: layout style paint;
 }
 .hero .hero-content .hero-copy {
   display: flex;

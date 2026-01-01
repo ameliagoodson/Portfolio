@@ -13,13 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("Initializing Chrome Text Scene...");
 
   // Get the hero container to properly size the canvas
-  const heroSection = canvas.closest('.hero');
+  const heroSection = canvas.closest(".hero");
 
   // Create WebGL renderer with alpha for transparency
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
-    antialias: true
+    antialias: true,
   });
 
   // Set pixel ratio - cap at 2x for all devices (Shopify's approach)
@@ -27,10 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const pixelRatio = Math.min(window.devicePixelRatio, 2);
   renderer.setPixelRatio(pixelRatio);
 
-  console.log('🖥️ Renderer pixel ratio:', {
+  console.log("🖥️ Renderer pixel ratio:", {
     native: window.devicePixelRatio,
     used: pixelRatio,
-    capped: pixelRatio < window.devicePixelRatio
+    capped: pixelRatio < window.devicePixelRatio,
   });
 
   // Function to resize canvas - force landscape aspect on portrait mobile
@@ -52,13 +52,13 @@ document.addEventListener("DOMContentLoaded", () => {
       renderer.setSize(renderWidth, renderHeight, false);
 
       // Manually set canvas CSS to viewport size
-      canvas.style.width = viewportWidth + 'px';
-      canvas.style.height = viewportHeight + 'px';
+      canvas.style.width = viewportWidth + "px";
+      canvas.style.height = viewportHeight + "px";
 
-      console.log('📱 Portrait mode:', {
+      console.log("📱 Portrait mode:", {
         viewport: `${viewportWidth}x${viewportHeight}`,
         renderBuffer: `${renderWidth}x${renderHeight}`,
-        pixelBuffer: `${renderWidth * pixelRatio}x${renderHeight * pixelRatio}`
+        pixelBuffer: `${renderWidth * pixelRatio}x${renderHeight * pixelRatio}`,
       });
     } else {
       // Desktop/landscape - use actual viewport
@@ -79,21 +79,39 @@ document.addEventListener("DOMContentLoaded", () => {
       const minAspectRatio = 1.4;
       return {
         width: Math.floor(viewportHeight * minAspectRatio),
-        height: viewportHeight
+        height: viewportHeight,
       };
     }
     return {
       width: viewportWidth,
-      height: viewportHeight
+      height: viewportHeight,
     };
   };
 
   // Initialize the chrome text scene
   // Scene handles its own animation loop internally
-  new ChromeTextScene(renderer, canvas, getRenderDimensions);
+  const scene = new ChromeTextScene(renderer, canvas, getRenderDimensions);
 
   console.log("✅ Chrome Text Scene initialized");
 
   // Handle window resize
   window.addEventListener("resize", resizeCanvas);
+
+  // Use IntersectionObserver to manage visibility for smoother scroll transitions
+  // Large rootMargin means we start/stop animation well before the section is visible
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (scene.setVisible) {
+          scene.setVisible(entry.isIntersecting);
+        }
+      });
+    },
+    {
+      // Start animation 50% of viewport height before entering view
+      rootMargin: "50% 0px",
+      threshold: 0,
+    }
+  );
+  observer.observe(canvas);
 });

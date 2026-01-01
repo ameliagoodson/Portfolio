@@ -350,6 +350,7 @@ class ShopifyDirectScene {
     });
 
     this.scene = new THREE.Scene();
+    this.isVisible = true; // Track visibility for smooth scroll transitions
 
     // Use viewport dimensions for camera/scene (not render buffer size)
     const viewport = this.getViewportDimensions();
@@ -1270,10 +1271,16 @@ void main() {
 
   animate() {
     const now = performance.now();
-    const deltaTime = Math.min(
-      (now - (this.lastFrameTime || now)) / 1000,
-      1 / 30
-    );
+    let deltaTime = (now - (this.lastFrameTime || now)) / 1000;
+
+    // If deltaTime is very large (>100ms), we were likely offscreen/throttled
+    // Use a small deltaTime to prevent jarring "catch up" animations
+    if (deltaTime > 0.1) {
+      deltaTime = 1 / 60; // Pretend only one frame passed
+    } else {
+      deltaTime = Math.min(deltaTime, 1 / 30);
+    }
+
     this.lastFrameTime = now;
 
     // Decay mouse velocity when not moving
@@ -1303,6 +1310,32 @@ void main() {
     this.renderer.render(this.scene, this.camera);
 
     this.animationId = requestAnimationFrame(() => this.animate());
+  }
+
+  setVisible(isVisible) {
+    // Called by IntersectionObserver when canvas enters/exits viewport
+    const wasVisible = this.isVisible;
+    this.isVisible = isVisible;
+
+    if (isVisible && !wasVisible) {
+      // Returning to view - reset timing and restart animation
+      this.lastFrameTime = performance.now();
+      this.lastMoveTime = performance.now();
+      this.mouseVelocity.set(0, 0);
+
+      // Restart animation loop if it was stopped
+      if (!this.animationId) {
+        console.log("🔄 Restarting animation loop");
+        this.animate();
+      }
+    } else if (!isVisible && wasVisible) {
+      // Going offscreen - stop animation to free resources
+      if (this.animationId) {
+        cancelAnimationFrame(this.animationId);
+        this.animationId = null;
+        console.log("⏸️ Pausing animation loop");
+      }
+    }
   }
 
   onWindowResize() {

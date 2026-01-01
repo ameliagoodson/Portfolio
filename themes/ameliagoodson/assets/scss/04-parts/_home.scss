@@ -28,9 +28,12 @@ body .background-image {
       position: absolute;
       top: 0;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translateX(-50%) translateZ(0);
       // Don't constrain canvas - let Three.js size it for optimal rendering
       display: block;
+      // Force GPU layer for smoother scrolling
+      will-change: contents;
+      contain: layout style paint;
     }
   }
 
